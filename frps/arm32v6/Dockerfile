@@ -4,7 +4,7 @@ ENV FRP_VERSION 0.24.1
 
 VOLUME [ “/sys/fs/cgroup” ]
 
-COPY ./qemu-arm-static /usr/bin
+ADD ./qemu-arm-static /usr/bin
 
 RUN pwd
 
