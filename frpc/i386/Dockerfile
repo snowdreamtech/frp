@@ -7,7 +7,7 @@ VOLUME [ “/sys/fs/cgroup” ]
 
 RUN apk add --no-cache openrc \
     && cd /root \
-    &&  wget -c https://github.com/multiarch/qemu-user-static/releases/download/${QEMU_USER_STATIC_VERSION}/x86_64_qemu-i386-static.tar.gz \
+    &&  wget -c https://github.com/multiarch/qemu-user-static/releases/download/v${QEMU_USER_STATIC_VERSION}/x86_64_qemu-i386-static.tar.gz \
     &&  tar zxvf x86_64_qemu-i386-static.tar.gz  \
     &&  mv qemu-i386-static /usr/bin/  \
     &&  rm x86_64_qemu-i386-static.tar.gz  \
