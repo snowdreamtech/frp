@@ -4,7 +4,7 @@ ENV FRP_VERSION 0.24.1
 
 VOLUME [ “/sys/fs/cgroup” ]
 
-COPY qemu-arm-static /usr/bin
+COPY qemu-aarch64-static /usr/bin
 
 RUN apk add --no-cache openrc \
     && cd /root \
