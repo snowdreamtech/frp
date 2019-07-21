@@ -37,7 +37,7 @@ frps:
 
 [Frps](https://cloud.docker.com/u/snowdreamtech/repository/docker/snowdreamtech/frps/tags)
 
-[Frpc](https://cloud.docker.com/u/snowdreamtech/repository/docker/snowdreamtech/frpc)
+[Frpc](https://cloud.docker.com/u/snowdreamtech/repository/docker/snowdreamtech/frpc/tags)
 
 ## License
 Apache 2.0
