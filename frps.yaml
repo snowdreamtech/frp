@@ -1,24 +1,24 @@
-image: snowdreamtech/frps:0.25.3
+image: snowdreamtech/frps:0.26.0
 manifests:
-  - image: snowdreamtechamd64/frps:0.25.3
+  - image: snowdreamtechamd64/frps:0.26.0
     platform:
       architecture: amd64
       os: linux
-  - image: snowdreamtechi386/frps:0.25.3
+  - image: snowdreamtechi386/frps:0.26.0
     platform:
       architecture: 386
       os: linux
-  - image: snowdreamtecharm32v6/frps:0.25.3
+  - image: snowdreamtecharm32v6/frps:0.26.0
     platform:
       architecture: arm
       os: linux
       variant: v6
-  - image: snowdreamtecharm32v7/frps:0.25.3
+  - image: snowdreamtecharm32v7/frps:0.26.0
     platform:
       architecture: arm
       os: linux
       variant: v7
-  - image: snowdreamtecharm64v8/frps:0.25.3
+  - image: snowdreamtecharm64v8/frps:0.26.0
     platform:
       architecture: arm64
       os: linux
