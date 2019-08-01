@@ -1,6 +1,6 @@
 FROM arm64v8/alpine:3.10
 
-ENV FRP_VERSION 0.27.1
+ENV FRP_VERSION 0.28.0
 
 VOLUME [ “/sys/fs/cgroup” ]
 
