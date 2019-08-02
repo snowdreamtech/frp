@@ -3,7 +3,7 @@ FROM i386/alpine:3.10
 ENV FRP_VERSION 0.28.0
 ENV QEMU_USER_STATIC_VERSION 4.0.0-5
 
-VOLUME [ “/sys/fs/cgroup” ]
+VOLUME [ "/sys/fs/cgroup" ]
 
 RUN apk add --no-cache openrc \
     && cd /root \

@@ -2,7 +2,7 @@ FROM arm64v8/alpine:3.10
 
 ENV FRP_VERSION 0.28.0
 
-VOLUME [ “/sys/fs/cgroup” ]
+VOLUME [ "/sys/fs/cgroup" ]
 
 COPY qemu-aarch64-static /usr/bin
 

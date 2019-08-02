@@ -2,7 +2,7 @@ FROM alpine:3.10
 
 ENV FRP_VERSION 0.28.0
 
-VOLUME [ “/sys/fs/cgroup” ]
+VOLUME [ "/sys/fs/cgroup" ]
 
 RUN apk add --no-cache openrc \
     && cd /root \
