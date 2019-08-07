@@ -1,0 +1,25 @@
+image: snowdreamtech/frps:latest
+manifests:
+  - image: snowdreamtechamd64/frps:latest
+    platform:
+      architecture: amd64
+      os: linux
+  - image: snowdreamtechi386/frps:latest
+    platform:
+      architecture: 386
+      os: linux
+  - image: snowdreamtecharm32v6/frps:latest
+    platform:
+      architecture: arm
+      os: linux
+      variant: v6
+  - image: snowdreamtecharm32v7/frps:latest
+    platform:
+      architecture: arm
+      os: linux
+      variant: v7
+  - image: snowdreamtecharm64v8/frps:latest
+    platform:
+      architecture: arm64
+      os: linux
+      variant: v8
