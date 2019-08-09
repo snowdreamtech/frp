@@ -1,6 +1,6 @@
 FROM alpine:3.10
 
-ENV FRP_VERSION 0.28.1
+ENV FRP_VERSION 0.28.2
 
 VOLUME [ "/sys/fs/cgroup" ]
 
