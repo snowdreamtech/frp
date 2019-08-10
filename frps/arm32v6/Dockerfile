@@ -1,5 +1,7 @@
 FROM arm32v6/alpine:3.10
 
+MAINTAINER snowdream <sn0wdr1am@icloud.com>
+
 ENV FRP_VERSION 0.28.2
 
 VOLUME [ "/sys/fs/cgroup" ]

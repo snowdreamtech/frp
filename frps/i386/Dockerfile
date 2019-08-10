@@ -1,5 +1,7 @@
 FROM i386/alpine:3.10
 
+MAINTAINER snowdream <sn0wdr1am@icloud.com>
+
 ENV FRP_VERSION 0.28.2
 ENV QEMU_USER_STATIC_VERSION 4.0.0-5
 
