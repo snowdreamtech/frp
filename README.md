@@ -7,7 +7,7 @@ Docker Image packaging for Frp.
 
 (amd64, arm32v6, arm32v7, arm64v8, i386)
 
-## Usage 
+## Usage
 
 start frps
 
