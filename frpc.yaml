@@ -1,24 +1,24 @@
-image: snowdreamtech/frpc:0.29.0
+image: snowdreamtech/frpc:0.29.1
 manifests:
-  - image: snowdreamtechamd64/frpc:0.29.0
+  - image: snowdreamtechamd64/frpc:0.29.1
     platform:
       architecture: amd64
       os: linux
-  - image: snowdreamtechi386/frpc:0.29.0
+  - image: snowdreamtechi386/frpc:0.29.1
     platform:
       architecture: 386
       os: linux
-  - image: snowdreamtecharm32v6/frpc:0.29.0
+  - image: snowdreamtecharm32v6/frpc:0.29.1
     platform:
       architecture: arm
       os: linux
       variant: v6
-  - image: snowdreamtecharm32v7/frpc:0.29.0
+  - image: snowdreamtecharm32v7/frpc:0.29.1
     platform:
       architecture: arm
       os: linux
       variant: v7
-  - image: snowdreamtecharm64v8/frpc:0.29.0
+  - image: snowdreamtecharm64v8/frpc:0.29.1
     platform:
       architecture: arm64
       os: linux

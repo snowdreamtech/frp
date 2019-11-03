@@ -2,7 +2,7 @@ FROM i386/alpine:3.10
 
 LABEL maintainer="snowdream <sn0wdr1am@icloud.com>"
 
-ENV FRP_VERSION 0.29.0
+ENV FRP_VERSION 0.29.1
 
 VOLUME [ "/sys/fs/cgroup" ]
 
