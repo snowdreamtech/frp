@@ -49,6 +49,12 @@ frps:
 
 [Frpc](https://cloud.docker.com/u/snowdreamtech/repository/docker/snowdreamtech/frpc/tags)
 
+## Sponsors
+
+[![tencent cloud](https://upload-dianshi-1255598498.file.myqcloud.com/345-60759ea0b2a21d3d1c764570c2a9f2960bfdf128.200.jpg)](https://cloud.tencent.com/act/cps/redirect?redirect=1054&cps_key=7ad172f808f30965a01c05887137e4d8&from=console)
+
+[![aliyun](https://img.alicdn.com/tfs/TB1Yr3IvubviK0jSZFNXXaApXXa-220-120.jpg)](https://www.aliyun.com/sale-season/2020/procurement-new-members?userCode=dbgo15cy)
+
 ## Website
 
 1. [Snowdream Tech](http://www.snowdream.tech/)
