@@ -57,10 +57,10 @@ frps:
 
 ## Contact (备注：frp)
 
-Email: 3217680847#qq.com
-QQ: 3217680847
-QQ群: 82695646
-WeChat: sn0wdr1am86
+* Email: 3217680847#qq.com
+* QQ: 3217680847
+* QQ群: 82695646
+* WeChat: sn0wdr1am86
 
 ## Website
 
