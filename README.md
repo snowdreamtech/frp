@@ -55,6 +55,13 @@ frps:
 
 [![aliyun](https://img.alicdn.com/tfs/TB1Yr3IvubviK0jSZFNXXaApXXa-220-120.jpg)](https://www.aliyun.com/sale-season/2020/procurement-new-members?userCode=dbgo15cy)
 
+## Contact (备注：frp)
+
+Email: 3217680847#qq.com
+QQ: 3217680847
+QQ群: 82695646
+WeChat: sn0wdr1am86
+
 ## Website
 
 1. [Snowdream Tech](http://www.snowdream.tech/)
