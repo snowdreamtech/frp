@@ -2,7 +2,7 @@ FROM arm64v8/alpine:3.10
 
 LABEL maintainer="snowdream <sn0wdr1am@icloud.com>"
 
-ENV FRP_VERSION 0.32.1
+ENV FRP_VERSION 0.33.0
 
 COPY qemu-aarch64-static /usr/bin
 
