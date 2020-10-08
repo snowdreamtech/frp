@@ -2,7 +2,7 @@ FROM arm32v6/alpine:3.10
 
 LABEL maintainer="snowdream <sn0wdr1am@icloud.com>"
 
-ENV FRP_VERSION 0.34.0
+ENV FRP_VERSION 0.34.1
 
 COPY qemu-arm-static /usr/bin
 
