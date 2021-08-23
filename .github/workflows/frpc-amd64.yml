@@ -5,7 +5,7 @@ on:
       - 'master'
     tags:
       - '*'
-    workflow_dispatch:
+  workflow_dispatch:
 jobs:
   docker:
     runs-on: ubuntu-latest
