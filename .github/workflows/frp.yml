@@ -19,10 +19,13 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:      
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - run: wget https://github.com/estesp/manifest-tool/releases/download/v1.0.3/manifest-tool-linux-amd64 -o manifest-tool-linux-amd64
       - run: chmod +x manifest-tool-linux-amd64
-      - run: manifest-tool-linux-amd64 push from-spec frpc.yaml
-      - run: manifest-tool-linux-amd64 push from-spec frps.yaml
+      - run: ./manifest-tool-linux-amd64 push from-spec frpc.yaml
+      - run: ./manifest-tool-linux-amd64 push from-spec frps.yaml
   on-failure:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
