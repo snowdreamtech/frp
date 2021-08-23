@@ -1,0 +1,31 @@
+name: frpc
+on:
+  workflow_run:
+    workflows:
+      - "frpc-amd64"
+      - "frpc-arm32v6"
+      - "frpc-arm32v7"
+      - "frpc-arm64v8"
+      - "frpc-i386"
+      - "frps-amd64"
+      - "frps-arm32v6"
+      - "frps-arm32v7"
+      - "frps-arm64v8"
+      - "frps-i386"
+    types:
+      - completed
+    jobs:
+      on-success:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        steps:      
+         - name: frpc-manifest-tool
+         - run: wget https://github.com/estesp/manifest-tool/releases/download/v1.0.3/manifest-tool-linux-amd64 -o manifest-tool-linux-amd64
+         - run: chmod +x manifest-tool-linux-amd64
+         - run: ./manifest-tool-linux-amd64 push from-spec frpc.yaml
+         - run: ./manifest-tool-linux-amd64 push from-spec frps.yaml
+      on-failure:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+        steps: 
+          - run: echo "frp.yml failure"
