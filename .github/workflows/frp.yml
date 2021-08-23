@@ -2,7 +2,7 @@ name: frp
 on:
   workflow_dispatch:
 jobs:
-  on-success:
+  manifest-tool:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:      
@@ -27,8 +27,3 @@ jobs:
       - run: chmod +x manifest-tool
       - run: ./manifest-tool push from-spec frpc.yaml
       - run: ./manifest-tool push from-spec frps.yaml
-  on-failure:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-    steps: 
-      - run: echo "frp.yml failure"
