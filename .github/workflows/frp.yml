@@ -22,9 +22,19 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-      - run: wget https://github.com/estesp/manifest-tool/releases/download/v1.0.3/manifest-tool-linux-amd64 -O manifest-tool
-      - run: chmod +x manifest-tool
-      - run: ./manifest-tool push from-spec frpc-dockerhub.yaml
-      - run: ./manifest-tool push from-spec frps-dockerhub.yaml
-      - run: ./manifest-tool push from-spec frpc-github.yaml
-      - run: ./manifest-tool push from-spec frps-github.yaml
+      -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}   
+      - 
+       name: Push Images to DockerHub and GitHub Container Registry
+       run: |
+        wget https://github.com/estesp/manifest-tool/releases/download/v1.0.3/manifest-tool-linux-amd64 -O manifest-tool
+        chmod +x manifest-tool
+        ./manifest-tool push from-spec frpc-dockerhub.yaml
+        ./manifest-tool push from-spec frps-dockerhub.yaml
+        ./manifest-tool push from-spec frpc-github.yaml
+        ./manifest-tool push from-spec frps-github.yaml
