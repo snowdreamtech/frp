@@ -1,8 +1,6 @@
 name: frps-amd64
 on:
   push:
-    branches:
-      - 'master'
     tags:
       - '*'
   workflow_dispatch:

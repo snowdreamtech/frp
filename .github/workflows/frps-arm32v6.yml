@@ -1,8 +1,6 @@
 name: frps-arm32v6
 on:
   push:
-    branches:
-      - 'master'
     tags:
       - '*'
   workflow_dispatch:
