@@ -42,5 +42,5 @@ jobs:
           tags: |
             snowdreamtechi386/frps:latest
             snowdreamtechi386/frps:0.37.1
-            ghcr.io/snowdreamtech/frps:latest
-            ghcr.io/snowdreamtech/frps:0.37.1
+            ghcr.io/snowdreamtech/frps:i386-latest
+            ghcr.io/snowdreamtech/frps:i386-0.37.1

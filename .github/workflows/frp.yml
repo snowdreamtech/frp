@@ -24,5 +24,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
       - run: wget https://github.com/estesp/manifest-tool/releases/download/v1.0.3/manifest-tool-linux-amd64 -O manifest-tool
       - run: chmod +x manifest-tool
-      - run: ./manifest-tool push from-spec frpc.yaml
-      - run: ./manifest-tool push from-spec frps.yaml
+      - run: ./manifest-tool push from-spec frpc-dockerhub.yaml
+      - run: ./manifest-tool push from-spec frps-dockerhub.yaml
+      - run: ./manifest-tool push from-spec frpc-github.yaml
+      - run: ./manifest-tool push from-spec frps-github.yaml

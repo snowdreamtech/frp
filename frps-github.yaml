@@ -1,0 +1,26 @@
+image: ghcr.io/snowdreamtech/frps:latest
+tags: ["0.37.1"]
+manifests:
+  - image: ghcr.io/snowdreamtech/frps:amd64-latest
+    platform:
+      architecture: amd64
+      os: linux
+  - image: ghcr.io/snowdreamtech/frps:i386-latest
+    platform:
+      architecture: 386
+      os: linux
+  - image: ghcr.io/snowdreamtech/frps:arm32v6-latest
+    platform:
+      architecture: arm
+      os: linux
+      variant: v6
+  - image: ghcr.io/snowdreamtech/frps:arm32v7-latest
+    platform:
+      architecture: arm
+      os: linux
+      variant: v7
+  - image: ghcr.io/snowdreamtech/frps:arm64v8-latest
+    platform:
+      architecture: arm64
+      os: linux
+      variant: v8
