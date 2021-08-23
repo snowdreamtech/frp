@@ -1,5 +1,4 @@
 name: frpc-amd64
-
 on:
   push:
     branches:
