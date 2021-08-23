@@ -1,19 +1,6 @@
 name: frp
 on:
-  workflow_run:
-    workflows:
-      - "frpc-amd64"
-      - "frpc-arm32v6"
-      - "frpc-arm32v7"
-      - "frpc-arm64v8"
-      - "frpc-i386"
-      - "frps-amd64"
-      - "frps-arm32v6"
-      - "frps-arm32v7"
-      - "frps-arm64v8"
-      - "frps-i386"
-    types:
-      - completed
+  workflow_dispatch:
 jobs:
   on-success:
     runs-on: ubuntu-latest
