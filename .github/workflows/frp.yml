@@ -1,4 +1,4 @@
-name: frpc
+name: frp
 on:
   workflow_run:
     workflows:
@@ -14,18 +14,18 @@ on:
       - "frps-i386"
     types:
       - completed
-    jobs:
-      on-success:
-        runs-on: ubuntu-latest
-        if: ${{ github.event.workflow_run.conclusion == 'success' }}
-        steps:      
-         - name: frpc-manifest-tool
-         - run: wget https://github.com/estesp/manifest-tool/releases/download/v1.0.3/manifest-tool-linux-amd64 -o manifest-tool-linux-amd64
-         - run: chmod +x manifest-tool-linux-amd64
-         - run: ./manifest-tool-linux-amd64 push from-spec frpc.yaml
-         - run: ./manifest-tool-linux-amd64 push from-spec frps.yaml
-      on-failure:
-        runs-on: ubuntu-latest
-        if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-        steps: 
-          - run: echo "frp.yml failure"
+jobs:
+  on-success:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:      
+      - name: frpc-manifest-tool
+      - run: wget https://github.com/estesp/manifest-tool/releases/download/v1.0.3/manifest-tool-linux-amd64 -o manifest-tool-linux-amd64
+      - run: chmod +x manifest-tool-linux-amd64
+      - run: ./manifest-tool-linux-amd64 push from-spec frpc.yaml
+      - run: ./manifest-tool-linux-amd64 push from-spec frps.yaml
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps: 
+      - run: echo "frp.yml failure"
