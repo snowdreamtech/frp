@@ -62,7 +62,8 @@ frps:
 * QQ群: 82695646
 * WeChat: sn0wdr1am86
 * 微信群: 
-![微信群](https://snowdreamtech.oss-cn-beijing.aliyuncs.com/snowdream/snowdreamtechwechatqun.png)
+
+ <img src="https://snowdreamtech.oss-cn-beijing.aliyuncs.com/snowdream/snowdreamtechwechatqun.png" width = "300"  alt="微信群" align=center />
 
 ## Website
 
