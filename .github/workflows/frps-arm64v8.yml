@@ -1,6 +1,8 @@
 name: frps-arm64v8
 on:
   push:
+    branches:
+      - master
     tags:
       - '*'
   workflow_dispatch:

@@ -1,6 +1,8 @@
 name: frpc-i386
 on:
   push:
+    branches:
+      - master  
     tags:
       - '*'
   workflow_dispatch:

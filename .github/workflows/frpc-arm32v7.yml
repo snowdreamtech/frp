@@ -1,6 +1,8 @@
 name: frpc-arm32v7
 on:
   push:
+    branches:
+    - master 
     tags:
       - '*'
   workflow_dispatch:

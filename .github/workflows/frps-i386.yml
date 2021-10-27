@@ -1,6 +1,8 @@
 name: frps-i386
 on:
   push:
+    branches:
+      - master
     tags:
       - '*'
   workflow_dispatch:
