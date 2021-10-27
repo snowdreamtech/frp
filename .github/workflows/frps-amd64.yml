@@ -39,6 +39,6 @@ jobs:
           push: true
           tags: |
             snowdreamtechamd64/frps:latest
-            snowdreamtechamd64/frps:0.37.1
+            snowdreamtechamd64/frps:0.38.0
             ghcr.io/snowdreamtech/frps:amd64-latest
-            ghcr.io/snowdreamtech/frps:amd64-0.37.1
+            ghcr.io/snowdreamtech/frps:amd64-0.38.0
