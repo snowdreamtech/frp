@@ -1,5 +1,5 @@
 image: ghcr.io/snowdreamtech/frpc:latest
-tags: ["0.38.0"]
+tags: ["0.39.0"]
 manifests:
   - image: ghcr.io/snowdreamtech/frpc:amd64-latest
     platform:
