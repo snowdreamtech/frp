@@ -1,4 +1,4 @@
-FROM i386/alpine:3.10
+FROM i386/alpine:latest
 
 LABEL maintainer="snowdream <sn0wdr1am@icloud.com>"
 
