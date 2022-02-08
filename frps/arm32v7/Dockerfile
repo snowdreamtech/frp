@@ -1,4 +1,4 @@
-FROM arm32v7/alpine:latest
+FROM arm32v7/alpine:3.15
 
 LABEL maintainer="snowdream <sn0wdr1am@icloud.com>"
 
