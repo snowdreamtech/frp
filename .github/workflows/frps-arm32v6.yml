@@ -42,5 +42,3 @@ jobs:
           tags: |
             snowdreamtecharm32v6/frps:latest
             snowdreamtecharm32v6/frps:0.47.0
-            ghcr.io/snowdreamtech/frps:arm32v6-latest
-            ghcr.io/snowdreamtech/frps:arm32v6-0.47.0
