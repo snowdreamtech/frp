@@ -42,4 +42,5 @@ jobs:
           tags: |
             snowdreamtechamd64/frpc:latest
             snowdreamtechamd64/frpc:0.47.0
-        
+            ghcr.io/snowdreamtech/frpc:amd64-latest
+            ghcr.io/snowdreamtech/frpc:amd64-0.47.0            

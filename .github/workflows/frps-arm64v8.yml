@@ -42,3 +42,5 @@ jobs:
           tags: |
             snowdreamtecharm64v8/frps:latest
             snowdreamtecharm64v8/frps:0.47.0
+            ghcr.io/snowdreamtech/frps:arm64v8-latest
+            ghcr.io/snowdreamtech/frps:arm64v8-0.47.0            
