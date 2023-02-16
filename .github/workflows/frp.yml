@@ -37,3 +37,5 @@ jobs:
         chmod +x manifest-tool-linux-amd64
         ./manifest-tool-linux-amd64 push from-spec frpc-dockerhub.yaml
         ./manifest-tool-linux-amd64 push from-spec frps-dockerhub.yaml
+        ./manifest-tool-linux-amd64 push from-spec frpc-github.yaml
+        ./manifest-tool-linux-amd64 push from-spec frps-github.yaml
