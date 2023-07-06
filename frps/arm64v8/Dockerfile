@@ -2,7 +2,7 @@ FROM arm64v8/alpine:3.15
 
 LABEL maintainer="snowdream <sn0wdr1am@icloud.com>"
 
-ENV FRP_VERSION 0.49.0
+ENV FRP_VERSION 0.50.0
 
 RUN cd /root \
     &&  wget --no-check-certificate -c https://github.com/fatedier/frp/releases/download/v${FRP_VERSION}/frp_${FRP_VERSION}_linux_arm64.tar.gz \
