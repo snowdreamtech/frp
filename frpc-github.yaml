@@ -5,10 +5,6 @@ manifests:
     platform:
       architecture: amd64
       os: linux
-  - image: ghcr.io/snowdreamtech/frpc:i386-latest
-    platform:
-      architecture: 386
-      os: linux
   - image: ghcr.io/snowdreamtech/frpc:arm32v6-latest
     platform:
       architecture: arm
