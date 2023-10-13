@@ -49,21 +49,18 @@ frps:
 
 [Frpc](https://cloud.docker.com/u/snowdreamtech/repository/docker/snowdreamtech/frpc/tags)
 
-## Sponsors
+<!-- ## Sponsors
 
 [![tencentcloud](https://snowdreamtech.oss-cn-beijing.aliyuncs.com/tengxunyun/%E9%A6%96%E5%8D%95%E9%99%90%E6%97%B6%E7%A7%92%E6%9D%80%E4%BF%AE%E6%94%B9/%E9%A6%96%E5%8D%95%E9%99%90%E6%97%B6_470-250.jpg)](https://cloud.tencent.com/act/cps/redirect?redirect=1077&cps_key=d09c5e921f9fcf4ac9516564262f3b99&from=console)
 
-[![aliyun](https://snowdreamtech.oss-cn-beijing.aliyuncs.com/aliyun/%E6%96%B0%E4%BA%BA-%E4%B8%BB/440-240%201.jpg)](https://www.aliyun.com/1111/new?userCode=dbgo15cy)
+[![aliyun](https://snowdreamtech.oss-cn-beijing.aliyuncs.com/aliyun/%E6%96%B0%E4%BA%BA-%E4%B8%BB/440-240%201.jpg)](https://www.aliyun.com/1111/new?userCode=dbgo15cy) -->
 
 ## Contact (备注：frp)
 
-* Email: sn0wdr1am@icloud.com
+* Email: sn0wdr1am@qq.com
 * QQ: 3217680847
 * QQ群: 82695646
-* WeChat: sn0wdr1am86
-* 微信群: 
-
- <img src="https://snowdreamtech.oss-cn-beijing.aliyuncs.com/snowdream/snowdreamtechwechatqun.png" width = "300"  alt="微信群" align=center />
+* WeChat/微信群: sn0wdr1am
 
 ## Website
 
