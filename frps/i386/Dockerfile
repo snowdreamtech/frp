@@ -10,9 +10,9 @@ RUN cd /root \
     &&  cd frp_${FRP_VERSION}_linux_386/ \
     &&  cp frps /usr/bin/ \
     &&  mkdir -p /etc/frp \
-    &&  cp frps.ini /etc/frp \
+    &&  cp frps.toml /etc/frp \
     &&  cd /root \
     &&  rm frp_${FRP_VERSION}_linux_386.tar.gz \
     &&  rm -rf frp_${FRP_VERSION}_linux_386/ 
 
-ENTRYPOINT /usr/bin/frps -c /etc/frp/frps.ini
+ENTRYPOINT /usr/bin/frps -c /etc/frp/frps.toml
