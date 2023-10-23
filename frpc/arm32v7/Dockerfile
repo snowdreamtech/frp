@@ -10,7 +10,7 @@ RUN cd /root \
     &&  cd frp_${FRP_VERSION}_linux_arm/ \
     &&  cp frpc /usr/bin/ \
     &&  mkdir -p /etc/frp \
-    &&  cp frpc.toml /etc/frp \
+     # &&  cp frpc.toml /etc/frp \
     &&  cd /root \
     &&  rm frp_${FRP_VERSION}_linux_arm.tar.gz \
     &&  rm -rf frp_${FRP_VERSION}_linux_arm/ 
