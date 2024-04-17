@@ -1,5 +1,5 @@
 image: snowdreamtech/frpc:latest
-tags: ["latest","0.56.0"]
+tags: ["latest","0.57.0"]
 manifests:
   - image: snowdreamtechamd64/frpc:latest
     platform:
