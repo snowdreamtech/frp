@@ -41,6 +41,6 @@ jobs:
           push: true
           tags: |
             snowdreamtecharm32v6/frpc:latest
-            snowdreamtecharm32v6/frpc:0.57.0
+            snowdreamtecharm32v6/frpc:0.58.0
             ghcr.io/snowdreamtech/frpc:arm32v6-latest
-            ghcr.io/snowdreamtech/frpc:arm32v6-0.57.0        
+            ghcr.io/snowdreamtech/frpc:arm32v6-0.58.0        
