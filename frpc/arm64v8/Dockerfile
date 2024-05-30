@@ -15,4 +15,6 @@ RUN cd /root \
     &&  rm frp_${FRP_VERSION}_linux_arm64.tar.gz \
     &&  rm -rf frp_${FRP_VERSION}_linux_arm64/ 
 
-ENTRYPOINT /usr/bin/frpc -c /etc/frp/frpc.toml
+ENTRYPOINT /usr/bin/frpc
+
+CMD -c /etc/frp/frpc.toml
