@@ -31,7 +31,7 @@ docker run --restart=always --network host -d -v /etc/frp/frpc.toml:/etc/frp/frp
 
 * Maintained by:
 
-snowdream <sn0wdr1am@icloud.com>
+snowdream <sn0wdr1am@qq.com>
 
 * Supported architectures: ([more info](https://github.com/docker-library/official-images#architectures-other-than-amd64))
 
