@@ -4,38 +4,43 @@ on:
 jobs:
   manifest-tool:
     runs-on: ubuntu-latest
-    steps:      
+    steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v4
+        with:
+          # [Required] Access token with `workflow` scope.
+          token: ${{ secrets.WORKFLOW_SECRET }}
+      - name: Run GitHub Actions Version Updater
+        uses: saadmk11/github-actions-version-updater@v0.8.1
+        with:
+          # [Required] Access token with `workflow` scope.
+          token: ${{ secrets.WORKFLOW_SECRET }}
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
-      -
-        name: Login to DockerHub
+      - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-      -
-        name: Login to GitHub Container Registry
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}   
-      - 
-       name: Push Images to DockerHub and GitHub Container Registry
-       run: |
-        wget https://github.com/estesp/manifest-tool/releases/download/v2.1.5/binaries-manifest-tool-2.1.5.tar.gz -O binaries-manifest-tool-2.1.5.tar.gz
-        tar zxvf binaries-manifest-tool-2.1.5.tar.gz
-        chmod +x manifest-tool-linux-amd64
-        ./manifest-tool-linux-amd64 push from-spec frpc-dockerhub.yaml
-        ./manifest-tool-linux-amd64 push from-spec frps-dockerhub.yaml
-        ./manifest-tool-linux-amd64 push from-spec frpc-github.yaml
-        ./manifest-tool-linux-amd64 push from-spec frps-github.yaml
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push Images to DockerHub and GitHub Container Registry
+        run: |
+          wget https://github.com/estesp/manifest-tool/releases/download/v2.1.5/binaries-manifest-tool-2.1.5.tar.gz -O binaries-manifest-tool-2.1.5.tar.gz
+          tar zxvf binaries-manifest-tool-2.1.5.tar.gz
+          chmod +x manifest-tool-linux-amd64
+          ./manifest-tool-linux-amd64 push from-spec frpc-dockerhub.yaml
+          ./manifest-tool-linux-amd64 push from-spec frps-dockerhub.yaml
+          ./manifest-tool-linux-amd64 push from-spec frpc-github.yaml
+          ./manifest-tool-linux-amd64 push from-spec frps-github.yaml
