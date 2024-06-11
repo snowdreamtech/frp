@@ -1,0 +1,65 @@
+name: CI Main
+
+on:
+  push:
+    branches:
+      - dev  
+    tags:
+      - '*'
+  workflow_dispatch:
+jobs:
+    buildx:
+      runs-on: ubuntu-latest
+      steps:
+        -
+          name: Checkout
+          uses: actions/checkout@v4.1.6
+          with:
+            # [Required] Access token with `workflow` scope.
+            token: ${{ secrets.WORKFLOW_SECRET }}
+        - 
+          name: Run GitHub Actions Version Updater
+          uses: saadmk11/github-actions-version-updater@v0.8.1
+          with:
+            # [Required] Access token with `workflow` scope.
+            token: ${{ secrets.WORKFLOW_SECRET }}
+        -
+          # Add support for more platforms with QEMU (optional)
+          # https://github.com/docker/setup-qemu-action
+          name: Set up QEMU
+          uses: docker/setup-qemu-action@v3
+        -
+          name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3.3.0
+        -
+          name: Login to DockerHub
+          uses: docker/login-action@v3.2.0
+          with:
+            username: ${{ secrets.DOCKER_HUB_USERNAME }}
+            password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        -
+          name: Login to GitHub Container Registry
+          uses: docker/login-action@v3.2.0
+          with:
+            registry: ghcr.io
+            username: ${{ github.repository_owner }}
+            password: ${{ secrets.GITHUB_TOKEN }}          
+        -
+          name: Build and push
+          uses: docker/build-push-action@v5.3.0
+          with:
+            context: frps
+            platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x
+            push: true
+            tags: |
+              snowdreamtech/frps:latest-dev
+              snowdreamtech/frps:0.58.1-r1-dev
+              snowdreamtech/frps:0.58.1-dev
+              snowdreamtech/frps:0.58-dev
+              snowdreamtech/frps:0-dev
+              ghcr.io/snowdreamtech/frps:latest-dev
+              ghcr.io/snowdreamtech/frps:0.58.1-r1-dev
+              ghcr.io/snowdreamtech/frps:0.58.1-dev
+              ghcr.io/snowdreamtech/frps:0.58-dev
+              ghcr.io/snowdreamtech/frps:0-dev
+             
