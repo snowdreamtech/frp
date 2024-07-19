@@ -1,4 +1,4 @@
-name: GitHub Actions Continuous Delivery (Frpss)
+name: GitHub Actions Continuous Delivery (Frps)
 
 on:
   push:
