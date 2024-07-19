@@ -1,0 +1,18 @@
+{
+    "recommendations": [
+        "ms-azuretools.vscode-docker",
+        "mhutchie.git-graph",
+        "redhat.vscode-yaml",
+        "be5invis.toml",
+        "iceyer.toml-formatter",
+        "davidanson.vscode-markdownlint",
+        "shd101wyy.markdown-preview-enhanced",
+        "ms-vscode-remote.remote-ssh",
+        "ms-vscode-remote.remote-ssh-edit",
+        "ms-vscode.remote-explorer",
+        "timonwong.shellcheck",
+        "foxundermoon.shell-format",
+        "ms-ceintl.vscode-language-pack-zh-hans",
+        "github.vscode-github-actions"
+    ]
+}
