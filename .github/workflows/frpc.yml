@@ -1,4 +1,4 @@
-name: CI Main (Frpc)
+name: GitHub Actions Continuous Delivery
 
 on:
   push:
@@ -18,19 +18,28 @@ jobs:
             # [Required] Access token with `workflow` scope.
             token: ${{ secrets.WORKFLOW_SECRET }}
         - 
-          name: Run GitHub Actions Version Updater
-          uses: saadmk11/github-actions-version-updater@v0.8.1
-          with:
-            # [Required] Access token with `workflow` scope.
-            token: ${{ secrets.WORKFLOW_SECRET }}
+          name: Set env variables
+          run: |
+            echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+            echo "http_proxy=${http_proxy}" >> $GITHUB_ENV
+            echo "no_proxy=${no_proxy}" >> $GITHUB_ENV
         -
           # Add support for more platforms with QEMU (optional)
           # https://github.com/docker/setup-qemu-action
           name: Set up QEMU
           uses: docker/setup-qemu-action@v3.1.0
         -
+          # https://github.com/docker/setup-buildx-action/issues/57#issuecomment-1059657292
+          # https://github.com/docker/buildx/issues/136#issuecomment-550205439
+          # docker buildx create --driver-opt env.http_proxy=$http_proxy --driver-opt env.https_proxy=$https_proxy --driver-opt '"env.no_proxy='$no_proxy'"'
           name: Set up Docker Buildx
           uses: docker/setup-buildx-action@v3.4.0
+          with:
+            buildkitd-config: .github/buildkitd.toml
+            driver-opts: |
+              env.http_proxy=${{ env.http_proxy }}
+              env.https_proxy=${{ env.http_proxy }}
+              env.no_proxy=${{ env.no_proxy }}
         -
           name: Login to DockerHub
           uses: docker/login-action@v3.2.0
@@ -46,7 +55,7 @@ jobs:
             password: ${{ secrets.GITHUB_TOKEN }}          
         -
           name: Build and push
-          uses: docker/build-push-action@v6.3.0
+          uses: docker/build-push-action@v6.4.1
           with:
             context: frpc
             platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x

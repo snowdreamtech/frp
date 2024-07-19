@@ -1,0 +1,31 @@
+debug = true
+
+[registry."docker.io"]
+    mirrors = ["https://docker.sn0wdr1am.com"]
+
+[registry."quay.io"]
+    mirrors = ["https://quay.sn0wdr1am.com"]
+
+[registry."gcr.io"]
+    mirrors = ["https://gcr.sn0wdr1am.com"]
+
+[registry."k8s.gcr.io"]
+    mirrors = ["https://k8s-gcr.sn0wdr1am.com"]
+
+[registry."k8s.io"]
+    mirrors = ["https://k8s.sn0wdr1am.com"]
+
+[registry."ghcr.io"]
+    mirrors = ["https://ghcr.sn0wdr1am.com"]
+
+[registry."cloudsmith.io"]
+    mirrors = ["https://cloudsmith.sn0wdr1am.com"]
+
+[registry."ecr.aws"]
+    mirrors = ["https://ecr.sn0wdr1am.com"]
+
+[worker.oci]
+  max-parallelism = 2
+
+
+
