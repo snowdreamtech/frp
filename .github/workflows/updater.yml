@@ -2,11 +2,15 @@ name: GitHub Actions Version Updater
 
 # Controls when the action will run.
 on:
-  # can be used to run workflow manually
-  workflow_dispatch:
+  push:
+    branches:
+      - main  
+    tags:
+      - '*'
   schedule:
     # Automatically run on every Day
     - cron:  '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
