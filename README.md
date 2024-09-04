@@ -71,3 +71,7 @@ frps:
 ## License
 
 MIT
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=snowdreamtech/frp&type=Date)](https://star-history.com/#snowdreamtech/frp&Date)
