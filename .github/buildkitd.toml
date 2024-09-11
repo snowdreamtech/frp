@@ -1,4 +1,8 @@
+# debug enables additional debug logging
 debug = true
+# trace enables additional trace logging (very verbose, with potential performance impacts)
+trace = true
+
 
 [registry."docker.io"]
     mirrors = ["https://docker.sn0wdr1am.com"]
