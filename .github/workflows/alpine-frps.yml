@@ -3,7 +3,7 @@ name: GitHub Actions Continuous Delivery (Frps)
 on:
   push:
     branches:
-      - dev  
+      - main  
     tags:
       - '*'
   schedule:
