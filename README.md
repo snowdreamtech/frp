@@ -7,7 +7,8 @@ Docker Image packaging for Frp.
 
  (amd64, arm32v6, arm32v7, arm64v8, i386, ppc64le,riscv64, s390x)
  
-### [中文文档](https://www.itcoder.tech/posts/docker-frp/)
+### [Documentation](https://gofrp.org/en/)
+### [中文文档](https://gofrp.org/zh-cn/docs/)
 
 ## Usage
 
