@@ -3,88 +3,81 @@ name: GitHub Actions Continuous Delivery (Frpc)
 on:
   push:
     branches:
-      - main  
+      - main
     tags:
-      - '*'
+      - "*"
   schedule:
     # Automatically run on every Day
-    - cron:  '0 0 * * *'
+    - cron: "0 0 * * *"
   workflow_dispatch:
 jobs:
-    buildx:
-      runs-on: 1H1G
-      steps:
-        -
-          name: Checkout
-          uses: actions/checkout@v4.1.7
-          with:
-            # [Required] Access token with `workflow` scope.
-            token: ${{ secrets.WORKFLOW_SECRET }}
-        - 
-          name: Set env variables
-          run: |
-            echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-            echo "http_proxy=${http_proxy}" >> $GITHUB_ENV
-            echo "no_proxy=${no_proxy}" >> $GITHUB_ENV
-        -
-          # Add support for more platforms with QEMU (optional)
-          # https://github.com/docker/setup-qemu-action
-          name: Set up QEMU
-          uses: docker/setup-qemu-action@v3.2.0
-        -
-          # https://github.com/docker/setup-buildx-action/issues/57#issuecomment-1059657292
-          # https://github.com/docker/buildx/issues/136#issuecomment-550205439
-          # docker buildx create --driver-opt env.http_proxy=$http_proxy --driver-opt env.https_proxy=$https_proxy --driver-opt '"env.no_proxy='$no_proxy'"'
-          name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v3.6.1
-          with:
-            buildkitd-config: .github/buildkitd.toml
-            driver-opts: |
-              env.http_proxy=${{ env.http_proxy }}
-              env.https_proxy=${{ env.http_proxy }}
-              env.no_proxy=${{ env.no_proxy }}
-        -
-          name: Login to DockerHub
-          uses: docker/login-action@v3.3.0
-          with:
-            username: ${{ secrets.DOCKER_HUB_USERNAME }}
-            password: ${{ secrets.DOCKER_HUB_TOKEN }}
-        -
-          name: Login to GitHub Container Registry
-          uses: docker/login-action@v3.3.0
-          with:
-            registry: ghcr.io
-            username: ${{ github.repository_owner }}
-            password: ${{ secrets.GITHUB_TOKEN }}          
-        -
-          name: Build and push
-          uses: docker/build-push-action@v6.7.0
-          with:
-            context: alpine/frpc
-            platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x
-            push: false
-            tags: |
-              snowdreamtech/frpc:latest
-              snowdreamtech/frpc:0.60.0
-              snowdreamtech/frpc:0.60
-              snowdreamtech/frpc:0
-              ghcr.io/snowdreamtech/frpc:latest
-              ghcr.io/snowdreamtech/frpc:0.60.0
-              ghcr.io/snowdreamtech/frpc:0.60
-              ghcr.io/snowdreamtech/frpc:0
-              snowdreamtech/frpc:alpine
-              snowdreamtech/frpc:0.60.0-alpine
-              snowdreamtech/frpc:0.60-alpine
-              snowdreamtech/frpc:0-alpine
-              ghcr.io/snowdreamtech/frpc:alpine
-              ghcr.io/snowdreamtech/frpc:0.60.0-alpine
-              ghcr.io/snowdreamtech/frpc:0.60-alpine
-              ghcr.io/snowdreamtech/frpc:0-alpine
-              snowdreamtech/frpc:alpine3.20
-              snowdreamtech/frpc:0.60.0-alpine3.20
-              snowdreamtech/frpc:0.60-alpine3.20
-              snowdreamtech/frpc:0-alpine3.20
-              ghcr.io/snowdreamtech/frpc:alpine3.20
-              ghcr.io/snowdreamtech/frpc:0.60.0-alpine3.20
-              ghcr.io/snowdreamtech/frpc:0.60-alpine3.20
-              ghcr.io/snowdreamtech/frpc:0-alpine3.20                
+  buildx:
+    runs-on: 1H1G
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+        with:
+          # [Required] Access token with `workflow` scope.
+          token: ${{ secrets.WORKFLOW_SECRET }}
+      - name: Set env variables
+        run: |
+          echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo "http_proxy=${http_proxy}" >> $GITHUB_ENV
+          echo "no_proxy=${no_proxy}" >> $GITHUB_ENV
+      - # Add support for more platforms with QEMU (optional)
+        # https://github.com/docker/setup-qemu-action
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3.2.0
+      - # https://github.com/docker/setup-buildx-action/issues/57#issuecomment-1059657292
+        # https://github.com/docker/buildx/issues/136#issuecomment-550205439
+        # docker buildx create --driver-opt env.http_proxy=$http_proxy --driver-opt env.https_proxy=$https_proxy --driver-opt '"env.no_proxy='$no_proxy'"'
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.6.1
+        with:
+          buildkitd-config: .github/buildkitd.toml
+          driver-opts: |
+            env.http_proxy=${{ env.http_proxy }}
+            env.https_proxy=${{ env.http_proxy }}
+            env.no_proxy=${{ env.no_proxy }}
+      - name: Login to DockerHub
+        uses: docker/login-action@v3.3.0
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3.3.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v6.7.0
+        with:
+          context: alpine/frpc
+          platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x
+          push: false
+          tags: |
+            snowdreamtech/frpc:latest
+            snowdreamtech/frpc:0.60.0
+            snowdreamtech/frpc:0.60
+            snowdreamtech/frpc:0
+            ghcr.io/snowdreamtech/frpc:latest
+            ghcr.io/snowdreamtech/frpc:0.60.0
+            ghcr.io/snowdreamtech/frpc:0.60
+            ghcr.io/snowdreamtech/frpc:0
+            snowdreamtech/frpc:alpine
+            snowdreamtech/frpc:0.60.0-alpine
+            snowdreamtech/frpc:0.60-alpine
+            snowdreamtech/frpc:0-alpine
+            ghcr.io/snowdreamtech/frpc:alpine
+            ghcr.io/snowdreamtech/frpc:0.60.0-alpine
+            ghcr.io/snowdreamtech/frpc:0.60-alpine
+            ghcr.io/snowdreamtech/frpc:0-alpine
+            snowdreamtech/frpc:alpine3.20
+            snowdreamtech/frpc:0.60.0-alpine3.20
+            snowdreamtech/frpc:0.60-alpine3.20
+            snowdreamtech/frpc:0-alpine3.20
+            ghcr.io/snowdreamtech/frpc:alpine3.20
+            ghcr.io/snowdreamtech/frpc:0.60.0-alpine3.20
+            ghcr.io/snowdreamtech/frpc:0.60-alpine3.20
+            ghcr.io/snowdreamtech/frpc:0-alpine3.20

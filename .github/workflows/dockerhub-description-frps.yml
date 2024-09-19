@@ -8,7 +8,7 @@ on:
     paths:
       - README.md
       - .github/workflows/dockerhub-description-frps.yml
-      
+
 jobs:
   dockerHubDescription:
     runs-on: ubuntu-latest
