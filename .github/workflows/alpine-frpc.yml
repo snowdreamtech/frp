@@ -72,4 +72,12 @@ jobs:
               ghcr.io/snowdreamtech/frpc:0.60.0
               ghcr.io/snowdreamtech/frpc:0.60
               ghcr.io/snowdreamtech/frpc:0
+              snowdreamtech/frpc:alpine
+              snowdreamtech/frpc:0.60.0-alpine
+              snowdreamtech/frpc:0.60-alpine
+              snowdreamtech/frpc:0-alpine
+              ghcr.io/snowdreamtech/frpc:alpine
+              ghcr.io/snowdreamtech/frpc:0.60.0-alpine
+              ghcr.io/snowdreamtech/frpc:0.60-alpine
+              ghcr.io/snowdreamtech/frpc:0-alpine
              
