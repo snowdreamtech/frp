@@ -4,7 +4,7 @@ name: GitHub Actions Version Updater
 on:
   push:
     branches:
-      - main  
+      - dev  
   schedule:
     # Automatically run on every Day
     - cron:  '0 0 * * *'
