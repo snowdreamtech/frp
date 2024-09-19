@@ -1,4 +1,4 @@
-name: GitHub Actions Continuous Delivery (Frps)
+name: GitHub Actions Continuous Delivery (Alpine Frps)
 
 on:
   push:
@@ -10,6 +10,7 @@ on:
     # Automatically run on every Day
     - cron: "0 0 * * *"
   workflow_dispatch:
+
 jobs:
   buildx:
     runs-on: 1H1G
@@ -50,36 +51,53 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5.5.1
+        with:
+          images: |
+            name=snowdreamtech/frps,enable=true
+            name=ghcr.io/snowdreamtech/frps,enable=true
+          flavor: |
+            latest=false  
+            prefix=
+            suffix=
+          tags: |
+            type=edge,enable=true,priority=700,prefix=,suffix=,branch=dev
+            type=raw,enable={{is_default_branch}},priority=200,prefix=,suffix=,value=latest
+            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=latest
+            type=pep440,enable=true,priority=900,prefix=,suffix=,pattern={{version}}
+            type=pep440,enable=true,priority=900,prefix=,suffix=,pattern={{major}}.{{minor}}
+            type=pep440,enable=${{ !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/0.') }},priority=900,prefix=,suffix=,pattern={{major}}
+            type=edge,enable=true,priority=700,prefix=,suffix=-alpine,branch=dev
+            type=raw,enable={{is_default_branch}},priority=200,prefix=,suffix=,value=alpine
+            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=alpine
+            type=pep440,enable=true,priority=900,prefix=,suffix=-alpine,pattern={{version}}
+            type=pep440,enable=true,priority=900,prefix=,suffix=-alpine,pattern={{major}}.{{minor}}
+            type=pep440,enable=${{ !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/0.') }},priority=900,prefix=,suffix=-alpine,pattern={{major}}
+            type=edge,enable=true,priority=700,prefix=,suffix=-alpine3.20⁠,branch=dev
+            type=raw,enable={{is_default_branch}},priority=200,prefix=,suffix=,value=alpine3.20⁠
+            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=alpine3.20⁠
+            type=pep440,enable=true,priority=900,prefix=,suffix=-alpine3.20⁠,pattern={{version}}
+            type=pep440,enable=true,priority=900,prefix=,suffix=-alpine3.20⁠,pattern={{major}}.{{minor}}
+            type=pep440,enable=${{ !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/0.') }},priority=900,prefix=,suffix=-alpine3.20⁠,pattern={{major}}
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
       - name: Build and push
         uses: docker/build-push-action@v6.7.0
         with:
           context: alpine/frps
+          build-args: |
+            http_proxy=${{ env.http_proxy }}
+            https_proxy=${{ env.http_proxy }}
+            env.no_proxy=${{ env.no_proxy }}
+            BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
+            VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+            REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
           platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x
-          push: false
-          tags: |
-            snowdreamtech/frps:latest
-            snowdreamtech/frps:0.60.0
-            snowdreamtech/frps:0.60
-            snowdreamtech/frps:0
-            ghcr.io/snowdreamtech/frps:latest
-            ghcr.io/snowdreamtech/frps:0.60.0
-            ghcr.io/snowdreamtech/frps:0.60
-            ghcr.io/snowdreamtech/frps:0
-            snowdreamtech/frps:alpine
-            snowdreamtech/frps:0.60.0-alpine
-            snowdreamtech/frps:0.60-alpine
-            snowdreamtech/frps:0-alpine
-            ghcr.io/snowdreamtech/frps:alpine
-            ghcr.io/snowdreamtech/frps:0.60.0-alpine
-            ghcr.io/snowdreamtech/frps:0.60-alpine
-            ghcr.io/snowdreamtech/frps:0-alpine            
-            snowdreamtech/frps:alpine3.20
-            snowdreamtech/frps:0.60.0-alpine3.20
-            snowdreamtech/frps:0.60-alpine3.20
-            snowdreamtech/frps:0-alpine3.20
-            ghcr.io/snowdreamtech/frps:alpine3.20
-            ghcr.io/snowdreamtech/frps:0.60.0-alpine3.20
-            ghcr.io/snowdreamtech/frps:0.60-alpine3.20
-            ghcr.io/snowdreamtech/frps:0-alpine3.20
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
