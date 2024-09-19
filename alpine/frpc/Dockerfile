@@ -12,7 +12,7 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
       org.opencontainers.image.version="0.60.0" \
       org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
 
-RUN apk add --no-cache frp@community=0.60.0-r0\
+RUN apk add --no-cache frp@community=0.60.0-r1\
     && rm -rfv /usr/bin/frps /etc/frp/frps.toml
 
 ENTRYPOINT ["/usr/bin/frpc"]
