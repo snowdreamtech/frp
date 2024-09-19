@@ -1,0 +1,29 @@
+name: Update Docker Hub Description (Frps)
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "*"
+    paths:
+      - README.md
+      - .github/workflows/dockerhub-description-frps.yml
+      
+jobs:
+  dockerHubDescription:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+        with:
+          # [Required] Access token with `workflow` scope.
+          token: ${{ secrets.WORKFLOW_SECRET }}
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v4.0.0
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          repository: snowdreamtech/frps
+          readme-filepath: ./README.md
+          short-description: ${{ github.event.repository.description }}
+          enable-url-completion: true
