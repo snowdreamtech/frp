@@ -8,7 +8,7 @@ on:
       - "*"
   schedule:
     # Automatically run on every Day
-    - cron: "0 0 * * *"
+    - cron: "0 17 * * *"
   workflow_dispatch:
 
 jobs:
