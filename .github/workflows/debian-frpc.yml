@@ -1,0 +1,97 @@
+name: GitHub Actions Continuous Delivery (Debian Frpc)
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "*"
+  schedule:
+    # Automatically run on every Day
+    - cron: "0 17 * * *"
+  workflow_dispatch:
+
+jobs:
+  buildx:
+    runs-on: 1H1G
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+        with:
+          # [Required] Access token with `workflow` scope.
+          token: ${{ secrets.WORKFLOW_SECRET }}
+      - name: Set env variables
+        run: |
+          echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo "http_proxy=${http_proxy}" >> $GITHUB_ENV
+          echo "no_proxy=${no_proxy}" >> $GITHUB_ENV
+      - # Add support for more platforms with QEMU (optional)
+        # https://github.com/docker/setup-qemu-action
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3.2.0
+      - # https://github.com/docker/setup-buildx-action/issues/57#issuecomment-1059657292
+        # https://github.com/docker/buildx/issues/136#issuecomment-550205439
+        # docker buildx create --driver-opt env.http_proxy=$http_proxy --driver-opt env.https_proxy=$https_proxy --driver-opt '"env.no_proxy='$no_proxy'"'
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.6.1
+        with:
+          buildkitd-config: .github/buildkitd.toml
+          driver-opts: |
+            env.http_proxy=${{ env.http_proxy }}
+            env.https_proxy=${{ env.http_proxy }}
+            env.no_proxy=${{ env.no_proxy }}
+      - name: Login to DockerHub
+        uses: docker/login-action@v3.3.0
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3.3.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5.5.1
+        with:
+          images: |
+            name=snowdreamtech/frpc,enable=true
+            name=ghcr.io/snowdreamtech/frpc,enable=true
+          flavor: |
+            latest=false  
+            prefix=
+            suffix=
+          tags: |
+           type=edge,enable=true,priority=700,prefix=,suffix=-debian,branch=dev
+            type=raw,enable={{is_default_branch}},priority=200,prefix=,suffix=,value=debian
+            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=debian
+            type=pep440,enable=true,priority=900,prefix=,suffix=-debian,pattern={{version}}
+            type=pep440,enable=true,priority=900,prefix=,suffix=-debian,pattern={{major}}.{{minor}}
+            type=pep440,enable=${{ !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/0.') }},priority=900,prefix=,suffix=-debian,pattern={{major}}
+            type=edge,enable=true,priority=700,prefix=,suffix=-bookworm,branch=dev
+            type=raw,enable={{is_default_branch}},priority=200,prefix=,suffix=,value=bookworm
+            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=bookworm
+            type=pep440,enable=true,priority=900,prefix=,suffix=-bookworm,pattern={{version}}
+            type=pep440,enable=true,priority=900,prefix=,suffix=-bookworm,pattern={{major}}.{{minor}}
+            type=pep440,enable=${{ !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/0.') }},priority=900,prefix=,suffix=-bookworm,pattern={{major}}
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
+      - name: Build and push
+        uses: docker/build-push-action@v6.7.0
+        with:
+          context: debian/frpc
+          build-args: |
+            http_proxy=${{ env.http_proxy }}
+            https_proxy=${{ env.http_proxy }}
+            env.no_proxy=${{ env.no_proxy }}
+            BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
+            VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+            REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
+          platforms: linux/386,linux/amd64,linux/arm/v5,linux/arm/v7,linux/arm64,linux/mips64le,linux/ppc64le,linux/s390x
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
