@@ -1,27 +1,41 @@
 # frp
 
-[![frp](http://dockeri.co/image/snowdreamtech/frps)](https://hub.docker.com/r/snowdreamtech/frps)
-[![frp](http://dockeri.co/image/snowdreamtech/frpc)](https://hub.docker.com/r/snowdreamtech/frpc)
+[![frps](http://dockeri.co/image/snowdreamtech/frps)](https://hub.docker.com/r/snowdreamtech/frps)
+[![frpc](http://dockeri.co/image/snowdreamtech/frpc)](https://hub.docker.com/r/snowdreamtech/frpc)
 
-Docker Image packaging for Frp.
+Docker Images for Frp Based on Alpine and Debian.
 
- (amd64, arm32v6, arm32v7, arm64v8, i386, ppc64le,riscv64, s390x)
+ (amd64, arm32v5, arm32v6, arm32v7, arm64v8, i386, mips64le, ppc64le,riscv64, s390x)
  
 ### [Documentation](https://gofrp.org/en/)
 ### [中文文档](https://gofrp.org/zh-cn/docs/)
 
 ## Usage
 
-start frps
+### Basic
 
 ```bash
 docker run --restart=always --network host -d -v /etc/frp/frps.toml:/etc/frp/frps.toml --name frps snowdreamtech/frps
+docker run --restart=always --network host -d -v /etc/frp/frpc.toml:/etc/frp/frpc.toml --name frpc snowdreamtech/frpc
 ```
 
-start frpc
+### Alpine
 
 ```bash
-docker run --restart=always --network host -d -v /etc/frp/frpc.toml:/etc/frp/frpc.toml --name frpc snowdreamtech/frpc
+docker run --restart=always --network host -d -v /etc/frp/frps.toml:/etc/frp/frps.toml --name frps snowdreamtech/frps:alpine
+docker run --restart=always --network host -d -v /etc/frp/frpc.toml:/etc/frp/frpc.toml --name frpc snowdreamtech/frpc:alpine
+```
+
+### Debian
+
+```bash
+docker run --restart=always --network host -d -v /etc/frp/frps.toml:/etc/frp/frps.toml --name frps snowdreamtech/frps:debian
+docker run --restart=always --network host -d -v /etc/frp/frpc.toml:/etc/frp/frpc.toml --name frpc snowdreamtech/frpc:debian
+```
+
+```bash
+docker run --restart=always --network host -d -v /etc/frp/frps.toml:/etc/frp/frps.toml --name frps snowdreamtech/frps:bookworm
+docker run --restart=always --network host -d -v /etc/frp/frpc.toml:/etc/frp/frpc.toml --name frpc snowdreamtech/frpc:bookworm
 ```
 
 ## Quick reference
@@ -30,31 +44,50 @@ docker run --restart=always --network host -d -v /etc/frp/frpc.toml:/etc/frp/frp
 
 [https://github.com/snowdreamtech/frp/issues](https://github.com/snowdreamtech/frp/issues)
 
+* Where to join discussions:
+
+[https://github.com/snowdreamtech/frp/discussions](https://github.com/snowdreamtech/frp/discussions)
+
 * Maintained by:
 
 snowdream <sn0wdr1am@qq.com>
 
 * Supported architectures: ([more info](https://github.com/docker-library/official-images#architectures-other-than-amd64))
 
-frpc:
+Alpine (linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x)
 
-[amd64](https://cloud.docker.com/u/snowdreamtechamd64/repository/docker/snowdreamtechamd64/frpc), [arm32v6](https://cloud.docker.com/u/snowdreamtecharm32v6/repository/docker/snowdreamtecharm32v6/frpc), [arm32v7](https://cloud.docker.com/u/snowdreamtecharm32v7/repository/docker/snowdreamtecharm32v7/frpc), [arm64v8](https://cloud.docker.com/u/snowdreamtecharm64v8/repository/docker/snowdreamtecharm64v8/frpc)
-
-frps:
-
-[amd64](https://cloud.docker.com/u/snowdreamtechamd64/repository/docker/snowdreamtechamd64/frps), [arm32v6](https://cloud.docker.com/u/snowdreamtecharm32v6/repository/docker/snowdreamtecharm32v6/frps), [arm32v7](https://cloud.docker.com/u/snowdreamtecharm32v7/repository/docker/snowdreamtecharm32v7/frps), [arm64v8](https://cloud.docker.com/u/snowdreamtecharm64v8/repository/docker/snowdreamtecharm64v8/frps)
+Debian (linux/386,linux/amd64,linux/arm/v5,linux/arm/v7,linux/arm64,linux/mips64le,linux/ppc64le,linux/s390x)
 
 * Supported Tags:
 
-[Frps](https://cloud.docker.com/u/snowdreamtech/repository/docker/snowdreamtech/frps/tags)
+Alpine:
 
-[Frpc](https://cloud.docker.com/u/snowdreamtech/repository/docker/snowdreamtech/frpc/tags)
+    - latest
+    - 0.60-alpine3.20
+    - 0.60.0-alpine3.20
+    - 0.60-alpine
+    - 0.60.0-alpine
+    - alpine3.20
+    - alpine
+    - 0.60
+    - 0.60.0
 
-<!-- ## Sponsors
+Debian:
 
-[![tencentcloud](https://snowdreamtech.oss-cn-beijing.aliyuncs.com/tengxunyun/%E9%A6%96%E5%8D%95%E9%99%90%E6%97%B6%E7%A7%92%E6%9D%80%E4%BF%AE%E6%94%B9/%E9%A6%96%E5%8D%95%E9%99%90%E6%97%B6_470-250.jpg)](https://cloud.tencent.com/act/cps/redirect?redirect=1077&cps_key=d09c5e921f9fcf4ac9516564262f3b99&from=console)
+    - bookworm
+    - debian
+    - 0.60-bookworm
+    - 0.60.0-bookworm
+    - 0.60-debian
+    - 0.60.0-debian
 
-[![aliyun](https://snowdreamtech.oss-cn-beijing.aliyuncs.com/aliyun/%E6%96%B0%E4%BA%BA-%E4%B8%BB/440-240%201.jpg)](https://www.aliyun.com/1111/new?userCode=dbgo15cy) -->
+## Ads
+
+1. [腾讯云](https://cloud.tencent.com/act/cps/redirect?redirect=2446&cps_key=d09c5e921f9fcf4ac9516564262f3b99&from=console)
+1. [阿里云](https://www.aliyun.com/minisite/goods?userCode=dbgo15cy)
+1. [华为云](https://activity.huaweicloud.com/cps.html?fromacct=7766b6ea-375c-416d-9ca5-bdbef333b645&utm_source=V1g3MDY4NTY=&utm_medium=cps&utm_campaign=201905)
+1. [Bandwagonhost/搬瓦工](https://bandwagonhost.com/aff.php?aff=41583)
+1. [Vultr](https://www.vultr.com/?ref=7265819)
 
 ## Contact (备注：frp)
 
@@ -66,8 +99,11 @@ frps:
 ## Website
 
 1. [fatedier/frp](https://github.com/fatedier/frp)
-1. [Snowdream Tech](http://www.snowdream.tech/)
-1. [ITCoder](https://www.itcoder.tech/)
+1. [snowdreamtech/frp](https://github.com/snowdreamtech/frp)
+1. [frpc images on Github](https://github.com/snowdreamtech/frp/pkgs/container/frpc) 
+1. [frps images on Github](https://github.com/snowdreamtech/frp/pkgs/container/frps)
+1. [frpc images on Docker Hub ](https://hub.docker.com/r/snowdreamtech/frpc) 
+1. [frps images on Docker Hub ](https://hub.docker.com/r/snowdreamtech/frps)
 
 ## License
 
