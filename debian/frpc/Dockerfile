@@ -36,8 +36,8 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
       org.opencontainers.image.version="0.60.0" \
       org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
 
-COPY --from=builder /workspace/bin/frpc /usr/bin
-COPY --from=builder /workspace/conf/frpc.toml /etc/frp
+COPY --from=builder /workspace/bin/frpc /usr/bin/
+COPY --from=builder /workspace/conf/frpc.toml /etc/frp/
 
 ENTRYPOINT ["/usr/bin/frpc"]
 
