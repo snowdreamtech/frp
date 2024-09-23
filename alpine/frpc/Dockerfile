@@ -1,19 +1,35 @@
+FROM snowdreamtech/go:1.23.1-alpine AS builder
+
+ENV FRP_VERSION=0.60.0
+
+RUN mkdir /workspace
+
+WORKDIR /workspace
+
+RUN apk add --no-cache make \
+    && wget -c https://github.com/fatedier/frp/archive/refs/tags/v${FRP_VERSION}.tar.gz \
+    && tar zxvf v${FRP_VERSION}.tar.gz \
+    && cd frp-${FRP_VERSION} \
+    && make \
+    && cp -rfv bin conf /workspace/ 
+
+
 FROM snowdreamtech/alpine:3.20.3
 
 # OCI annotations to image
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
-      org.opencontainers.image.title="Frpc Image Based On Alpine" \
-      org.opencontainers.image.description="Docker Images for Frpc on Alpine. (i386, amd64, arm32v6, arm32v7, arm64, ppc64le,riscv64, s390x)" \
-      org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/frpc" \
-      org.opencontainers.image.base.name="snowdreamtech/frpc:alpine" \
-      org.opencontainers.image.licenses="MIT" \
-      org.opencontainers.image.source="https://github.com/snowdreamtech/frp" \
-      org.opencontainers.image.vendor="Snowdream Tech" \
-      org.opencontainers.image.version="0.60.0" \
-      org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
+    org.opencontainers.image.title="Frpc Image Based On Alpine" \
+    org.opencontainers.image.description="Docker Images for Frpc on Alpine. (i386, amd64, arm32v6, arm32v7, arm64, ppc64le,riscv64, s390x)" \
+    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/frpc" \
+    org.opencontainers.image.base.name="snowdreamtech/frpc:alpine" \
+    org.opencontainers.image.licenses="MIT" \
+    org.opencontainers.image.source="https://github.com/snowdreamtech/frp" \
+    org.opencontainers.image.vendor="Snowdream Tech" \
+    org.opencontainers.image.version="0.60.0" \
+    org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
 
-RUN apk add --no-cache frp@community=0.60.0-r1\
-    && rm -rfv /usr/bin/frps /etc/frp/frps.toml
+COPY --from=builder /workspace/bin/frpc /usr/bin/
+COPY --from=builder /workspace/conf/frpc.toml /etc/frp/
 
 ENTRYPOINT ["/usr/bin/frpc"]
 
