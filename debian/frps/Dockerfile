@@ -1,4 +1,4 @@
-FROM snowdreamtech/go:1.23-bookworm AS builder
+FROM snowdreamtech/go:1.23.1-bookworm AS builder
 
 ENV FRP_VERSION=0.60.0
 
