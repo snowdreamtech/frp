@@ -4,9 +4,22 @@ name: GitHub Actions Version Updater
 on:
   push:
     branches:
-      - main
+      - "main"
+      - "dev"
+      - "feat/**"
+      - "feature/**"
+      - "fix/**"
+      - "pr/**"
     tags:
       - "*"
+  pull_request:
+    branches:
+      - "main"
+      - "dev"
+      - "feat/**"
+      - "feature/**"
+      - "fix/**"
+      - "pr/**"
   schedule:
     # Automatically run on every Day
     - cron: "0 17 * * *"

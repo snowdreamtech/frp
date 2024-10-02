@@ -3,9 +3,33 @@ name: GitHub Actions Continuous Delivery (Alpine Frpc)
 on:
   push:
     branches:
-      - main
+      - "main"
+      - "dev"
+      - "feat/**"
+      - "feature/**"
+      - "fix/**"
+      - "pr/**"
     tags:
-      - "*"
+      - "[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "V[0-9]+.[0-9]+.[0-9]+"
+      - "alpine-[0-9]+.[0-9]+.[0-9]+"
+      - "[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+"
+      - "V[0-9]+.[0-9]+"
+      - "alpine-[0-9]+.[0-9]+"
+      - "[0-9]+"
+      - "v[0-9]+"
+      - "V[0-9]+"
+      - "alpine-[0-9]+"
+  pull_request:
+    branches:
+      - "main"
+      - "dev"
+      - "feat/**"
+      - "feature/**"
+      - "fix/**"
+      - "pr/**"
   schedule:
     # Automatically run on every Day
     - cron: "0 17 * * *"
@@ -67,27 +91,30 @@ jobs:
             type=edge,enable=true,priority=700,prefix=,suffix=,branch=dev
             type=raw,enable={{is_default_branch}},priority=200,prefix=,suffix=,value=latest
             type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=latest
-            type=pep440,enable=true,priority=900,prefix=,suffix=,pattern={{version}}
-            type=pep440,enable=true,priority=900,prefix=,suffix=,pattern={{major}}.{{minor}}
-            type=pep440,enable=${{ !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/0.') }},priority=900,prefix=,suffix=,pattern={{major}}
+            type=schedule,enable=true,priority=1000,prefix=,suffix=,pattern=nightly
+            type=match,enable=true,priority=800,prefix=,suffix=,pattern=\d+.\d+.\d+,group=0,value=
+            type=match,enable=true,priority=800,prefix=,suffix=,pattern=\d+.\d+,group=0,value=
+            type=match,enable=${{ !startsWith(github.ref, 'refs/tags/0.') && !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/V0.') && !startsWith(github.ref, 'refs/tags/alpine-0.') && !startsWith(github.ref, 'refs/tags/alpine-v0.') && !startsWith(github.ref, 'refs/tags/alpine-V0.') }},priority=800,prefix=,suffix=,pattern=\d+,group=0,value=
             type=ref,enable=true,priority=600,prefix=,suffix=-alpine,event=branch
             type=edge,enable=true,priority=700,prefix=,suffix=-alpine,branch=dev
             type=raw,enable={{is_default_branch}},priority=200,prefix=,suffix=,value=alpine
             type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=alpine
-            type=pep440,enable=true,priority=900,prefix=,suffix=-alpine,pattern={{version}}
-            type=pep440,enable=true,priority=900,prefix=,suffix=-alpine,pattern={{major}}.{{minor}}
-            type=pep440,enable=${{ !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/0.') }},priority=900,prefix=,suffix=-alpine,pattern={{major}}
+            type=schedule,enable=true,priority=1000,prefix=,suffix=-alpine,pattern=nightly
+            type=match,enable=true,priority=800,prefix=,suffix=-alpine,pattern=\d+.\d+.\d+,group=0,value=
+            type=match,enable=true,priority=800,prefix=,suffix=-alpine,pattern=\d+.\d+,group=0,value=
+            type=match,enable=${{ !startsWith(github.ref, 'refs/tags/0.') && !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/V0.') && !startsWith(github.ref, 'refs/tags/alpine-0.') && !startsWith(github.ref, 'refs/tags/alpine-v0.') && !startsWith(github.ref, 'refs/tags/alpine-V0.') }},priority=800,prefix=,suffix=-alpine,pattern=\d+,group=0,value=
             type=ref,enable=true,priority=600,prefix=,suffix=-alpine3.20,event=branch
             type=edge,enable=true,priority=700,prefix=,suffix=-alpine3.20,branch=dev
             type=raw,enable={{is_default_branch}},priority=200,prefix=,suffix=,value=alpine3.20
             type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=alpine3.20
-            type=pep440,enable=true,priority=900,prefix=,suffix=-alpine3.20,pattern={{version}}
-            type=pep440,enable=true,priority=900,prefix=,suffix=-alpine3.20,pattern={{major}}.{{minor}}
-            type=pep440,enable=${{ !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/0.') }},priority=900,prefix=,suffix=-alpine3.20,pattern={{major}}
+            type=schedule,enable=true,priority=1000,prefix=,suffix=-alpine3.20,pattern=nightly
+            type=match,enable=true,priority=800,prefix=,suffix=-alpine3.20,pattern=\d+.\d+.\d+,group=0,value=
+            type=match,enable=true,priority=800,prefix=,suffix=-alpine3.20,pattern=\d+.\d+,group=0,value=
+            type=match,enable=${{ !startsWith(github.ref, 'refs/tags/0.') && !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/V0.') && !startsWith(github.ref, 'refs/tags/alpine-0.') && !startsWith(github.ref, 'refs/tags/alpine-v0.') && !startsWith(github.ref, 'refs/tags/alpine-V0.') }},priority=800,prefix=,suffix=-alpine3.20,pattern=\d+,group=0,value=
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
       - name: Build and push
-        uses: docker/build-push-action@v6.7.0
+        uses: docker/build-push-action@v6.9.0
         with:
           context: alpine/frpc
           build-args: |
@@ -98,7 +125,7 @@ jobs:
             VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
             REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
           platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' && !startsWith(github.ref, 'refs/heads/feat/') && !startsWith(github.ref, 'refs/heads/feature/') && !startsWith(github.ref, 'refs/heads/fix/') && !startsWith(github.ref, 'refs/heads/pr/') }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
