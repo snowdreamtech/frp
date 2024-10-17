@@ -1,6 +1,6 @@
 FROM snowdreamtech/go:1.23.1-bookworm AS builder
 
-ENV FRP_VERSION=0.60.0
+ENV FRP_VERSION=0.61.0
 
 RUN mkdir /workspace
 
@@ -33,7 +33,7 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.licenses="MIT" \
     org.opencontainers.image.source="https://github.com/snowdreamtech/frp" \
     org.opencontainers.image.vendor="Snowdream Tech" \
-    org.opencontainers.image.version="0.60.0" \
+    org.opencontainers.image.version="0.61.0" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
 
 COPY --from=builder /workspace/bin/frps /usr/bin/
