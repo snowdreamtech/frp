@@ -69,6 +69,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Login to Quay.io
+        uses: docker/login-action@v3.3.0
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_ROBOT_TOKEN }}
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3.3.0
         with:
@@ -82,6 +88,7 @@ jobs:
           images: |
             name=snowdreamtech/frpc,enable=true
             name=ghcr.io/snowdreamtech/frpc,enable=true
+            name=quay.io/snowdreamtech/frpc,enable=true
           flavor: |
             latest=false  
             prefix=
