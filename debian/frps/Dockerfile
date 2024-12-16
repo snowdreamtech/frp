@@ -22,7 +22,7 @@ RUN set -eux \
     && rm -rf /var/tmp/*
 
 
-FROM snowdreamtech/debian:12.7.0
+FROM snowdreamtech/debian:12.8.0
 
 # OCI annotations to image
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
