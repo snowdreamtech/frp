@@ -29,7 +29,7 @@ trace = true
     mirrors = ["https://ecr.sn0wdr1am.com"]
 
 [worker.oci]
-  max-parallelism = 2
+  max-parallelism = 3
 
 
 

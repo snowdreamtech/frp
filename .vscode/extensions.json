@@ -15,6 +15,7 @@
         "ms-ceintl.vscode-language-pack-zh-hans",
         "github.vscode-github-actions",
         "ultram4rine.vscode-choosealicense",
-        "minherz.copyright-inserter"
+        "minherz.copyright-inserter",
+        "wdhongtw.gpg-indicator"
     ]
 }

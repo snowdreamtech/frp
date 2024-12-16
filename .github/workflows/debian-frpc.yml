@@ -39,6 +39,29 @@ jobs:
   buildx:
     runs-on: ubuntu-latest
     steps:
+      - name: Bypass Cloudflare for Github Action Pro
+        uses: snowdreamtech/bypass-cloudflare-for-github-action@v0.0.4
+        with:
+          mode: 'list'
+          cf_account_id: ${{ secrets.CF_ACCOUNT_ID }}
+          cf_api_token: ${{ secrets.CF_API_TOKEN }}
+          cf_zone_id: ${{ secrets.CF_ZONE_ID }}
+          github_api_token: ${{ secrets.GITHUB_TOKEN }}     
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+            # this might remove tools that are actually needed,
+            # if set to "true" but frees about 6 GB
+            tool-cache: false
+            
+            # all of these default to true, but feel free to set to
+            # "false" if necessary for your workflow
+            android: true
+            dotnet: true
+            haskell: true
+            large-packages: true
+            docker-images: false
+            swap-storage: false      
       - name: Checkout
         uses: actions/checkout@v4.2.2
         with:
@@ -63,7 +86,7 @@ jobs:
           driver-opts: |
             env.http_proxy=${{ env.http_proxy }}
             env.https_proxy=${{ env.http_proxy }}
-            env.no_proxy=${{ env.no_proxy }}
+            "env.no_proxy='${{ env.no_proxy}}'"
       - name: Login to DockerHub
         uses: docker/login-action@v3.3.0
         with:
@@ -117,9 +140,8 @@ jobs:
         with:
           context: debian/frpc
           build-args: |
-            http_proxy=${{ env.http_proxy }}
-            https_proxy=${{ env.http_proxy }}
-            env.no_proxy=${{ env.no_proxy }}
+            "http_proxy=${{ env.http_proxy }}"
+            "https_proxy=${{ env.http_proxy }}"
             BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
             VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
             REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
