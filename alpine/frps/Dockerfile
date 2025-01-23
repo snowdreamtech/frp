@@ -1,10 +1,12 @@
-FROM snowdreamtech/go:1.23.1-alpine AS builder
+FROM snowdreamtech/go:1.23.4-alpine3.21 AS builder
+
+# Switch to the user
+USER root
+
+# Set the workdir
+WORKDIR /root
 
 ENV FRP_VERSION=0.61.1
-
-RUN mkdir /workspace
-
-WORKDIR /workspace
 
 RUN apk add --no-cache make \
     && wget -c https://github.com/fatedier/frp/archive/refs/tags/v${FRP_VERSION}.tar.gz \
@@ -28,8 +30,8 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.version="0.61.1" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
 
-COPY --from=builder /workspace/bin/frps /usr/bin/
-COPY --from=builder /workspace/conf/frps.toml /etc/frp/
+COPY --from=builder /home/go/bin/frps /usr/bin/
+COPY --from=builder /home/go/conf/frps.toml /etc/frp/
 
 ENTRYPOINT ["/usr/bin/frps"]
 

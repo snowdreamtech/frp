@@ -1,10 +1,12 @@
-FROM snowdreamtech/go:1.23.1-bookworm AS builder
+FROM snowdreamtech/go:1.23.3-bookworm AS builder
+
+# Switch to the user
+USER root
+
+# Set the workdir
+WORKDIR /root
 
 ENV FRP_VERSION=0.61.1
-
-RUN mkdir /workspace
-
-WORKDIR /workspace
 
 RUN set -eux \
     && apt-get -qqy update  \
@@ -36,8 +38,8 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.version="0.61.1" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
 
-COPY --from=builder /workspace/bin/frpc /usr/bin/
-COPY --from=builder /workspace/conf/frpc.toml /etc/frp/
+COPY --from=builder /home/go/bin/frpc /usr/bin/
+COPY --from=builder /home/go/conf/frpc.toml /etc/frp/
 
 ENTRYPOINT ["/usr/bin/frpc"]
 
