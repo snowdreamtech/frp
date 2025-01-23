@@ -133,14 +133,14 @@ jobs:
             type=match,enable=true,priority=800,prefix=,suffix=-alpine,pattern=\d+.\d+.\d+,group=0,value=
             type=match,enable=true,priority=800,prefix=,suffix=-alpine,pattern=\d+.\d+,group=0,value=
             type=match,enable=${{ !startsWith(github.ref, 'refs/tags/0.') && !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/V0.') && !startsWith(github.ref, 'refs/tags/alpine-0.') && !startsWith(github.ref, 'refs/tags/alpine-v0.') && !startsWith(github.ref, 'refs/tags/alpine-V0.') }},priority=800,prefix=,suffix=-alpine,pattern=\d+,group=0,value=
-            type=ref,enable=${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' && github.event_name != 'schedule' }},priority=600,prefix=,suffix=-alpine3.20,event=branch
-            type=edge,enable=true,priority=700,prefix=,suffix=-alpine3.20,branch=dev
-            type=raw,enable=${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && github.event_name != 'schedule' }},priority=200,prefix=,suffix=,value=alpine3.20
-            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=alpine3.20
-            type=schedule,enable=true,priority=1000,prefix=,suffix=-alpine3.20,pattern=nightly
-            type=match,enable=true,priority=800,prefix=,suffix=-alpine3.20,pattern=\d+.\d+.\d+,group=0,value=
-            type=match,enable=true,priority=800,prefix=,suffix=-alpine3.20,pattern=\d+.\d+,group=0,value=
-            type=match,enable=${{ !startsWith(github.ref, 'refs/tags/0.') && !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/V0.') && !startsWith(github.ref, 'refs/tags/alpine-0.') && !startsWith(github.ref, 'refs/tags/alpine-v0.') && !startsWith(github.ref, 'refs/tags/alpine-V0.') }},priority=800,prefix=,suffix=-alpine3.20,pattern=\d+,group=0,value=
+            type=ref,enable=${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' && github.event_name != 'schedule' }},priority=600,prefix=,suffix=-alpine3.21,event=branch
+            type=edge,enable=true,priority=700,prefix=,suffix=-alpine3.21,branch=dev
+            type=raw,enable=${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && github.event_name != 'schedule' }},priority=200,prefix=,suffix=,value=alpine3.21
+            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=alpine3.21
+            type=schedule,enable=true,priority=1000,prefix=,suffix=-alpine3.21,pattern=nightly
+            type=match,enable=true,priority=800,prefix=,suffix=-alpine3.21,pattern=\d+.\d+.\d+,group=0,value=
+            type=match,enable=true,priority=800,prefix=,suffix=-alpine3.21,pattern=\d+.\d+,group=0,value=
+            type=match,enable=${{ !startsWith(github.ref, 'refs/tags/0.') && !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/V0.') && !startsWith(github.ref, 'refs/tags/alpine-0.') && !startsWith(github.ref, 'refs/tags/alpine-v0.') && !startsWith(github.ref, 'refs/tags/alpine-V0.') }},priority=800,prefix=,suffix=-alpine3.21,pattern=\d+,group=0,value=
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
       - name: Build and push
