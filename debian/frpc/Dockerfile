@@ -16,7 +16,7 @@ RUN set -eux \
     && tar zxvf v${FRP_VERSION}.tar.gz \
     && cd frp-${FRP_VERSION} \
     && make \
-    && cp -rfv bin conf /workspace/ \
+    && cp -rfv bin conf /root/\
     && apt-get -qqy --purge autoremove \
     && apt-get -qqy clean \
     && rm -rf /var/lib/apt/lists/* \
@@ -38,8 +38,8 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.version="0.61.1" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
 
-COPY --from=builder /home/go/bin/frpc /usr/bin/
-COPY --from=builder /home/go/conf/frpc.toml /etc/frp/
+COPY --from=builder /root/bin/frpc /usr/bin/
+COPY --from=builder /root/conf/frpc.toml /etc/frp/
 
 ENTRYPOINT ["/usr/bin/frpc"]
 

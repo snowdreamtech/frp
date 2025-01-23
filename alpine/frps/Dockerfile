@@ -13,7 +13,7 @@ RUN apk add --no-cache make \
     && tar zxvf v${FRP_VERSION}.tar.gz \
     && cd frp-${FRP_VERSION} \
     && make \
-    && cp -rfv bin conf /workspace/ 
+    && cp -rfv bin conf /root/
 
 
 FROM snowdreamtech/alpine:3.21.0
@@ -30,8 +30,8 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.version="0.61.1" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
 
-COPY --from=builder /home/go/bin/frps /usr/bin/
-COPY --from=builder /home/go/conf/frps.toml /etc/frp/
+COPY --from=builder /root/bin/frps /usr/bin/
+COPY --from=builder /root/conf/frps.toml /etc/frp/
 
 ENTRYPOINT ["/usr/bin/frps"]
 
