@@ -20,7 +20,7 @@ on:
       - "pr/**"
   schedule:
     # Automatically run on every Day
-    - cron: "0 17 * * *"
+    - cron: "38 16 * * *"
   workflow_dispatch:
 
 jobs:
