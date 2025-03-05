@@ -75,7 +75,7 @@ jobs:
       - # Add support for more platforms with QEMU (optional)
         # https://github.com/docker/setup-qemu-action
         name: Set up QEMU
-        uses: docker/setup-qemu-action@v3.5.0
+        uses: docker/setup-qemu-action@v3.6.0
       - # https://github.com/docker/setup-buildx-action/issues/57#issuecomment-1059657292
         # https://github.com/docker/buildx/issues/136#issuecomment-550205439
         # docker buildx create --driver-opt env.http_proxy=$http_proxy --driver-opt env.https_proxy=$https_proxy --driver-opt '"env.no_proxy='$no_proxy'"'
