@@ -6,7 +6,7 @@ USER root
 # Set the workdir
 WORKDIR /root
 
-ENV FRP_VERSION=0.61.1
+ENV FRP_VERSION=0.61.2
 
 RUN set -eux \
     && apt-get -qqy update  \
@@ -35,7 +35,7 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.licenses="MIT" \
     org.opencontainers.image.source="https://github.com/snowdreamtech/frp" \
     org.opencontainers.image.vendor="Snowdream Tech" \
-    org.opencontainers.image.version="0.61.1" \
+    org.opencontainers.image.version="0.61.2" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
 
 COPY --from=builder /root/bin/frps /usr/bin/
