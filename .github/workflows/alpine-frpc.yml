@@ -39,14 +39,14 @@ jobs:
   buildx:
     runs-on: ubuntu-latest
     steps:
-      - name: Bypass Cloudflare for Github Action Pro
-        uses: snowdreamtech/bypass-cloudflare-for-github-action@v0.0.4
-        with:
-          mode: 'list'
-          cf_account_id: ${{ secrets.CF_ACCOUNT_ID }}
-          cf_api_token: ${{ secrets.CF_API_TOKEN }}
-          cf_zone_id: ${{ secrets.CF_ZONE_ID }}
-          github_api_token: ${{ secrets.GITHUB_TOKEN }}     
+      # - name: Bypass Cloudflare for Github Action Pro
+      #   uses: snowdreamtech/bypass-cloudflare-for-github-action@v0.0.4
+      #   with:
+      #     mode: 'list'
+      #     cf_account_id: ${{ secrets.CF_ACCOUNT_ID }}
+      #     cf_api_token: ${{ secrets.CF_API_TOKEN }}
+      #     cf_zone_id: ${{ secrets.CF_ZONE_ID }}
+      #     github_api_token: ${{ secrets.GITHUB_TOKEN }}     
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
