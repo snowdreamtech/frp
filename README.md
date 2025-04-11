@@ -1,7 +1,7 @@
 # frp
 
-[![frps](http://dockeri.co/image/snowdreamtech/frps)](https://hub.docker.com/r/snowdreamtech/frps)
-[![frpc](http://dockeri.co/image/snowdreamtech/frpc)](https://hub.docker.com/r/snowdreamtech/frpc)
+[![dockeri.co](https://dockerico.blankenship.io/image/snowdreamtech/frps)](https://hub.docker.com/r/snowdreamtech/frps)
+[![dockeri.co](https://dockerico.blankenship.io/image/snowdreamtech/frpc)](https://hub.docker.com/r/snowdreamtech/frpc)
 
 Docker Images for Frp Based on Alpine and Debian.
 
