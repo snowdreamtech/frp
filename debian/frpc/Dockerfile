@@ -1,4 +1,7 @@
-FROM snowdreamtech/go:1.23.5-bookworm AS builder
+FROM --platform=$BUILDPLATFORM snowdreamtech/golang:1.23.5-bookworm AS builder
+
+ARG TARGETOS
+ARG TARGETARCH
 
 # Switch to the user
 USER root
@@ -15,8 +18,9 @@ RUN set -eux \
     && wget -c https://github.com/fatedier/frp/archive/refs/tags/v${FRP_VERSION}.tar.gz \
     && tar zxvf v${FRP_VERSION}.tar.gz \
     && cd frp-${FRP_VERSION} \
+    && sed -i 's/CGO_ENABLED=0/CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH}/' Makefile \
     && make \
-    && cp -rfv bin conf /root/\
+    && cp -rfv bin conf /root/ \
     && apt-get -qqy --purge autoremove \
     && apt-get -qqy clean \
     && rm -rf /var/lib/apt/lists/* \
@@ -24,7 +28,7 @@ RUN set -eux \
     && rm -rf /var/tmp/*
 
 
-FROM snowdreamtech/debian:12.8.0
+FROM snowdreamtech/debian:12.10.0
 
 # OCI annotations to image
 LABEL org.opencontainers.image.authors="Snowdream Tech" \

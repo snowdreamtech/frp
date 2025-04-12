@@ -1,4 +1,7 @@
-FROM snowdreamtech/go:1.23.4-alpine3.21 AS builder
+FROM --platform=$BUILDPLATFORM snowdreamtech/golang:1.23.7-alpine3.21 AS builder
+
+ARG TARGETOS
+ARG TARGETARCH
 
 # Switch to the user
 USER root
@@ -12,11 +15,12 @@ RUN apk add --no-cache make \
     && wget -c https://github.com/fatedier/frp/archive/refs/tags/v${FRP_VERSION}.tar.gz \
     && tar zxvf v${FRP_VERSION}.tar.gz \
     && cd frp-${FRP_VERSION} \
+    && sed -i 's/CGO_ENABLED=0/CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH}/' Makefile \
     && make \
     && cp -rfv bin conf /root/
 
 
-FROM snowdreamtech/alpine:3.21.0
+FROM snowdreamtech/alpine:3.21.3
 
 # OCI annotations to image
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
