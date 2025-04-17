@@ -63,23 +63,23 @@ Debian (linux/386,linux/amd64,linux/arm/v5,linux/arm/v7,linux/arm64,linux/mips64
 Alpine:
 
     - latest
-    - 0.61-alpine3.21
-    - 0.61.2-alpine3.21
-    - 0.61-alpine
-    - 0.61.2-alpine
+    - 0.62-alpine3.21
+    - 0.62.0-alpine3.21
+    - 0.62-alpine
+    - 0.62.0-alpine
     - alpine3.21
     - alpine
-    - 0.61
-    - 0.61.2
+    - 0.62
+    - 0.62.0
 
 Debian:
 
     - bookworm
     - debian
-    - 0.61-bookworm
-    - 0.61.2-bookworm
-    - 0.61-debian
-    - 0.61.2-debian
+    - 0.62-bookworm
+    - 0.62.0-bookworm
+    - 0.62-debian
+    - 0.62.0-debian
 
 ## Ads
 
