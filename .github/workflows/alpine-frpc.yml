@@ -80,7 +80,7 @@ jobs:
         # https://github.com/docker/buildx/issues/136#issuecomment-550205439
         # docker buildx create --driver-opt env.http_proxy=$http_proxy --driver-opt env.https_proxy=$https_proxy --driver-opt '"env.no_proxy='$no_proxy'"'
         name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.11.0
+        uses: docker/setup-buildx-action@v3.11.1
         with:
           buildkitd-config: .github/buildkitd.toml
           driver-opts: |
