@@ -40,7 +40,7 @@ jobs:
       - name: Quay.io Description
         uses: christian-korneck/update-container-description-action@v1
         env:
-          DOCKER_APIKEY: ${{ secrets.QUAY_API_TOKEN }}
+          DOCKER_APIKEY: ${{ secrets.QUAY_ROBOT_TOKEN }}
         with:
           destination_container_repo: quay.io/snowdreamtech/frpc
           provider: quay
@@ -48,7 +48,7 @@ jobs:
       - name: Quay.io Description
         uses: christian-korneck/update-container-description-action@v1
         env:
-          DOCKER_APIKEY: ${{ secrets.QUAY_API_TOKEN }}
+          DOCKER_APIKEY: ${{ secrets.QUAY_ROBOT_TOKEN }}
         with:
           destination_container_repo: quay.io/snowdreamtech/frps
           provider: quay
