@@ -37,19 +37,19 @@ jobs:
           provider: dockerhub
           short_description: ${{ github.event.repository.description }}
           readme_file: "README.md"
-      - name: Quay.io Description
-        uses: christian-korneck/update-container-description-action@v1
-        env:
-          DOCKER_APIKEY: ${{ secrets.QUAY_ROBOT_TOKEN }}
-        with:
-          destination_container_repo: quay.io/snowdreamtech/frpc
-          provider: quay
-          readme_file: "README.md"
-      - name: Quay.io Description
-        uses: christian-korneck/update-container-description-action@v1
-        env:
-          DOCKER_APIKEY: ${{ secrets.QUAY_ROBOT_TOKEN }}
-        with:
-          destination_container_repo: quay.io/snowdreamtech/frps
-          provider: quay
-          readme_file: "README.md"
+      # - name: Quay.io Description
+      #   uses: christian-korneck/update-container-description-action@v1
+      #   env:
+      #     DOCKER_APIKEY: ${{ secrets.QUAY_ROBOT_TOKEN }}
+      #   with:
+      #     destination_container_repo: quay.io/snowdreamtech/frpc
+      #     provider: quay
+      #     readme_file: "README.md"
+      # - name: Quay.io Description
+      #   uses: christian-korneck/update-container-description-action@v1
+      #   env:
+      #     DOCKER_APIKEY: ${{ secrets.QUAY_ROBOT_TOKEN }}
+      #   with:
+      #     destination_container_repo: quay.io/snowdreamtech/frps
+      #     provider: quay
+      #     readme_file: "README.md"
