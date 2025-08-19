@@ -64,22 +64,22 @@ Alpine:
 
     - latest
     - 0.62-alpine3.21
-    - 0.63.0-alpine3.21
+    - 0.64.0-alpine3.21
     - 0.62-alpine
-    - 0.63.0-alpine
+    - 0.64.0-alpine
     - alpine3.21
     - alpine
     - 0.62
-    - 0.63.0
+    - 0.64.0
 
 Debian:
 
     - bookworm
     - debian
     - 0.62-bookworm
-    - 0.63.0-bookworm
+    - 0.64.0-bookworm
     - 0.62-debian
-    - 0.63.0-debian
+    - 0.64.0-debian
 
 ## Ads
 

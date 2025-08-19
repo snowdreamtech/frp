@@ -9,7 +9,7 @@ USER root
 # Set the workdir
 WORKDIR /root
 
-ENV FRP_VERSION=0.63.0
+ENV FRP_VERSION=0.64.0
 
 RUN apk add --no-cache make \
     && wget -c https://github.com/fatedier/frp/archive/refs/tags/v${FRP_VERSION}.tar.gz \
@@ -31,7 +31,7 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.licenses="MIT" \
     org.opencontainers.image.source="https://github.com/snowdreamtech/frp" \
     org.opencontainers.image.vendor="Snowdream Tech" \
-    org.opencontainers.image.version="0.63.0" \
+    org.opencontainers.image.version="0.64.0" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
 
 COPY --from=builder /root/bin/frpc /usr/bin/
