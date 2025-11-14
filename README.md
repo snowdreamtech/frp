@@ -1,7 +1,15 @@
 # frp
 
-[![dockeri.co](https://dockerico.blankenship.io/image/snowdreamtech/frps)](https://hub.docker.com/r/snowdreamtech/frps)
-[![dockeri.co](https://dockerico.blankenship.io/image/snowdreamtech/frpc)](https://hub.docker.com/r/snowdreamtech/frpc)
+![Docker Image Version](https://img.shields.io/docker/v/snowdreamtech/frps)
+![Docker Image Size](https://img.shields.io/docker/image-size/snowdreamtech/frps/latest)
+![Docker Pulls](https://img.shields.io/docker/pulls/snowdreamtech/frps)
+![Docker Stars](https://img.shields.io/docker/stars/snowdreamtech/frps)
+
+
+![Docker Image Version](https://img.shields.io/docker/v/snowdreamtech/frpc)
+![Docker Image Size](https://img.shields.io/docker/image-size/snowdreamtech/frpc/latest)
+![Docker Pulls](https://img.shields.io/docker/pulls/snowdreamtech/frpc)
+![Docker Stars](https://img.shields.io/docker/stars/snowdreamtech/frpc)
 
 Docker Images for Frp Based on Alpine and Debian.
 
