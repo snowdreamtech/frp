@@ -7,6 +7,7 @@ on:
       - "main"
       - "dev"
       - "feat/**"
+      - "branch/**"
       - "feature/**"
       - "fix/**"
       - "pr/**"
@@ -15,12 +16,13 @@ on:
       - "main"
       - "dev"
       - "feat/**"
+      - "branch/**"
       - "feature/**"
       - "fix/**"
       - "pr/**"
   schedule:
-    # Automatically run on every Day
-    - cron: "38 16 * * *"
+    # Automatically run on every Week
+    - cron: "0 0 * * 0"
   workflow_dispatch:
 
 jobs:
