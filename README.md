@@ -42,8 +42,8 @@ docker run --restart=always --network host -d -v /etc/frp/frpc.toml:/etc/frp/frp
 ```
 
 ```bash
-docker run --restart=always --network host -d -v /etc/frp/frps.toml:/etc/frp/frps.toml --name frps snowdreamtech/frps:bookworm
-docker run --restart=always --network host -d -v /etc/frp/frpc.toml:/etc/frp/frpc.toml --name frpc snowdreamtech/frpc:bookworm
+docker run --restart=always --network host -d -v /etc/frp/frps.toml:/etc/frp/frps.toml --name frps snowdreamtech/frps:trixie
+docker run --restart=always --network host -d -v /etc/frp/frpc.toml:/etc/frp/frpc.toml --name frpc snowdreamtech/frpc:trixie
 ```
 
 ## Quick reference
@@ -82,10 +82,10 @@ Alpine:
 
 Debian:
 
-    - bookworm
+    - trixie
     - debian
-    - 0.62-bookworm
-    - 0.65.0-bookworm
+    - 0.62-trixie
+    - 0.65.0-trixie
     - 0.62-debian
     - 0.65.0-debian
 
