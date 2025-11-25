@@ -72,7 +72,7 @@ ENV KEEPALIVE=${KEEPALIVE} \
     WORKDIR=${WORKDIR} 
 
 # Create a user with PUID and PGID
-RUN if [ "${USER}" != "root" ]; then \
+RUN if [ "${USER}" != "root" ] && [ ! -d "/home/${USER}" ] && [ "${PUID}" -ne 0 ] && [ "${PGID}" -ne 0 ]; then \
     addgroup -g ${PGID} ${USER}; \
     adduser -h /home/${USER} -u ${PUID} -g ${USER} -G ${USER} -s /bin/sh -D ${USER}; \
     # sed -i "/%sudo/c ${USER} ALL=(ALL:ALL) NOPASSWD:ALL" /etc/sudoers; \
