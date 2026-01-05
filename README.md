@@ -71,23 +71,23 @@ Debian (linux/386,linux/amd64,linux/arm/v5,linux/arm/v7,linux/arm64,linux/mips64
 Alpine:
 
     - latest
-    - 0.62-alpine3.21
-    - 0.65.0-alpine3.21
+    - 0.62-alpine3.22
+    - 0.66.0-alpine3.22
     - 0.62-alpine
-    - 0.65.0-alpine
-    - alpine3.21
+    - 0.66.0-alpine
+    - alpine3.22
     - alpine
     - 0.62
-    - 0.65.0
+    - 0.66.0
 
 Debian:
 
     - trixie
     - debian
     - 0.62-trixie
-    - 0.65.0-trixie
+    - 0.66.0-trixie
     - 0.62-debian
-    - 0.65.0-debian
+    - 0.66.0-debian
 
 ## Ads
 
