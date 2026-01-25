@@ -65,7 +65,7 @@ jobs:
             docker-images: false
             swap-storage: false      
       - name: Checkout
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
         with:
           # [Required] Access token with `workflow` scope.
           token: ${{ secrets.WORKFLOW_SECRET }}
