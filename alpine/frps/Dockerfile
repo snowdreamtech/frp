@@ -12,6 +12,7 @@ WORKDIR /root
 ENV FRP_VERSION=0.67.0
 
 RUN apk add --no-cache make \
+    && nodejs \
     && wget -c https://github.com/fatedier/frp/archive/refs/tags/v${FRP_VERSION}.tar.gz \
     && tar zxvf v${FRP_VERSION}.tar.gz \
     && cd frp-${FRP_VERSION} \
