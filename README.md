@@ -5,7 +5,6 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/snowdreamtech/frps)
 ![Docker Stars](https://img.shields.io/docker/stars/snowdreamtech/frps)
 
-
 ![Docker Image Version](https://img.shields.io/docker/v/snowdreamtech/frpc)
 ![Docker Image Size](https://img.shields.io/docker/image-size/snowdreamtech/frpc/latest)
 ![Docker Pulls](https://img.shields.io/docker/pulls/snowdreamtech/frpc)
@@ -13,9 +12,10 @@
 
 Docker Images for Frp Based on Alpine and Debian.
 
- (amd64, arm32v5, arm32v6, arm32v7, arm64v8, i386, mips64le, ppc64le,riscv64, s390x)
- 
+(amd64, arm32v5, arm32v6, arm32v7, arm64v8, i386, mips64le, ppc64le,riscv64, s390x)
+
 ### [Documentation](https://gofrp.org/en/)
+
 ### [中文文档](https://gofrp.org/zh-cn/docs/)
 
 ## Usage
@@ -48,46 +48,46 @@ docker run --restart=always --network host -d -v /etc/frp/frpc.toml:/etc/frp/frp
 
 ## Quick reference
 
-* Where to file issues:
+- Where to file issues:
 
 [https://github.com/snowdreamtech/frp/issues](https://github.com/snowdreamtech/frp/issues)
 
-* Where to join discussions:
+- Where to join discussions:
 
 [https://github.com/snowdreamtech/frp/discussions](https://github.com/snowdreamtech/frp/discussions)
 
-* Maintained by:
+- Maintained by:
 
 snowdream <sn0wdr1am@qq.com>
 
-* Supported architectures: ([more info](https://github.com/docker-library/official-images#architectures-other-than-amd64))
+- Supported architectures: ([more info](https://github.com/docker-library/official-images#architectures-other-than-amd64))
 
 Alpine (linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x)
 
 Debian (linux/386,linux/amd64,linux/arm/v5,linux/arm/v7,linux/arm64,linux/mips64le,linux/ppc64le,linux/s390x)
 
-* Supported Tags:
+- Supported Tags:
 
 Alpine:
 
     - latest
     - 0.62-alpine3.22
-    - 0.66.0-alpine3.22
+    - 0.67.0-alpine3.22
     - 0.62-alpine
-    - 0.66.0-alpine
+    - 0.67.0-alpine
     - alpine3.22
     - alpine
     - 0.62
-    - 0.66.0
+    - 0.67.0
 
 Debian:
 
     - trixie
     - debian
     - 0.62-trixie
-    - 0.66.0-trixie
+    - 0.67.0-trixie
     - 0.62-debian
-    - 0.66.0-debian
+    - 0.67.0-debian
 
 ## Ads
 
@@ -99,18 +99,18 @@ Debian:
 
 ## Contact (备注：frp)
 
-* Email: sn0wdr1am@qq.com
-* QQ: 3217680847
-* QQ群: 949022145
-* WeChat/微信群: sn0wdr1am
+- Email: sn0wdr1am@qq.com
+- QQ: 3217680847
+- QQ群: 949022145
+- WeChat/微信群: sn0wdr1am
 
 ## Website
 
 1. [fatedier/frp](https://github.com/fatedier/frp)
 1. [snowdreamtech/frp](https://github.com/snowdreamtech/frp)
-1. [frpc images on Github](https://github.com/snowdreamtech/frp/pkgs/container/frpc) 
+1. [frpc images on Github](https://github.com/snowdreamtech/frp/pkgs/container/frpc)
 1. [frps images on Github](https://github.com/snowdreamtech/frp/pkgs/container/frps)
-1. [frpc images on Docker Hub ](https://hub.docker.com/r/snowdreamtech/frpc) 
+1. [frpc images on Docker Hub ](https://hub.docker.com/r/snowdreamtech/frpc)
 1. [frps images on Docker Hub ](https://hub.docker.com/r/snowdreamtech/frps)
 
 ## License
