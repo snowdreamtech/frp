@@ -17,6 +17,8 @@ RUN apk add --no-cache make \
     && wget -c https://github.com/fatedier/frp/archive/refs/tags/v${FRP_VERSION}.tar.gz \
     && tar zxvf v${FRP_VERSION}.tar.gz \
     && cd frp-${FRP_VERSION} \
+    && sed -i 's/$(MAKE) -C web\/frps build/$(MAKE) -C web\/frps install build/' Makefile \
+    && sed -i 's/$(MAKE) -C web\/frpc build/$(MAKE) -C web\/frpc install build/' Makefile \
     && sed -i 's/CGO_ENABLED=0/CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH}/' Makefile \
     && make \
     && cp -rfv bin conf /root/
