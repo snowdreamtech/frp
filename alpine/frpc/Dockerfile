@@ -12,6 +12,8 @@ WORKDIR /root
 ENV FRP_VERSION=0.67.0
 
 RUN apk add --no-cache make \
+    nodejs \
+    npm \
     && wget -c https://github.com/fatedier/frp/archive/refs/tags/v${FRP_VERSION}.tar.gz \
     && tar zxvf v${FRP_VERSION}.tar.gz \
     && cd frp-${FRP_VERSION} \
@@ -34,7 +36,7 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.version="0.67.0" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
 
-    
+
 # Switch to the user
 USER root
 
@@ -80,8 +82,8 @@ RUN if [ "${USER}" != "root" ] && [ ! -d "/home/${USER}" ] && [ "${PUID}" -ne 0 
 
 # Enable CAP_NET_BIND_SERVICE
 # RUN if [ "${USER}" != "root" ] && [ "${CAP_NET_BIND_SERVICE}" -eq 1 ]; then \
-    # setcap 'cap_net_bind_service=+ep' `which nginx`; \
-    # fi
+# setcap 'cap_net_bind_service=+ep' `which nginx`; \
+# fi
 
 COPY --from=builder /root/bin/frpc /usr/bin/
 COPY --from=builder /root/conf/frpc.toml /etc/frp/

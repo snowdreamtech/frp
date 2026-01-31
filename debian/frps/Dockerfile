@@ -16,6 +16,7 @@ RUN set -eux \
     && apt-get -qqy install --no-install-recommends \ 
     make \
     nodejs \
+    npm \
     && wget -c https://github.com/fatedier/frp/archive/refs/tags/v${FRP_VERSION}.tar.gz \
     && tar zxvf v${FRP_VERSION}.tar.gz \
     && cd frp-${FRP_VERSION} \
