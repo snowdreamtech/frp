@@ -23,17 +23,17 @@ set -eu
 # shellcheck disable=SC2034
 VER_GO="1.26.2"
 VER_NODE="25.9.0"
-VER_PNPM="11.0.0"
+VER_PNPM="11.0.4"
 VER_PNPM_PROVIDER="npm:pnpm"
 VER_PYTHON="3.14.4"
 VER_PIPX="1.11.0"
 VER_PIPX_PROVIDER="pip"
 
 # ── 🏗️ Tier 2: Language Runtimes (On-demand) ─────────────────────────────────
-VER_KOTLIN="2.4.0-Beta2"
+VER_KOTLIN="2.3.21-RC"
 VER_RUST="1.95.0"
 VER_BUN="1.3.13"
-VER_DENO="2.7.13"
+VER_DENO="2.7.14"
 VER_ZIG="0.16.0"
 VER_JAVA="26.0.1"
 VER_DOTNET="10.0.203"
@@ -105,9 +105,9 @@ VER_ADDLICENSE="1.2.0"
 VER_ADDLICENSE_PROVIDER="github:google/addlicense"
 
 # Git / commit workflow
-VER_COMMITLINT="20.5.2"
+VER_COMMITLINT="20.5.3"
 VER_COMMITLINT_PROVIDER="npm:@commitlint/cli"
-VER_COMMITLINT_CONFIG="20.5.0"
+VER_COMMITLINT_CONFIG="20.5.3"
 VER_COMMITLINT_CONFIG_PROVIDER="npm:@commitlint/config-conventional"
 VER_COMMITIZEN="4.3.1"
 VER_COMMITIZEN_PROVIDER="npm:commitizen"
@@ -153,19 +153,19 @@ VER_SWIFTLINT_PROVIDER="github:realm/SwiftLint"
 
 VER_RUBOCOP_PROVIDER="gem:rubocop"
 
-VER_STYLELINT="17.9.1"
+VER_STYLELINT="17.10.0"
 VER_STYLELINT_PROVIDER="npm:stylelint"
 
 VER_STYLELINT_CONFIG="40.0.0"
 VER_STYLELINT_CONFIG_PROVIDER="npm:stylelint-config-standard"
 
-VER_ASSEMBLYSCRIPT="0.28.16"
+VER_ASSEMBLYSCRIPT="0.28.17"
 VER_ASSEMBLYSCRIPT_PROVIDER="npm:assemblyscript"
 
-VER_OPA="1.15.2"
+VER_OPA="1.16.1"
 VER_OPA_PROVIDER="github:open-policy-agent/opa"
 
-VER_BUF="1.68.4"
+VER_BUF="1.69.0"
 VER_BUF_PROVIDER="github:bufbuild/buf"
 
 VER_CUE="0.16.1"
@@ -179,7 +179,7 @@ VER_GOLANGCI_LINT="1.64.5"
 VER_VITEPRESS="1.6.4"
 VER_VITEPRESS_PROVIDER="npm:vitepress"
 
-VER_ESLINT="10.2.1"
+VER_ESLINT="10.3.0"
 VER_ESLINT_PROVIDER="npm:eslint"
 
 VER_MARKDOWNLINT="0.22.1"
@@ -215,7 +215,7 @@ VER_DOTENV_LINTER_PROVIDER="github:dotenv-linter/dotenv-linter"
 VER_TRIVY="0.70.0"
 VER_TRIVY_PROVIDER="github:aquasecurity/trivy"
 
-VER_OSV_SCANNER="2.3.5"
+VER_OSV_SCANNER="2.3.6"
 VER_OSV_SCANNER_PROVIDER="github:google/osv-scanner"
 
 VER_GOVULNCHECK="1.3.0"
@@ -238,7 +238,7 @@ VER_TERRAFORM="1.11.0"
 VER_TERRAGRUNT="1.0.0-rc3"
 VER_TOFU="1.11.6"
 VER_TOFU_PROVIDER="github:opentofu/opentofu"
-VER_PULUMI="3.232.0"
+VER_PULUMI="3.234.0"
 VER_PULUMI_PROVIDER="github:pulumi/pulumi"
 VER_KUBE_LINTER="0.8.3"
 VER_KUBE_LINTER_PROVIDER="github:stackrox/kube-linter"
@@ -258,5 +258,5 @@ VER_BATS_PROVIDER="npm:bats"
 
 # ── 🛠️ Mise Internal / Helpers ────────────────────────────────────────────────
 VER_MISE="2026.4.15"
-VER_USAGE="3.2.1"
+VER_USAGE="3.3.0"
 VER_USAGE_PROVIDER="usage"
