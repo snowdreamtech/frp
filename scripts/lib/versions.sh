@@ -21,11 +21,11 @@ set -eu
 
 # ── 🏗️ Tier 1: Core Runtimes (Mirror of .mise.toml) ──────────────────────────
 # shellcheck disable=SC2034
-VER_GO="1.26.2"
-VER_NODE="25.9.0"
-VER_PNPM="11.0.4"
+VER_GO="1.26.3"
+VER_NODE="26.1.0"
+VER_PNPM="11.0.9"
 VER_PNPM_PROVIDER="npm:pnpm"
-VER_PYTHON="3.14.4"
+VER_PYTHON="3.14.5"
 VER_PIPX="1.11.0"
 VER_PIPX_PROVIDER="pip"
 
@@ -58,13 +58,13 @@ VER_PKL_PROVIDER="github:apple/pkl"
 VER_BAZEL="9.1.0"
 VER_BAZEL_PROVIDER="github:bazelbuild/bazel"
 
-VER_BALLERINA="2201.13.3"
+VER_BALLERINA="2201.13.4"
 VER_BALLERINA_PROVIDER="github:ballerina-platform/ballerina-distribution"
 
 VER_STYLUA="2.4.1"
 VER_STYLUA_PROVIDER="github:JohnnyMorganz/StyLua"
 
-VER_JUST="1.50.0"
+VER_JUST="1.51.0"
 VER_JUST_PROVIDER="github:casey/just"
 
 VER_TASK="3.50.0"
@@ -105,9 +105,9 @@ VER_ADDLICENSE="1.2.0"
 VER_ADDLICENSE_PROVIDER="github:google/addlicense"
 
 # Git / commit workflow
-VER_COMMITLINT="20.5.3"
+VER_COMMITLINT="21.0.0"
 VER_COMMITLINT_PROVIDER="npm:@commitlint/cli"
-VER_COMMITLINT_CONFIG="20.5.3"
+VER_COMMITLINT_CONFIG="21.0.0"
 VER_COMMITLINT_CONFIG_PROVIDER="npm:@commitlint/config-conventional"
 VER_COMMITIZEN="4.3.1"
 VER_COMMITIZEN_PROVIDER="npm:commitizen"
@@ -153,7 +153,7 @@ VER_SWIFTLINT_PROVIDER="github:realm/SwiftLint"
 
 VER_RUBOCOP_PROVIDER="gem:rubocop"
 
-VER_STYLELINT="17.10.0"
+VER_STYLELINT="17.11.0"
 VER_STYLELINT_PROVIDER="npm:stylelint"
 
 VER_STYLELINT_CONFIG="40.0.0"
@@ -200,7 +200,7 @@ VER_DOCKERFILE_UTILS_PROVIDER="npm:dockerfile-utils"
 VER_RUFF="0.15.12"
 VER_RUFF_PROVIDER="github:astral-sh/ruff"
 
-VER_CLANG_FORMAT="22.1.4"
+VER_CLANG_FORMAT="22.1.5"
 VER_CLANG_FORMAT_PROVIDER="pipx:clang-format"
 
 VER_SQLFLUFF="4.1.0"
@@ -215,7 +215,7 @@ VER_DOTENV_LINTER_PROVIDER="github:dotenv-linter/dotenv-linter"
 VER_TRIVY="0.70.0"
 VER_TRIVY_PROVIDER="github:aquasecurity/trivy"
 
-VER_OSV_SCANNER="2.3.6"
+VER_OSV_SCANNER="2.3.8"
 VER_OSV_SCANNER_PROVIDER="github:google/osv-scanner"
 
 VER_GOVULNCHECK="1.3.0"
@@ -238,7 +238,7 @@ VER_TERRAFORM="1.11.0"
 VER_TERRAGRUNT="1.0.0-rc3"
 VER_TOFU="1.11.6"
 VER_TOFU_PROVIDER="github:opentofu/opentofu"
-VER_PULUMI="3.234.0"
+VER_PULUMI="3.237.0"
 VER_PULUMI_PROVIDER="github:pulumi/pulumi"
 VER_KUBE_LINTER="0.8.3"
 VER_KUBE_LINTER_PROVIDER="github:stackrox/kube-linter"

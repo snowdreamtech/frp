@@ -9,10 +9,10 @@
 [tools]
 
 # ── 🏗️ Core Runtimes ──────────────────────────────────────────────────────────
-go = "1.26.2"
-node = "25.9.0"
-"npm:pnpm" = "11.0.4"
-python = "3.14.4"
+go = "1.26.3"
+node = "26.1.0"
+"npm:pnpm" = "11.0.9"
+python = "3.14.5"
 # pipx is managed as a bootstrap tool via pip in scripts/lib/langs/base.sh to ensure cross-platform compatibility.
 # pipx = "1.11.0"
 
@@ -30,15 +30,15 @@ python = "3.14.4"
 "github:google/addlicense" = "1.2.0"
 
 # Git / commit workflow
-"npm:@commitlint/cli" = "20.5.3"
-"npm:@commitlint/config-conventional" = "20.5.3"
+"npm:@commitlint/cli" = "21.0.0"
+"npm:@commitlint/config-conventional" = "21.0.0"
 "npm:commitizen" = "4.3.1"
 "npm:cz-conventional-changelog" = "3.3.0"
 
 # Formatting & linting (invoked by pre-commit hooks)
 "npm:prettier" = "3.8.3"
 "npm:eslint" = "10.3.0"
-"npm:stylelint" = "17.10.0"
+"npm:stylelint" = "17.11.0"
 "npm:markdownlint-cli2" = "0.22.1"
 "npm:sort-package-json" = "3.6.1"
 "npm:@taplo/cli" = "0.7.0"
@@ -51,7 +51,7 @@ python = "3.14.4"
 
 # Python tools (pre-commit hooks)
 "github:astral-sh/ruff" = "0.15.12"
-"pipx:clang-format" = "22.1.4"
+"pipx:clang-format" = "22.1.5"
 
 # Shell & scripting linters (pre-commit hooks)
 "github:rhysd/actionlint" = "1.7.12"
