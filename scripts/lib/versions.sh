@@ -23,21 +23,21 @@ set -eu
 # shellcheck disable=SC2034
 VER_GO="1.26.3"
 VER_NODE="26.1.0"
-VER_PNPM="11.0.9"
+VER_PNPM="11.1.2"
 VER_PNPM_PROVIDER="npm:pnpm"
 VER_PYTHON="3.14.5"
 VER_PIPX="1.11.0"
 VER_PIPX_PROVIDER="pip"
 
 # ── 🏗️ Tier 2: Language Runtimes (On-demand) ─────────────────────────────────
-VER_KOTLIN="2.3.21-RC"
+VER_KOTLIN="2.3.21"
 VER_RUST="1.95.0"
-VER_BUN="1.3.13"
+VER_BUN="1.3.14"
 VER_DENO="2.7.14"
 VER_ZIG="0.16.0"
 VER_JAVA="26.0.1"
-VER_DOTNET="10.0.203"
-VER_RUBY="4.0.3"
+VER_DOTNET="10.0.300"
+VER_RUBY="4.0.4"
 VER_YARN="1.22.22"
 
 # ── 🧪 Exotic / Domain-Specific Runtimes ─────────────────────────────────────
@@ -61,13 +61,13 @@ VER_BAZEL_PROVIDER="github:bazelbuild/bazel"
 VER_BALLERINA="2201.13.4"
 VER_BALLERINA_PROVIDER="github:ballerina-platform/ballerina-distribution"
 
-VER_STYLUA="2.4.1"
+VER_STYLUA="2.5.2"
 VER_STYLUA_PROVIDER="github:JohnnyMorganz/StyLua"
 
 VER_JUST="1.51.0"
 VER_JUST_PROVIDER="github:casey/just"
 
-VER_TASK="3.50.0"
+VER_TASK="3.51.1"
 VER_TASK_PROVIDER="github:go-task/task"
 
 VER_TYPST="0.13.0"
@@ -105,9 +105,9 @@ VER_ADDLICENSE="1.2.0"
 VER_ADDLICENSE_PROVIDER="github:google/addlicense"
 
 # Git / commit workflow
-VER_COMMITLINT="21.0.0"
+VER_COMMITLINT="21.0.1"
 VER_COMMITLINT_PROVIDER="npm:@commitlint/cli"
-VER_COMMITLINT_CONFIG="21.0.0"
+VER_COMMITLINT_CONFIG="21.0.1"
 VER_COMMITLINT_CONFIG_PROVIDER="npm:@commitlint/config-conventional"
 VER_COMMITIZEN="4.3.1"
 VER_COMMITIZEN_PROVIDER="npm:commitizen"
@@ -127,7 +127,7 @@ VER_SHELLCHECK_PY_PROVIDER="pipx:shellcheck-py"
 VER_SHFMT="3.13.1"
 VER_SHFMT_PROVIDER="github:mvdan/sh"
 # Use shfmt-py for pipx fallback if needed
-VER_SHFMT_PY="3.12.0.2"
+VER_SHFMT_PY="4.0.0"
 VER_SHFMT_PY_PROVIDER="pipx:shfmt-py"
 VER_YAMLLINT="1.38.0"
 VER_YAMLLINT_PROVIDER="pipx:yamllint"
@@ -153,7 +153,7 @@ VER_SWIFTLINT_PROVIDER="github:realm/SwiftLint"
 
 VER_RUBOCOP_PROVIDER="gem:rubocop"
 
-VER_STYLELINT="17.11.0"
+VER_STYLELINT="17.11.1"
 VER_STYLELINT_PROVIDER="npm:stylelint"
 
 VER_STYLELINT_CONFIG="40.0.0"
@@ -162,7 +162,7 @@ VER_STYLELINT_CONFIG_PROVIDER="npm:stylelint-config-standard"
 VER_ASSEMBLYSCRIPT="0.28.17"
 VER_ASSEMBLYSCRIPT_PROVIDER="npm:assemblyscript"
 
-VER_OPA="1.16.1"
+VER_OPA="1.16.2"
 VER_OPA_PROVIDER="github:open-policy-agent/opa"
 
 VER_BUF="1.69.0"
@@ -179,7 +179,7 @@ VER_GOLANGCI_LINT="1.64.5"
 VER_VITEPRESS="1.6.4"
 VER_VITEPRESS_PROVIDER="npm:vitepress"
 
-VER_ESLINT="10.3.0"
+VER_ESLINT="10.4.0"
 VER_ESLINT_PROVIDER="npm:eslint"
 
 VER_MARKDOWNLINT="0.22.1"
@@ -197,13 +197,13 @@ VER_HADOLINT_PROVIDER="github:hadolint/hadolint"
 VER_DOCKERFILE_UTILS="0.16.3"
 VER_DOCKERFILE_UTILS_PROVIDER="npm:dockerfile-utils"
 
-VER_RUFF="0.15.12"
+VER_RUFF="0.15.13"
 VER_RUFF_PROVIDER="github:astral-sh/ruff"
 
 VER_CLANG_FORMAT="22.1.5"
 VER_CLANG_FORMAT_PROVIDER="pipx:clang-format"
 
-VER_SQLFLUFF="4.1.0"
+VER_SQLFLUFF="4.2.1"
 VER_SQLFLUFF_PROVIDER="pipx:sqlfluff"
 
 VER_DOTENV_LINTER="4.0.0"
@@ -229,24 +229,24 @@ VER_CARGO_AUDIT="0.22.1"
 VER_CARGO_AUDIT_PROVIDER="cargo:cargo-audit"
 
 # Updated 2026-04-05: Ensure latest versions are installed
-VER_ZIZMOR="1.24.1"
+VER_ZIZMOR="1.25.2"
 VER_ZIZMOR_PROVIDER="github:zizmorcore/zizmor"
 
 # ── ☁️ DevOps & Infrastructure ────────────────────────────────────────────────
 VER_HELM="3.17.1"
 VER_TERRAFORM="1.11.0"
 VER_TERRAGRUNT="1.0.0-rc3"
-VER_TOFU="1.11.6"
+VER_TOFU="1.12.0"
 VER_TOFU_PROVIDER="github:opentofu/opentofu"
-VER_PULUMI="3.237.0"
+VER_PULUMI="3.239.0"
 VER_PULUMI_PROVIDER="github:pulumi/pulumi"
 VER_KUBE_LINTER="0.8.3"
 VER_KUBE_LINTER_PROVIDER="github:stackrox/kube-linter"
-VER_TFLINT="0.62.0"
+VER_TFLINT="0.62.1"
 VER_TFLINT_PROVIDER="github:terraform-linters/tflint"
 VER_ANSIBLE_LINT="26.4.0"
 VER_ANSIBLE_LINT_PROVIDER="pipx:ansible-lint"
-VER_SPECTRAL="6.15.1"
+VER_SPECTRAL="6.16.0"
 VER_SPECTRAL_PROVIDER="npm:@stoplight/spectral-cli"
 
 VER_GORELEASER="2.15.4"
