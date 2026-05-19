@@ -89,7 +89,7 @@ jobs:
           persist-credentials: false
 
       - name: "🔍 Dependency Review"
-        uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48 # v4.9.0
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
 
   # 1. Code Quality Stage (Lint)
   lint:
@@ -551,7 +551,7 @@ jobs:
           exit-code: "1"
 
       - name: "📤 Upload Security Audit (SARIF)"
-        uses: github/codeql-action/upload-sarif@e46ed2cbd01164d986452f91f178727624ae40d7 # v4.35.3
+        uses: github/codeql-action/upload-sarif@68bde559dea0fdcac2102bfdf6230c5f70eb485e # v4.35.4
         if: always()
         with:
           sarif_file: "."
