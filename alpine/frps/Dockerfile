@@ -9,7 +9,7 @@ USER root
 # Set the workdir
 WORKDIR /root
 
-ENV FRP_VERSION=0.68.1
+ENV FRP_VERSION=0.69.0
 
 RUN apk add --no-cache make \
     nodejs \
@@ -35,7 +35,7 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.licenses="MIT" \
     org.opencontainers.image.source="https://github.com/snowdreamtech/frp" \
     org.opencontainers.image.vendor="Snowdream Tech" \
-    org.opencontainers.image.version="0.68.1" \
+    org.opencontainers.image.version="0.69.0" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
 
 
