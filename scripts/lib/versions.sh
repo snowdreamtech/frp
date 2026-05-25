@@ -22,8 +22,8 @@ set -eu
 # ── 🏗️ Tier 1: Core Runtimes (Mirror of .mise.toml) ──────────────────────────
 # shellcheck disable=SC2034
 VER_GO="1.26.3"
-VER_NODE="26.1.0"
-VER_PNPM="11.1.2"
+VER_NODE="26.2.0"
+VER_PNPM="11.3.0"
 VER_PNPM_PROVIDER="npm:pnpm"
 VER_PYTHON="3.14.5"
 VER_PIPX="1.11.0"
@@ -33,11 +33,11 @@ VER_PIPX_PROVIDER="pip"
 VER_KOTLIN="2.3.21"
 VER_RUST="1.95.0"
 VER_BUN="1.3.14"
-VER_DENO="2.7.14"
+VER_DENO="2.8.0"
 VER_ZIG="0.16.0"
 VER_JAVA="26.0.1"
 VER_DOTNET="10.0.300"
-VER_RUBY="4.0.4"
+VER_RUBY="4.0.5"
 VER_YARN="1.22.22"
 
 # ── 🧪 Exotic / Domain-Specific Runtimes ─────────────────────────────────────
@@ -153,7 +153,7 @@ VER_SWIFTLINT_PROVIDER="github:realm/SwiftLint"
 
 VER_RUBOCOP_PROVIDER="gem:rubocop"
 
-VER_STYLELINT="17.11.1"
+VER_STYLELINT="17.12.0"
 VER_STYLELINT_PROVIDER="npm:stylelint"
 
 VER_STYLELINT_CONFIG="40.0.0"
@@ -197,7 +197,7 @@ VER_HADOLINT_PROVIDER="github:hadolint/hadolint"
 VER_DOCKERFILE_UTILS="0.16.3"
 VER_DOCKERFILE_UTILS_PROVIDER="npm:dockerfile-utils"
 
-VER_RUFF="0.15.13"
+VER_RUFF="0.15.14"
 VER_RUFF_PROVIDER="github:astral-sh/ruff"
 
 VER_CLANG_FORMAT="22.1.5"
@@ -238,7 +238,7 @@ VER_TERRAFORM="1.11.0"
 VER_TERRAGRUNT="1.0.0-rc3"
 VER_TOFU="1.12.0"
 VER_TOFU_PROVIDER="github:opentofu/opentofu"
-VER_PULUMI="3.239.0"
+VER_PULUMI="3.243.0"
 VER_PULUMI_PROVIDER="github:pulumi/pulumi"
 VER_KUBE_LINTER="0.8.3"
 VER_KUBE_LINTER_PROVIDER="github:stackrox/kube-linter"
@@ -249,7 +249,7 @@ VER_ANSIBLE_LINT_PROVIDER="pipx:ansible-lint"
 VER_SPECTRAL="6.16.0"
 VER_SPECTRAL_PROVIDER="npm:@stoplight/spectral-cli"
 
-VER_GORELEASER="2.15.4"
+VER_GORELEASER="2.16.0"
 VER_GORELEASER_PROVIDER="github:goreleaser/goreleaser"
 
 # ── 📖 Documentation ──────────────────────────────────────────────────────────
