@@ -11,7 +11,7 @@
 # ── 🏗️ Core Runtimes ──────────────────────────────────────────────────────────
 go = "1.26.3"
 node = "26.2.0"
-"npm:pnpm" = "11.3.0"
+"npm:pnpm" = "11.5.0"
 python = "3.14.5"
 # pipx is managed as a bootstrap tool via pip in scripts/lib/langs/base.sh to ensure cross-platform compatibility.
 # pipx = "1.11.0"
@@ -21,7 +21,7 @@ python = "3.14.5"
 "github:gitleaks/gitleaks" = "8.30.1"
 "github:google/osv-scanner" = "2.3.5"
 "github:zizmorcore/zizmor" = "1.24.1"
-"github:cli/cli" = "2.92.0"
+"github:cli/cli" = "2.93.0"
 
 # ── 💎 Core Quality & Commit Tooling ──────────────────────────────────────────
 # Tools invoked by pre-commit hooks or universally needed.
@@ -30,14 +30,14 @@ python = "3.14.5"
 "github:google/addlicense" = "1.2.0"
 
 # Git / commit workflow
-"npm:@commitlint/cli" = "21.0.1"
-"npm:@commitlint/config-conventional" = "21.0.1"
+"npm:@commitlint/cli" = "21.0.2"
+"npm:@commitlint/config-conventional" = "21.0.2"
 "npm:commitizen" = "4.3.1"
 "npm:cz-conventional-changelog" = "3.3.0"
 
 # Formatting & linting (invoked by pre-commit hooks)
 "npm:prettier" = "3.8.3"
-"npm:eslint" = "10.4.0"
+"npm:eslint" = "10.4.1"
 "npm:stylelint" = "17.12.0"
 "npm:markdownlint-cli2" = "0.22.1"
 "npm:sort-package-json" = "3.6.1"
@@ -50,7 +50,7 @@ python = "3.14.5"
 "pipx:yamllint" = "1.38.0"
 
 # Python tools (pre-commit hooks)
-"github:astral-sh/ruff" = "0.15.14"
+"github:astral-sh/ruff" = "0.15.15"
 "pipx:clang-format" = "22.1.5"
 
 # Shell & scripting linters (pre-commit hooks)
