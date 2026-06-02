@@ -72,22 +72,22 @@ Alpine:
 
     - latest
     - 0.69-alpine3.23
-    - 0.69.0-alpine3.23
+    - 0.69.1-alpine3.23
     - 0.69-alpine
-    - 0.69.0-alpine
+    - 0.69.1-alpine
     - alpine3.23
     - alpine
     - 0.69
-    - 0.69.0
+    - 0.69.1
 
 Debian:
 
     - trixie
     - debian
     - 0.69-trixie
-    - 0.69.0-trixie
+    - 0.69.1-trixie
     - 0.69-debian
-    - 0.69.0-debian
+    - 0.69.1-debian
 
 ## Ads
 
