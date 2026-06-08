@@ -21,19 +21,19 @@ set -eu
 
 # ── 🏗️ Tier 1: Core Runtimes (Mirror of .mise.toml) ──────────────────────────
 # shellcheck disable=SC2034
-VER_GO="1.26.3"
-VER_NODE="26.2.0"
-VER_PNPM="11.5.0"
+VER_GO="1.26.4"
+VER_NODE="26.3.0"
+VER_PNPM="11.5.2"
 VER_PNPM_PROVIDER="npm:pnpm"
 VER_PYTHON="3.14.5"
 VER_PIPX="1.11.0"
 VER_PIPX_PROVIDER="pip"
 
 # ── 🏗️ Tier 2: Language Runtimes (On-demand) ─────────────────────────────────
-VER_KOTLIN="2.3.21"
+VER_KOTLIN="2.4.0"
 VER_RUST="1.96.0"
 VER_BUN="1.3.14"
-VER_DENO="2.8.1"
+VER_DENO="2.8.2"
 VER_ZIG="0.16.0"
 VER_JAVA="26.0.1"
 VER_DOTNET="10.0.300"
@@ -55,7 +55,7 @@ VER_KCL_PROVIDER="github:kcl-lang/kcl"
 VER_PKL="0.31.1"
 VER_PKL_PROVIDER="github:apple/pkl"
 
-VER_BAZEL="9.1.0"
+VER_BAZEL="9.1.1"
 VER_BAZEL_PROVIDER="github:bazelbuild/bazel"
 
 VER_BALLERINA="2201.13.4"
@@ -153,13 +153,13 @@ VER_SWIFTLINT_PROVIDER="github:realm/SwiftLint"
 
 VER_RUBOCOP_PROVIDER="gem:rubocop"
 
-VER_STYLELINT="17.12.0"
+VER_STYLELINT="17.13.0"
 VER_STYLELINT_PROVIDER="npm:stylelint"
 
 VER_STYLELINT_CONFIG="40.0.0"
 VER_STYLELINT_CONFIG_PROVIDER="npm:stylelint-config-standard"
 
-VER_ASSEMBLYSCRIPT="0.28.17"
+VER_ASSEMBLYSCRIPT="0.28.18"
 VER_ASSEMBLYSCRIPT_PROVIDER="npm:assemblyscript"
 
 VER_OPA="1.17.0"
@@ -185,7 +185,7 @@ VER_ESLINT_PROVIDER="npm:eslint"
 VER_MARKDOWNLINT="0.22.1"
 VER_MARKDOWNLINT_PROVIDER="npm:markdownlint-cli2"
 
-VER_SORT_PACKAGE_JSON="3.6.1"
+VER_SORT_PACKAGE_JSON="4.0.0"
 VER_SORT_PACKAGE_JSON_PROVIDER="npm:sort-package-json"
 
 VER_TAPLO="0.7.0"
@@ -197,13 +197,13 @@ VER_HADOLINT_PROVIDER="github:hadolint/hadolint"
 VER_DOCKERFILE_UTILS="0.16.3"
 VER_DOCKERFILE_UTILS_PROVIDER="npm:dockerfile-utils"
 
-VER_RUFF="0.15.15"
+VER_RUFF="0.15.16"
 VER_RUFF_PROVIDER="github:astral-sh/ruff"
 
 VER_CLANG_FORMAT="22.1.5"
 VER_CLANG_FORMAT_PROVIDER="pipx:clang-format"
 
-VER_SQLFLUFF="4.2.1"
+VER_SQLFLUFF="4.2.2"
 VER_SQLFLUFF_PROVIDER="pipx:sqlfluff"
 
 VER_DOTENV_LINTER="4.0.0"
@@ -212,7 +212,7 @@ VER_DOTENV_LINTER_PROVIDER="github:dotenv-linter/dotenv-linter"
 # NOTE: VER_CHECKMAKE moved to Tier 1 section above.
 
 # ── 🛡️ Security Scanning (CI-only by default) ─────────────────────────────────
-VER_TRIVY="0.70.0"
+VER_TRIVY="0.71.0"
 VER_TRIVY_PROVIDER="github:aquasecurity/trivy"
 
 VER_OSV_SCANNER="2.3.8"
@@ -225,7 +225,7 @@ VER_GOVULNCHECK_PROVIDER="go:golang.org/x/vuln/cmd/govulncheck"
 VER_PIP_AUDIT="2.10.0"
 VER_PIP_AUDIT_PROVIDER="pipx:pip-audit"
 
-VER_CARGO_AUDIT="0.22.1"
+VER_CARGO_AUDIT="0.22.2"
 VER_CARGO_AUDIT_PROVIDER="cargo:cargo-audit"
 
 # Updated 2026-04-05: Ensure latest versions are installed
@@ -238,11 +238,11 @@ VER_TERRAFORM="1.11.0"
 VER_TERRAGRUNT="1.0.0-rc3"
 VER_TOFU="1.12.1"
 VER_TOFU_PROVIDER="github:opentofu/opentofu"
-VER_PULUMI="3.244.0"
+VER_PULUMI="3.245.0"
 VER_PULUMI_PROVIDER="github:pulumi/pulumi"
 VER_KUBE_LINTER="0.8.3"
 VER_KUBE_LINTER_PROVIDER="github:stackrox/kube-linter"
-VER_TFLINT="0.62.1"
+VER_TFLINT="0.63.1"
 VER_TFLINT_PROVIDER="github:terraform-linters/tflint"
 VER_ANSIBLE_LINT="26.4.0"
 VER_ANSIBLE_LINT_PROVIDER="pipx:ansible-lint"
