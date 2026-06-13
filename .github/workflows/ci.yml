@@ -356,23 +356,23 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           UNIRTM_YES: 1
 
-#       - name: "🧪 Execute Shell Tests (Bats)"
-#         if: matrix.os != 'windows-latest'
-#         shell: sh
-#         run: |
-#           unirtm run test:shell
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#           UNIRTM_YES: 1
-# 
-#       - name: "🧪 Execute PowerShell Tests (Pester)"
-#         if: matrix.os == 'windows-latest'
-#         shell: pwsh
-#         run: |
-#           unirtm run test:powershell
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#           UNIRTM_YES: 1
+  #       - name: "🧪 Execute Shell Tests (Bats)"
+  #         if: matrix.os != 'windows-latest'
+  #         shell: sh
+  #         run: |
+  #           unirtm run test:shell
+  #         env:
+  #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #           UNIRTM_YES: 1
+  #
+  #       - name: "🧪 Execute PowerShell Tests (Pester)"
+  #         if: matrix.os == 'windows-latest'
+  #         shell: pwsh
+  #         run: |
+  #           unirtm run test:powershell
+  #         env:
+  #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #           UNIRTM_YES: 1
 
   # 3. Security & Standards Audit Stage (Audit)
   audit:
