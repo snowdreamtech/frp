@@ -272,7 +272,7 @@ jobs:
           exit-code: "1"
 
       - name: "📤 Upload Security Audit (SARIF)"
-        uses: github/codeql-action/upload-sarif@e46ed2cbd01164d986452f91f178727624ae40d7 # v4.35.3
+        uses: github/codeql-action/upload-sarif@68bde559dea0fdcac2102bfdf6230c5f70eb485e # v4.35.4
         if: always() && matrix.os == 'ubuntu-latest'
         with:
           sarif_file: "."
@@ -321,7 +321,7 @@ jobs:
 
       - name: "📦 Setup pnpm Environment"
         if: ${{ steps.release.outputs.pr && hashFiles('pnpm-lock.yaml') != '' }}
-        uses: pnpm/action-setup@8912a9102ac27614460f54aedde9e1e7f9aec20d # v6.0.5
+        uses: pnpm/action-setup@739bfe42ca9233c5e6aca07c1a25a9d34aca49b0 # v6.0.7
         with:
           run_install: false
 
