@@ -78,14 +78,13 @@ graph TD
 
 - **运行时**: Node.js (>= 20.x), Python (>= 3.10.x)。
 - **Git**: 需要全局安装 git。
-- **Make**: 统一命令执行所必需。
 
 ### 快速开始
 
-1. **前提条件**：推荐安装 [mise](https://mise.jdx.dev/) 以实现全局工具管理（脚本会在 setup 阶段自动引导安装）。
-2. **初始化**：`make setup`（引导安装 mise 及核心工具）。
-3. **安装**：`make install`（同步项目依赖）。
-4. **验证**：`make verify`（确保环境健康）。
+1. **前提条件**：必须安装 [UniRTM](https://github.com/snowdreamtech/UniRTM) 以实现全局工具和任务管理。
+2. **初始化**：`unirtm run setup`（引导安装核心工具）。
+3. **安装**：`unirtm run install`（同步项目依赖）。
+4. **验证**：`unirtm run verify`（确保环境健康）。
 
 ### 配置参考
 
@@ -114,8 +113,8 @@ project-root/
 
 ### 部署前检查清单
 
-1. 运行 `make verify` 确保所有质量门禁均为绿色。
-2. 运行 `make audit` 验证安全合规性。
+1. 运行 `unirtm run verify` 确保所有质量门禁均为绿色。
+2. 运行 `unirtm run audit` 验证安全合规性。
 3. 确保 `CHANGELOG.md` 已更新。
 
 ### 性能考虑
@@ -125,15 +124,15 @@ project-root/
 
 ### 故障排除
 
-- **问题**: `make install` 在 Windows 上失败。
+- **问题**: `unirtm run install` 在 Windows 上失败。
   - **诊断**: 检查 `ExecutionPolicy` 是否允许脚本执行。
   - **解决方案**: 运行 `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`。
 - **问题**: Gitleaks 检测到误报。
   - **诊断**: 检查 `.gitleaks.toml` 白名单。
   - **解决方案**: 将特征码添加到 `.gitleaksignore`。
-- **问题**: `make install` 后，macOS 上的 Pre-commit 钩子出现 Python 报错。
+- **问题**: `unirtm run install` 后，macOS 上的 Pre-commit 钩子出现 Python 报错。
   - **诊断**: 检查 venv 是否存在：`ls .venv/bin/python`。
-  - **解决方案**: 重建 venv：`rm -rf .venv && make install`。
+  - **解决方案**: 重建 venv：`rm -rf .venv && unirtm run install`。
 
 ---
 
@@ -173,7 +172,7 @@ project-root/
 │   └── glossary.md       # 中英文对照术语表
 ├── scripts/              # POSIX Shell 自动化脚本（setup、install、verify）
 │   └── lib/              # 共享 Shell 库函数
-└── Makefile              # 任务编排（setup、install、lint、verify、audit）
+└── .unirtm.toml          # 任务编排（setup、install、lint、verify、audit）
 ```
 
 **命名规范**：核心规则文件使用 `NN-短横线命名.md`，语言栈规则使用 `technology.md`，
@@ -191,8 +190,8 @@ project-root/
 git clone <repo>
 cd <repo>
 git config core.ignorecase false  # Mac/Windows 用户必须执行此设置
-make setup
-make install
+unirtm run setup
+unirtm run install
 ```
 
 ### 参考资料
@@ -214,7 +213,7 @@ make install
 | **项目文件夹**         | ❌ **不支持** | 不支持通过代理进行项目文件夹的浏览或克隆。     |
 
 > [!IMPORTANT]
-> 为了防止破坏工具链（如 `mise` 或 `asdf`），本模板显式禁用了通过此代理进行的 Git 重定向。请仅在脚本中进行直接 HTTP 下载时使用它。
+> 为了防止破坏工具链（如 `unirtm` 或 `asdf`），本模板显式禁用了通过此代理进行的 Git 重定向。请仅在脚本中进行直接 HTTP 下载时使用它。
 
 ---
 

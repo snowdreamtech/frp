@@ -81,10 +81,10 @@ graph TD
 
 ### Quick Start
 
-1. **Prerequisites**: [mise](https://mise.jdx.dev/) is highly recommended for global tool management (automatically installed during setup).
-2. **Initialize**: `make setup` (bootstraps mise and core tools).
-3. **Install**: `make install` (installs project dependencies).
-4. **Verify**: `make verify` (ensures everything is green).
+1. **Prerequisites**: [UniRTM](https://github.com/snowdreamtech/UniRTM) is required for global tool and task management.
+2. **Initialize**: `unirtm run setup` (bootstraps core tools).
+3. **Install**: `unirtm run install` (installs project dependencies).
+4. **Verify**: `unirtm run verify` (ensures everything is green).
 
 ### Configuration Reference
 
@@ -113,8 +113,8 @@ project-root/
 
 ### Pre-deployment Checklist
 
-1. Run `make verify` to ensure all quality gates are green.
-2. Run `make audit` to verify security compliance.
+1. Run `unirtm run verify` to ensure all quality gates are green.
+2. Run `unirtm run audit` to verify security compliance.
 3. Ensure `CHANGELOG.md` is updated.
 
 ### Performance Considerations
@@ -124,15 +124,15 @@ project-root/
 
 ### Troubleshooting
 
-- **Problem**: `make install` fails on Windows.
+- **Problem**: `unirtm run install` fails on Windows.
   - **Diagnosis**: Check if `ExecutionPolicy` allows script execution.
   - **Solution**: Run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`.
 - **Problem**: Gitleaks detects false positives.
   - **Diagnosis**: Check `.gitleaks.toml` allowlist.
   - **Solution**: Add fingerprint to `.gitleaksignore`.
-- **Problem**: Pre-commit hooks fail on macOS after `make install` with Python errors.
+- **Problem**: Pre-commit hooks fail on macOS after `unirtm run install` with Python errors.
   - **Diagnosis**: Check if the venv exists: `ls .venv/bin/python`.
-  - **Solution**: Rebuild the venv: `rm -rf .venv && make install`.
+  - **Solution**: Rebuild the venv: `rm -rf .venv && unirtm run install`.
 
 ---
 
@@ -172,7 +172,7 @@ project-root/
 │   └── glossary.md       # Bilingual term glossary
 ├── scripts/              # POSIX shell automation (setup, install, verify)
 │   └── lib/              # Shared shell library functions
-└── Makefile              # Task orchestration (setup, install, lint, verify, audit)
+└── .unirtm.toml          # Task orchestration (setup, install, lint, verify, audit)
 ```
 
 **Naming Conventions**: Rule files use `NN-kebab-case.md` (core rules) or `technology.md`
@@ -190,8 +190,8 @@ project-root/
 git clone <repo>
 cd <repo>
 git config core.ignorecase false  # MANDATORY for Mac/Windows
-make setup
-make install
+unirtm run setup
+unirtm run install
 ```
 
 ### References
@@ -213,7 +213,7 @@ The `GITHUB_PROXY` (default: `https://gh-proxy.sn0wdr1am.com/`) is optimized for
 | **Project Folders**   | ❌ **No**  | Browsing/cloning via proxy is not supported.           |
 
 > [!IMPORTANT]
-> To prevent breaking toolchains (like `mise` or `asdf`), this template explicitly disables Git redirection via this proxy. Use it only for direct HTTP downloads in scripts.
+> To prevent breaking toolchains (like `unirtm` or `asdf`), this template explicitly disables Git redirection via this proxy. Use it only for direct HTTP downloads in scripts.
 
 ## 📄 License
 
