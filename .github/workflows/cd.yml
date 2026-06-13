@@ -44,7 +44,7 @@ jobs:
       PYTHONUTF8: 1
     steps:
       - name: "🔒 Harden Runner (Security Egress Audit)"
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -272,7 +272,7 @@ jobs:
           exit-code: "1"
 
       - name: "📤 Upload Security Audit (SARIF)"
-        uses: github/codeql-action/upload-sarif@95e58e9a2cdfd71adc6e0353d5c52f41a045d225 # v4.35.2
+        uses: github/codeql-action/upload-sarif@e46ed2cbd01164d986452f91f178727624ae40d7 # v4.35.3
         if: always() && matrix.os == 'ubuntu-latest'
         with:
           sarif_file: "."
@@ -321,7 +321,7 @@ jobs:
 
       - name: "📦 Setup pnpm Environment"
         if: ${{ steps.release.outputs.pr && hashFiles('pnpm-lock.yaml') != '' }}
-        uses: pnpm/action-setup@903f9c1a6ebcba6cf41d87230be49611ac97822e # v6.0.3
+        uses: pnpm/action-setup@8912a9102ac27614460f54aedde9e1e7f9aec20d # v6.0.5
         with:
           run_install: false
 

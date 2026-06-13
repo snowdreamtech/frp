@@ -65,7 +65,7 @@ jobs:
 
     steps:
       - name: "🔒 Harden Runner (Security Egress Audit)"
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -109,18 +109,18 @@ jobs:
           persist-credentials: false
 
       - name: "🛡️ Initialize CodeQL Engine"
-        uses: github/codeql-action/init@95e58e9a2cdfd71adc6e0353d5c52f41a045d225 # v4.35.2
+        uses: github/codeql-action/init@e46ed2cbd01164d986452f91f178727624ae40d7 # v4.35.3
         with:
           # Sets up the CodeQL database for the specified technical stack (e.g., Python, Go).
           languages: ${{ matrix.language }}
           config-file: .github/codeql/codeql-config.yml
 
       - name: "🚀 Bootstrap Target Build"
-        uses: github/codeql-action/autobuild@95e58e9a2cdfd71adc6e0353d5c52f41a045d225 # v4.35.2
+        uses: github/codeql-action/autobuild@e46ed2cbd01164d986452f91f178727624ae40d7 # v4.35.3
         # Attempts to automatically compile the project to enable full-trace analysis.
 
       - name: "🔍 Perform Deep Security Analysis"
-        uses: github/codeql-action/analyze@95e58e9a2cdfd71adc6e0353d5c52f41a045d225 # v4.35.2
+        uses: github/codeql-action/analyze@e46ed2cbd01164d986452f91f178727624ae40d7 # v4.35.3
         with:
           # Executes the semantic queries and generates the final vulnerability report.
           category: "/language:${{ matrix.language }}"
