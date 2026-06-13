@@ -8,7 +8,7 @@
 
 ### 1. `refresh_mise_cache()` 被禁用
 
-**位置**: `scripts/lib/common.sh:237-250`
+**位置**: `.unirtm.toml:237-250`
 
 ```bash
 refresh_mise_cache() {
@@ -107,7 +107,7 @@ fy
 
 **GitHub Actions PATH 持久化**:
 ```bash
-# scripts/lib/common.sh:1744-1761
+# .unirtm.toml:1744-1761
 persist_mise_to_github_path() {
   if [ -d "$_G_MISE_SHIMS_BASE" ]; then
     echo "${_M_SHIMS_CI:-}" >>"${GITHUB_PATH:-}"
@@ -218,7 +218,7 @@ DISABLED: mise ls --json hangs due to proxy/network issues
 **实现**:
 
 ```bash
-# scripts/lib/common.sh:704-715
+# .unirtm.toml:704-715
 if [ ${_STATUS:-} -eq 0 ] &&
   { [ "${_CMD:-}" = "install" ] || [ "${_CMD:-}" = "i" ]; }; then
 

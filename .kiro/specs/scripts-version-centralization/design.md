@@ -2,14 +2,14 @@
 
 ## Overview
 
-This bugfix addresses the inconsistent use of hardcoded provider values across 20+ shell scripts in `scripts/lib/langs/`. Currently, 36 instances use hardcoded strings like `local _PROVIDER="github:hadolint/hadolint"` instead of referencing centralized variables from `scripts/lib/versions.sh` (e.g., `${VER_HADOLINT_PROVIDER:-}`). This violates the Single Source of Truth (SSoT) principle and makes version management error-prone. The fix systematically replaces all hardcoded provider values with centralized variable references, ensuring consistency and maintainability.
+This bugfix addresses the inconsistent use of hardcoded provider values across 20+ shell scripts in `scripts/lib/langs/`. Currently, 36 instances use hardcoded strings like `local _PROVIDER="github:hadolint/hadolint"` instead of referencing centralized variables from `.unirtm.toml` (e.g., `${VER_HADOLINT_PROVIDER:-}`). This violates the Single Source of Truth (SSoT) principle and makes version management error-prone. The fix systematically replaces all hardcoded provider values with centralized variable references, ensuring consistency and maintainability.
 
 ## Glossary
 
 - **Bug_Condition (C)**: A script contains a hardcoded `_PROVIDER` assignment instead of referencing a centralized variable from `versions.sh`
 - **Property (P)**: The script uses `local _PROVIDER="${VER_*_PROVIDER:-}"` pattern to reference centralized provider values
 - **Preservation**: Existing functionality (version checking, installation, logging, DRY_RUN mode) must remain unchanged
-- **versions.sh**: The centralized registry at `scripts/lib/versions.sh` that defines all tool versions and provider strings
+- **versions.sh**: The centralized registry at `.unirtm.toml` that defines all tool versions and provider strings
 - **Provider String**: The mise backend identifier (e.g., `github:hadolint/hadolint`, `npm:prettier`, `pipx:sqlfluff`)
 - **SSoT (Single Source of Truth)**: The principle that each piece of data should have exactly one authoritative source
 - **install\_\* functions**: Shell functions in `scripts/lib/langs/*.sh` that install specific tools via mise
@@ -20,7 +20,7 @@ This bugfix addresses the inconsistent use of hardcoded provider values across 2
 
 ### Bug Condition
 
-The bug manifests when a script in `scripts/lib/langs/` defines a `_PROVIDER` variable with a hardcoded string value instead of referencing the corresponding centralized variable from `scripts/lib/versions.sh`. This creates version management inconsistency and violates the SSoT principle.
+The bug manifests when a script in `scripts/lib/langs/` defines a `_PROVIDER` variable with a hardcoded string value instead of referencing the corresponding centralized variable from `.unirtm.toml`. This creates version management inconsistency and violates the SSoT principle.
 
 **Formal Specification:**
 
@@ -66,7 +66,7 @@ All inputs that do NOT involve the 36 identified hardcoded `_PROVIDER` assignmen
 - Scripts that already use centralized variables correctly
 - All other script logic (version checking, installation, logging, error handling)
 - The structure and content of `versions.sh` itself (except for adding 3 missing variables)
-- The behavior of helper functions in `scripts/lib/common.sh`
+- The behavior of helper functions in `.unirtm.toml`
 
 ## Hypothesized Root Cause
 
@@ -105,7 +105,7 @@ Assuming our root cause analysis is correct, we need to systematically replace h
 
 #### Phase 1: Add Missing Variables to versions.sh
 
-**File**: `scripts/lib/versions.sh`
+**File**: `.unirtm.toml`
 
 **Specific Changes**:
 
@@ -196,7 +196,7 @@ FOR ALL scriptFile IN 'scripts/lib/langs/*.sh' DO
     toolName := extractToolName(line)
     centralizedVar := getCentralizedVariable(toolName)
     ASSERT line CONTAINS "${" + centralizedVar + ":-}"
-    ASSERT centralizedVar EXISTS IN 'scripts/lib/versions.sh'
+    ASSERT centralizedVar EXISTS IN '.unirtm.toml'
   END FOR
 END FOR
 ```

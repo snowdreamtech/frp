@@ -207,7 +207,7 @@
 
 ### Ruby Version & Dependency Management
 
-- Pin the **Ruby version** in `.ruby-version` (rbenv/rvm/mise) and `Gemfile`:
+- Pin the **Ruby version** in `.ruby-version` (rbenv/rvm/unirtm) and `Gemfile`:
 
   ```ruby
   # Gemfile — pin to exact Ruby version

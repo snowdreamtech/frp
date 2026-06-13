@@ -5,7 +5,7 @@
 ## 1. Package Management
 
 - **Package Management Hierarchy**:
-  - **mise**: Manages the `node` and `pnpm` **executors** (binary runtimes).
+  - **unirtm**: Manages the `node` and `pnpm` **executors** (binary runtimes).
   - **pnpm**: Manages **project dependencies** (libraries) and Node.js-specific scripts.
 - **Dependency Classification**:
   - `dependencies`: Runtime requirements only.
@@ -23,7 +23,7 @@
 
 ## 2. Environment Setup
 
-- **Node Version**: Specify version strictly in `.mise.toml`. Use `mise` for local version management.
+- **Node Version**: Specify version strictly in `.unirtm.toml`. Use `unirtm` for local version management.
 - **Environment Variables**: Never commit `.env` files. Use `.env.example` as a documentation template. Validate all required env vars at startup using a schema validator (e.g., `zod`, `envalid`).
 
   ```typescript
@@ -39,7 +39,7 @@
 ## 3. Tool Execution (Performance First)
 
 - **Anti-npx Policy**: Avoid `npx` for frequently used tools (lint, format, test). Its startup overhead is significant.
-- **Preferred Method**: Use direct execution of pre-installed binaries (via `make setup` or `npm run <command>`).
+- **Preferred Method**: Use direct execution of pre-installed binaries (via `unirtm install` or `npm run <command>`).
 
 ## 4. Coding Style
 

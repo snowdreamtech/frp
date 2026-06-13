@@ -1,0 +1,5 @@
+
+# --- Spec Kit AI IDE Integration ---
+# This project uses Spec Kit.
+# CRITICAL: If you need to execute workflows or commands, refer to the files in `.agent/workflows/`.
+# CRITICAL: For project governance and rules, refer to `.agent/rules/00-index.md`.

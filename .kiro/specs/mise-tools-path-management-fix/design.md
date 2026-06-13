@@ -16,8 +16,8 @@ The fix implements a comprehensive Hybrid Approach (Solution 3 from root cause a
 - **Bug_Condition (C)**: The condition that triggers the bug - when `run_mise install` completes but mise shims are not in PATH
 - **Property (P)**: The desired behavior - mise shims directory is automatically added to PATH after installation
 - **Preservation**: Existing tool resolution behavior that must remain unchanged by the fix
-- **run_mise**: The function in `scripts/lib/common.sh` that wraps all mise command executions
-- **refresh_mise_cache()**: The function in `scripts/lib/common.sh` that caches `mise ls --json` output for performance
+- **run_mise**: The function in `.unirtm.toml` that wraps all mise command executions
+- **refresh_mise_cache()**: The function in `.unirtm.toml` that caches `mise ls --json` output for performance
 - **resolve_bin**: The function in `scripts/lib/bin-resolver.sh` that resolves tool binary paths across multiple layers
 - **\_G_MISE_SHIMS_BASE**: Global variable containing the path to mise shims directory (OS-specific)
 - **GITHUB_PATH**: Environment variable in GitHub Actions for persisting PATH modifications across steps
@@ -99,7 +99,7 @@ _For any_ tool that is already in PATH from sources other than mise (system pack
 
 Assuming our root cause analysis is correct:
 
-**File**: `scripts/lib/common.sh`
+**File**: `.unirtm.toml`
 
 **Function**: `run_mise`
 

@@ -134,7 +134,7 @@ The refactoring introduced binary-first detection, platform-specific binary name
 
 #### Acceptance Criteria 10
 
-1. THE Documentation_Generator SHALL extract function signatures from `scripts/lib/common.sh`
+1. THE Documentation_Generator SHALL extract function signatures from `.unirtm.toml`
 2. THE Documentation_Generator SHALL generate API documentation for `install_tool_safe()` and related functions
 3. THE Documentation_Generator SHALL update tool lists in documentation when new tools are added
 4. THE Documentation_Generator SHALL validate that all code examples in documentation are syntactically correct

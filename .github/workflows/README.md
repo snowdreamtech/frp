@@ -69,7 +69,7 @@ graph TD
 | Parameter | Type    | Default | Description                                            |
 | :-------- | :------ | :------ | :----------------------------------------------------- |
 | `venv`    | String  | `.venv` | Path to the Python virtual environment.                |
-| `pnpm`    | Boolean | `true`  | Whether to use pnpm for Node.js dependency management. |
+| `npm`     | Boolean | `true`  | Whether to use npm for Node.js dependency management.  |
 
 ### Workflow Patterns
 
@@ -99,12 +99,12 @@ graph TD
 ### Pre-deployment Checklist
 
 1. Verify `actionlint` passes on all workflow changes.
-2. Ensure `make verify` passes locally.
+2. Ensure `unirtm run verify` passes locally.
 3. Check `GITHUB_TOKEN` permissions for new workflows.
 
 ### Performance Considerations
 
-- **Caching**: Use `pnpm` and `pip` caching in every job to reduce build time by ~40%.
+- **Caching**: Use `npm` and `pip` caching in every job to reduce build time by ~40%.
 - **Matrix**: Limit test matrices to supported OS/version combinations to save runner minutes.
 
 ### Troubleshooting
@@ -113,7 +113,7 @@ graph TD
   - **Diagnosis**: Check the `permissions` block in the Job definition.
   - **Solution**: Grant the required scope (e.g., `contents: write`) at the job or workflow level.
 - **Problem**: `lint` job fails on a specific file.
-  - **Diagnosis**: Run `make lint` locally to identify the specific formatting or syntax error.
+  - **Diagnosis**: Run `unirtm run lint` locally to identify the specific formatting or syntax error.
   - **Solution**: Fix the file and push the correction; CI will re-trigger automatically.
 - **Problem**: `test` job times out.
   - **Diagnosis**: Review the logs to see if a specific test case is hanging.
@@ -151,7 +151,7 @@ graph TD
 
 1. Install `actionlint`: `brew install actionlint`.
 2. Validate workflows: `actionlint .github/workflows/*.yml`.
-3. Check project health: `make verify`.
+3. Check project health: `unirtm run verify`.
 
 ### References
 

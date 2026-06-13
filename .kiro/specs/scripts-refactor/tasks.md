@@ -2,7 +2,7 @@
 
 ## Overview
 
-This implementation refactors `scripts/lib/common.sh` and related modules to provide zero-hang guarantees, robust bin resolution, graceful timeout handling, and high-performance JSON parsing. The implementation follows a modular architecture with separate modules for timeout mechanisms, JSON parsing, process management, and bin resolution.
+This implementation refactors `.unirtm.toml` and related modules to provide zero-hang guarantees, robust bin resolution, graceful timeout handling, and high-performance JSON parsing. The implementation follows a modular architecture with separate modules for timeout mechanisms, JSON parsing, process management, and bin resolution.
 
 ## Tasks
 
@@ -94,7 +94,7 @@ This implementation refactors `scripts/lib/common.sh` and related modules to pro
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 6. Integrate modules into common.sh
-  - [x] 6.1 Update `scripts/lib/common.sh` to source new modules
+  - [x] 6.1 Update `.unirtm.toml` to source new modules
     - Add source statements for timeout.sh, json-parser.sh, process-manager.sh, bin-resolver.sh
     - Add timeout configuration constants (TIMEOUT_RESOLVE_BIN=5, TIMEOUT_JSON_PARSE=3, etc.)
     - Add debug mode switches (DEBUG_RESOLVE_BIN, VERBOSE levels)

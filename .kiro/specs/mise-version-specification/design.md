@@ -2,7 +2,7 @@
 
 ## Overview
 
-This bugfix addresses a critical version locking violation where ~40+ `run_mise install` calls across `scripts/lib/langs/*.sh` are missing version specifications. The bug causes mise to install the latest available version from providers instead of the pinned versions defined in `scripts/lib/versions.sh`, breaking reproducibility and environment consistency. The fix involves systematically appending `@${_VERSION:-}` to all affected `run_mise install "${_PROVIDER:-}"` calls to enforce version locking.
+This bugfix addresses a critical version locking violation where ~40+ `run_mise install` calls across `scripts/lib/langs/*.sh` are missing version specifications. The bug causes mise to install the latest available version from providers instead of the pinned versions defined in `.unirtm.toml`, breaking reproducibility and environment consistency. The fix involves systematically appending `@${_VERSION:-}` to all affected `run_mise install "${_PROVIDER:-}"` calls to enforce version locking.
 
 ## Glossary
 
@@ -19,7 +19,7 @@ This bugfix addresses a critical version locking violation where ~40+ `run_mise 
 
 ### Bug Condition
 
-The bug manifests when `run_mise install "${_PROVIDER:-}"` is called without a version suffix in any of the language module installation functions. The mise tool interprets this as a request to install the latest version from the provider, ignoring the pinned version defined in `scripts/lib/versions.sh`.
+The bug manifests when `run_mise install "${_PROVIDER:-}"` is called without a version suffix in any of the language module installation functions. The mise tool interprets this as a request to install the latest version from the provider, ignoring the pinned version defined in `.unirtm.toml`.
 
 **Formal Specification:**
 
@@ -123,7 +123,7 @@ Assuming our root cause analysis is correct:
    run_mise install "${_PROVIDER:-}@${_VERSION:-}" || _STAT_HADO="❌ Failed"
    ```
 
-3. **Verify Version Variable Exists**: Ensure corresponding `VER_*` variable is defined in `scripts/lib/versions.sh`
+3. **Verify Version Variable Exists**: Ensure corresponding `VER_*` variable is defined in `.unirtm.toml`
 
 4. **Update get_mise_tool_version Calls**: For functions using `get_mise_tool_version`, verify the provider string is passed correctly
 

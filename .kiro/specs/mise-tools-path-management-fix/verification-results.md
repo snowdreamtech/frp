@@ -109,17 +109,17 @@ Tests failed: 0
 ### 已完成的修复
 
 1. ✅ **统一 PATH 管理** (任务 3.1)
-   - 位置: `scripts/lib/common.sh` - `run_mise` 函数
+   - 位置: `.unirtm.toml` - `run_mise` 函数
    - 实现: 在 `run_mise install` 成功后自动添加 `_G_MISE_SHIMS_BASE` 到 PATH
    - 幂等性: 使用 `case ":$PATH:" in` 模式避免重复
 
 2. ✅ **CI PATH 持久化** (任务 3.2)
-   - 位置: `scripts/lib/common.sh` - `run_mise` 函数
+   - 位置: `.unirtm.toml` - `run_mise` 函数
    - 实现: 在 CI 环境中自动持久化到 `$GITHUB_PATH`
    - 幂等性: 使用 `grep -qxF` 检查避免重复
 
 3. ✅ **缓存超时保护** (任务 3.3)
-   - 位置: `scripts/lib/common.sh` - `refresh_mise_cache` 函数
+   - 位置: `.unirtm.toml` - `refresh_mise_cache` 函数
    - 实现: 使用 `run_with_timeout_robust 5` 包装 `mise ls --json`
    - 回退: 超时或错误时返回空 JSON `{}`
 

@@ -16,7 +16,7 @@ trim_trailing_whitespace = true
 
 # ── 4-Space Indentation ──────────────────────────────────────────────────────
 # Modern backend, system, and enterprise languages
-[*.{py,go,rs,java,kt,kts,scala,groovy,cs,fs,fsi,fsx,proto,c,cpp,h,hpp,objc,m,mm,f90,f95,pas,pp,d,zig,nim,odin,v,sv,vhdl,vhd,prolog,sol,lean,move,bal,ada,cob,cbl,jl,r,f,p,asm,s,fbs,thrift}]
+[*.{py,rs,java,kt,kts,scala,groovy,cs,fs,fsi,fsx,proto,c,cpp,h,hpp,objc,m,mm,f90,f95,pas,pp,d,zig,nim,odin,v,sv,vhdl,vhd,prolog,sol,lean,move,bal,ada,cob,cbl,jl,r,f,p,asm,s,fbs,thrift}]
 indent_style = space
 indent_size = 4
 
@@ -47,6 +47,11 @@ indent_size = 2
 # Makefile requires literal Tabs for command blocks
 [Makefile]
 indent_style = tab
+
+# Go relies heavily on gofmt which defaults to tabs
+[*.go]
+indent_style = tab
+indent_size = 4
 
 # Markdown requires trailing spaces for hard line breaks (<br>)
 [*.md]

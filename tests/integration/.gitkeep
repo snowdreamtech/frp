@@ -1,8 +1,0 @@
-# 集成测试目录
-
-此目录用于存放集成测试文件。
-
-## 计划的测试文件
-
-- test_setup_flow.bats - 完整设置流程测试
-- test_ci_simulation.bats - CI 环境模拟测试

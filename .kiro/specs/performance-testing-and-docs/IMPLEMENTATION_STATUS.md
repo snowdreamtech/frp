@@ -167,7 +167,7 @@ This document tracks the implementation status of the Performance Testing and Do
 
 - **Status**: Not Started
 - **Required Changes**:
-  - Modify `scripts/lib/common.sh`
+  - Modify `.unirtm.toml`
   - Add timing for Step 1 (binary detection)
   - Add timing for Step 2 (mise install)
   - Add timing for Step 3 (cache refresh)

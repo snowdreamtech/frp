@@ -1,1 +1,0 @@
-../../.agent/workflows/speckit.specify.md

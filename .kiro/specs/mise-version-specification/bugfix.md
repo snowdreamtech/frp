@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Many `run_mise install` commands across `scripts/lib/langs/*.sh` are missing version specifications, causing mise to install the latest version instead of the pinned version defined in `scripts/lib/versions.sh`. This violates version locking principles and breaks reproducibility. The bug affects approximately 40+ tool installations across multiple language modules.
+Many `run_mise install` commands across `scripts/lib/langs/*.sh` are missing version specifications, causing mise to install the latest version instead of the pinned version defined in `.unirtm.toml`. This violates version locking principles and breaks reproducibility. The bug affects approximately 40+ tool installations across multiple language modules.
 
 ## Bug Analysis
 

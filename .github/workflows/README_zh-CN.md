@@ -69,7 +69,7 @@ graph TD
 | 参数   | 类型    | 默认值  | 描述                                  |
 | :----- | :------ | :------ | :------------------------------------ |
 | `venv` | String  | `.venv` | Python 虚拟环境路径。                 |
-| `pnpm` | Boolean | `true`  | 是否使用 pnpm 进行 Node.js 依赖管理。 |
+| `npm`  | Boolean | `true`  | 是否使用 npm 进行 Node.js 依赖管理。  |
 
 ### 工作流模式
 
@@ -99,12 +99,12 @@ graph TD
 ### 发布前检查清单
 
 1. 确保所有工作流变更均通过 `actionlint` 校验。
-2. 确保 `make verify` 在本地运行通过。
+2. 确保 `unirtm run verify` 在本地运行通过。
 3. 检查新工作流的 `GITHUB_TOKEN` 权限。
 
 ### 性能考量
 
-- **缓存应用**：在每个任务中使用 `pnpm` 和 `pip` 缓存，可减少约 40% 的构建时间。
+- **缓存应用**：在每个任务中使用 `npm` 和 `pip` 缓存，可减少约 40% 的构建时间。
 - **矩阵测试**：将测试矩阵限制在支持的 OS/版本组合中，以节省运行配额。
 
 ### 故障排查
@@ -113,7 +113,7 @@ graph TD
   - **诊断**：检查 Job 定义中的 `permissions` 块。
   - **解决方案**：在 Job 或工作流级别授予所需的权限作用域（如 `contents: write`）。
 - **问题**：`lint` 任务在特定文件上失败。
-  - **诊断**：本地运行 `make lint` 以定位具体的格式或语法错误。
+  - **诊断**：本地运行 `unirtm run lint` 以定位具体的格式或语法错误。
   - **解决方案**：修复文件并重新推送，CI 会自动重新触发。
 - **问题**：`test` 任务超过超时限制。
   - **诊断**：查看日志确认是否有测试用例挂起。
@@ -151,7 +151,7 @@ graph TD
 
 1. 安装 `actionlint`: `brew install actionlint`.
 2. 校验工作流: `actionlint .github/workflows/*.yml`.
-3. 验证项目健康状况: `make verify`.
+3. 验证项目健康状况: `unirtm run verify`.
 
 ### 参考资料
 
