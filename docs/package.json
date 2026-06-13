@@ -10,8 +10,12 @@
     "docs:preview": "vitepress preview"
   },
   "devDependencies": {
-    "esbuild": "0.28.1",
-    "vite": "8.0.16",
     "vitepress": "1.6.4"
+  },
+  "overrides": {
+    "esbuild": "0.28.1",
+    "vite": "8.0.16"
   }
 }
+
+
