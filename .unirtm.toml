@@ -27,6 +27,7 @@ UNIRTM_GO_SKIP_CHECKSUM = '{% if env.CI is defined %}0{% else %}1{% endif %}'
 UNIRTM_NODE_COMPILE = '{% if env.ALPINE_VERSION is defined %}false{% endif %}'
 UNIRTM_NODE_FLAVOR = '{% if env.ALPINE_VERSION is defined %}musl{% endif %}'
 UNIRTM_NODE_MIRROR_URL = '{% if env.ALPINE_VERSION is defined %}https://unofficial-builds.nodejs.org/download/release/{% elif env.CI is defined %}https://nodejs.org/dist/{% else %}https://npmmirror.com/mirrors/node/{% endif %}'
+UNIRTM_HOOK_ALLOW_MISSING = '1'
 
 [tools]
 'github:anchore/syft' = '1.44.0'
