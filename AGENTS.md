@@ -28,11 +28,6 @@ the actual rules live in `.agent/rules/` as the Single Source of Truth.
 
 > **Failure to follow the rules inside `.agent/rules/` and the Lazy-Loading protocol is completely unacceptable.**
 
-<!-- SPECKIT START -->
-For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan:
-file:///Users/snowdream/Workspace/snowdreamtech/UniRTM/specs/026-docs-mise-compare/plan.md
-<!-- SPECKIT END -->
 
 ## Slash Commands / Workflows
 

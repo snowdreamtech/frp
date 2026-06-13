@@ -61,7 +61,7 @@ UniRTM (开放多模态):
 
 ## 3. Native 模式源码解析 (以 UniRTM 引擎为例)
 
-在 UniRTM 的 [native.go](../internal/task/native.go) 中，展现了对 Mise 高级输出样式的完美对齐与超越：
+在 UniRTM 的 native.go 中，展现了对 Mise 高级输出样式的完美对齐与超越：
 
 ```go
 // 绑定 IO 输出风格，支持完美的 prefix 前缀化注入

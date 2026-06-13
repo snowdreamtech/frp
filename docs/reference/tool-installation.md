@@ -344,7 +344,7 @@ MISE_OFFLINE=1 ./scripts/setup.sh
 
 ## Performance Characteristics
 
-Based on performance testing (see [Performance Testing](../../benchmarks/README.md)):
+Based on performance testing:
 
 - **Total setup time**: ~5 minutes (300 seconds) for all tools
 - **Binary verification**: < 5 seconds per tool
@@ -394,7 +394,6 @@ For a complete list, see the implementation in `scripts/lib/langs/*.sh`.
 ## Related Documentation
 
 - [Alpine Linux Compatibility](../alpine-compatibility.md)
-- [Performance Testing](../../benchmarks/README.md)
 - [API Documentation](./api-common.md)
 - [Troubleshooting](../troubleshooting-mise-provenance.md)
 
