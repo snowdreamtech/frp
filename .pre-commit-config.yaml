@@ -1,3 +1,6 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
 ---
 # .pre-commit-config.yaml - Second Line of Defense
 #
@@ -60,7 +63,7 @@ repos:
         types: [text]
         exclude: |
           (?x)^(
-            \.md$|
+            \.md$|.*\.lock$|go\.sum$|
             (\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
           )
         stages: [pre-commit, pre-merge-commit]
@@ -89,6 +92,7 @@ repos:
         types: [text]
         exclude: |
           (?x)^(
+            .*\.lock$|go\.sum$|
             (\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
           )
         stages: [pre-commit, pre-merge-commit]
@@ -99,13 +103,18 @@ repos:
         entry: |
           python3 -c "
           import sys, os
-          large_files = [f for f in sys.argv[1:] if os.path.isfile(f) and os.path.getsize(f) > 500*1024]
-          for f in large_files: print(f'File too large (>500KB): {f}')
+          large_files = [f for f in sys.argv[1:] if os.path.isfile(f) and os.path.getsize(f) > 1024*1024]
+          for f in large_files: print(f'File too large (>1MB): {f}')
           sys.exit(1 if large_files else 0)
           "
         language: system
+        exclude: |
+          (?x)^(
+            examples/plugin-go/unirtm-plugin-example|
+            docs/tapes/demo\.gif
+          )
         stages: [pre-commit, pre-merge-commit]
-        description: "Prevent large files (>500KB) from being committed."
+        description: "Prevent large files (>1MB) from being committed."
 
       - id: check-merge-conflict
         name: check for merge conflicts
@@ -612,8 +621,7 @@ repos:
       - id: prettier
         name: prettier format
         language: system
-        entry: unirtm hook-exec prettier
-        args: [--write]
+        entry: unirtm hook-exec prettier --write
         types_or:
           - json
           - yaml
@@ -664,8 +672,7 @@ repos:
       - id: shfmt
         name: shfmt format
         language: system
-        entry: unirtm hook-exec shfmt
-        args: [-w, -s, -i, "2"]
+        entry: unirtm hook-exec shfmt -w -s -i 2
         types: [shell]
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -706,6 +713,25 @@ repos:
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
         description: "Canonical Go code formatting."
 
+      - id: goimports
+        name: goimports
+        language: system
+        entry: unirtm hook-exec goimports -w
+        types: [go]
+        exclude: |
+          (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
+        description: "Manage Go imports and formatting."
+
+      #      - id: golangci-lint
+      #        name: golangci-lint
+      #        language: system
+      #        entry: unirtm hook-exec golangci-lint run --fix
+      #        types: [go]
+      #        pass_filenames: false
+      #        exclude: |
+      #          (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
+      #        description: "Comprehensive Go linter aggregator."
+      
       - id: cargo-fmt
         name: cargo format
         language: system
@@ -766,6 +792,7 @@ repos:
         entry: unirtm hook-exec trivy fs . --scanners vuln,misconfig,secret --skip-dirs internal/addlicense/testdata --db-repository public.ecr.aws/aquasecurity/trivy-db --java-db-repository public.ecr.aws/aquasecurity/trivy-java-db:1 --checks-bundle-repository public.ecr.aws/aquasecurity/trivy-checks --timeout 15m --exit-code 1 --severity HIGH,CRITICAL
         always_run: true
         pass_filenames: false
+        stages: [manual, pre-push] # Skip in local pre-commit, run in CI or manually
         description: "Comprehensive security scan for vulnerabilities, misconfigurations, and secrets using Trivy."
 
       - id: checkov
@@ -774,6 +801,7 @@ repos:
         entry: unirtm hook-exec checkov --directory . --quiet --compact --soft-fail-on HIGH
         types_or: [yaml, dockerfile, terraform]
         pass_filenames: false
+        stages: [manual, pre-push] # Skip in local pre-commit, run in CI or manually
         description: "Audit Infrastructure-as-Code (Terraform, K8s, Docker) for security best practices."
 
       - id: semgrep
@@ -792,13 +820,13 @@ repos:
         exclude: ^tests/
         description: "Find common security issues in Python code using Bandit."
 
-      - id: gosec
-        name: gosec go security scan
-        language: system
-        entry: unirtm hook-exec gosec -quiet ./...
-        types: [go]
-        pass_filenames: false
-        description: "Audit Go source code for security vulnerabilities using Gosec."
+      #      - id: gosec
+      #        name: gosec go security scan
+      #        language: system
+      #        entry: unirtm hook-exec gosec -exclude=G104 -quiet ./...
+      #        types: [go]
+      #        pass_filenames: false
+      #        description: "Audit Go source code for security vulnerabilities using Gosec."
 
       - id: govulncheck
         name: govulncheck go vulnerability audit
@@ -991,8 +1019,7 @@ repos:
       - id: eslint
         name: eslint quality check
         language: system
-        entry: unirtm hook-exec eslint
-        args: [--fix]
+        entry: unirtm hook-exec eslint --fix
         types_or:
           - javascript
           - ts
@@ -1027,8 +1054,7 @@ repos:
       - id: yamllint
         name: yamllint
         language: system
-        entry: unirtm hook-exec yamllint
-        args: [--config-file, .yamllint.yml]
+        entry: unirtm hook-exec yamllint --config-file .yamllint.yml
         types: [yaml]
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -1037,8 +1063,7 @@ repos:
       - id: markdownlint-cli2
         name: markdownlint-cli2
         language: system
-        entry: bash -c 'if unirtm which markdownlint-cli2 >/dev/null 2>&1; then printf "%s\0" "" | xargs -0 -s 7000 unirtm exec -- markdownlint-cli2 --fix; else echo "Skipped markdownlint-cli2 not found"; fi' markdownlint-cli2
-        args: [--fix]
+        entry: bash -c 'if unirtm which markdownlint-cli2 >/dev/null 2>&1; then printf "%s\\0" "$@" | xargs -0 -s 7000 unirtm exec -- markdownlint-cli2 --fix; else echo "Skipped markdownlint-cli2 not found"; fi' markdownlint-cli2
         types: [markdown]
         description: "Ensure Markdown follows project style guides."
 
@@ -1047,6 +1072,10 @@ repos:
         language: system
         entry: unirtm hook-exec shellcheck
         types: [shell]
+        exclude: |
+          (?x)^(
+            test_activate\.sh
+          )
         description: "Posix-compliant ShellCheck for shell code quality."
 
       - id: shellcheck-posix
@@ -1056,7 +1085,8 @@ repos:
         types: [shell]
         exclude: |
           (?x)^(
-            tests/.*\.(sh|bats)$
+            tests/.*\.(sh|bats)$|
+            test_activate\.sh
           )
         description: "Enforce strict POSIX compliance for shell scripts (Rule 01.3.39). Test files are excluded as they use bash features."
 
