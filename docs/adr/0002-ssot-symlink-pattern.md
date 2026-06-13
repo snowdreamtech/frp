@@ -54,7 +54,7 @@ We adopt a **Single Source of Truth (SSoT) Symlink and Redirect Pattern**:
 - **Symlink Fragility on Windows**: Native Windows environments do not support POSIX symlinks without
   Developer Mode or admin rights. For Windows, the adapter must use a redirect file or a copy-on-init
   strategy. This is an accepted trade-off given that the majority of development occurs on POSIX systems.
-- **Init Dependency**: The symlink graph is only valid after `make setup` or `scripts/init-project.sh`
+- **Init Dependency**: The symlink graph is only valid after `unirtm run setup` or `scripts/init-project.sh`
   has been run. A freshly cloned repository before initialization may have broken symlinks for any IDE
   that relies on them.
 

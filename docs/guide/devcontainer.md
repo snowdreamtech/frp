@@ -100,4 +100,4 @@ Add extensions to `devcontainer.json`:
 
 ### Post-Create Commands
 
-The DevContainer runs `make install` after creation to install project dependencies automatically.
+The DevContainer runs `unirtm run install` after creation to install project dependencies automatically.

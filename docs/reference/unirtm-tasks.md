@@ -1,33 +1,33 @@
-# Makefile Commands
+# .unirtm.toml Commands
 
-All common tasks are unified under `make`. Run `make help` to see all available targets.
+All common tasks are unified under `make`. Run `unirtm run help` to see all available targets.
 
 ## Setup & Installation
 
 ```bash
-make setup    # Install system-level tools (Homebrew/APT/Scoop depending on OS)
-make install  # Install project language dependencies
+unirtm run setup    # Install system-level tools (Homebrew/APT/Scoop depending on OS)
+unirtm run install  # Install project language dependencies
 ```
 
 ### On-Demand Module Installation
 
-By default, `make setup` installs only commonly-used tools. For specialized tools, install them explicitly:
+By default, `unirtm run setup` installs only commonly-used tools. For specialized tools, install them explicitly:
 
 ```bash
 # Install SQL linting tools (when working with .sql files)
-make setup sql
+unirtm run setup sql
 
 # Install API contract tools (when working with OpenAPI/Swagger specs)
-make setup openapi
+unirtm run setup openapi
 
 # Install Protobuf tools (when working with .proto files)
-make setup protobuf
+unirtm run setup protobuf
 
 # Install task runners (when using Taskfile or justfile)
-make setup runners
+unirtm run setup runners
 
 # Install multiple modules at once
-make setup sql openapi protobuf
+unirtm run setup sql openapi protobuf
 ```
 
 These tools are automatically detected and installed when relevant files exist in your project.
@@ -35,16 +35,16 @@ These tools are automatically detected and installed when relevant files exist i
 ## Quality Gates
 
 ```bash
-make lint     # Run ALL linting checks (pre-commit hooks)
+unirtm run lint     # Run ALL linting checks (pre-commit hooks)
 make format   # Auto-format code across all languages
-make test     # Run the test suite
+unirtm run test     # Run the test suite
 make check    # Run lint + test in sequence
 ```
 
 ## Build & Release
 
 ```bash
-make build    # Build the project binary/artifacts
+unirtm run build    # Build the project binary/artifacts
 make clean    # Remove build artifacts and temporary files
 ```
 
@@ -64,7 +64,7 @@ make clean    # Remove build artifacts and temporary files
 
 ## Cross-Platform Behavior
 
-The Makefile automatically detects your operating system and uses the appropriate package manager:
+The .unirtm.toml automatically detects your operating system and uses the appropriate package manager:
 
 | OS                    | Package Manager   |
 | --------------------- | ----------------- |

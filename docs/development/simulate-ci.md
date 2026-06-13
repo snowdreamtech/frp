@@ -11,8 +11,8 @@
 source scripts/simulate-ci.sh
 
 # 运行测试
-make verify
-make audit
+unirtm run verify
+unirtm run audit
 
 # 禁用 CI 模式
 source scripts/simulate-ci.sh reset
@@ -27,7 +27,7 @@ export GITHUB_ACTIONS=true
 export _G_IS_CI=1
 
 # 运行测试
-make verify
+unirtm run verify
 
 # 禁用 CI 模式（关闭终端或 unset）
 unset CI GITHUB_ACTIONS _G_IS_CI
@@ -37,10 +37,10 @@ unset CI GITHUB_ACTIONS _G_IS_CI
 
 ```bash
 # 仅在单个命令中模拟 CI
-CI=true GITHUB_ACTIONS=true make verify
+CI=true GITHUB_ACTIONS=true unirtm run verify
 
 # 或使用 env 命令
-env CI=true GITHUB_ACTIONS=true make audit
+env CI=true GITHUB_ACTIONS=true unirtm run audit
 ```
 
 ## CI 环境检测机制
@@ -86,7 +86,7 @@ env CI=true GITHUB_ACTIONS=true make audit
 
 - 缺失的必需工具会导致失败（`❌ Failed`）
 - 严格验证工具的可执行性
-- 强制刷新 mise 缓存
+- 强制刷新 unirtm 缓存
 
 ### 2. 安全扫描
 
@@ -134,10 +134,10 @@ env CI=true GITHUB_ACTIONS=true make audit
 source scripts/simulate-ci.sh
 
 # 测试 setup 脚本（CI 模式下会严格验证）
-make setup
+unirtm run setup
 
 # 检查是否所有工具都正确安装
-make verify
+unirtm run verify
 ```
 
 ### 场景 2: 测试安全扫描
@@ -147,7 +147,7 @@ make verify
 source scripts/simulate-ci.sh
 
 # 运行完整的安全审计（包括重量级工具）
-make audit
+unirtm run audit
 
 # 查看 CI 摘要
 cat .ci_summary.log
@@ -210,18 +210,18 @@ export VERBOSE=2
 export DEBUG_RESOLVE_BIN=1
 
 # 运行命令查看详细输出
-make verify
+unirtm run verify
 ```
 
 ### 4. 比较本地和 CI 行为
 
 ```bash
 # 本地模式运行
-make verify > local.log 2>&1
+unirtm run verify > local.log 2>&1
 
 # CI 模式运行
 source scripts/simulate-ci.sh
-make verify > ci.log 2>&1
+unirtm run verify > ci.log 2>&1
 
 # 比较差异
 diff local.log ci.log
@@ -233,9 +233,9 @@ diff local.log ci.log
 
 **A**: CI 模式下会严格验证工具的可执行性。检查：
 
-- 工具是否在 `.mise.toml` 中正确配置
+- 工具是否在 `.unirtm.toml` 中正确配置
 - 工具版本是否与 `scripts/lib/versions.sh` 一致
-- mise 缓存是否需要刷新：`mise cache clear`
+- unirtm 缓存是否需要刷新：`unirtm cache clear`
 
 ### Q2: 如何永久禁用 CI 模式？
 
@@ -281,7 +281,7 @@ export GITEA_ACTIONS=true
 
    ```bash
    source scripts/simulate-ci.sh
-   make verify && make audit
+   unirtm run verify && unirtm run audit
    ```
 
 2. **隔离测试**: 在单独的终端窗口中启用 CI 模式，避免影响正常开发

@@ -5,7 +5,7 @@
 ### 方案一的问题 ❌
 
 ```toml
-# .mise.toml
+# .unirtm.toml
 [settings]
 node.flavor = "musl"  # ⚠️ 会影响所有系统！
 ```
@@ -40,7 +40,7 @@ RUN apk add --no-cache nodejs npm
 
 ### 方案 3: 使用环境变量（推荐）✅
 
-在不同环境使用不同配置，而不是在 `.mise.toml` 中硬编码。
+在不同环境使用不同配置，而不是在 `.unirtm.toml` 中硬编码。
 
 #### Dockerfile 配置（方案 3）
 
@@ -50,25 +50,25 @@ FROM alpine:3.19
 # 安装基础依赖
 RUN apk add --no-cache bash curl git ca-certificates
 
-# 安装 mise
-RUN curl https://mise.run | sh
+# 安装 unirtm
+RUN curl https://unirtm.run | sh
 ENV PATH="/root/.local/bin:$PATH"
 
 # ⭐ 关键：只在 Alpine 上配置 musl
-ENV MISE_NODE_MIRROR_URL="https://unofficial-builds.nodejs.org/download/release/"
-ENV MISE_NODE_FLAVOR="musl"
+ENV UNIRTM_NODE_MIRROR_URL="https://unofficial-builds.nodejs.org/download/release/"
+ENV UNIRTM_NODE_FLAVOR="musl"
 
 # 复制配置文件（不包含 node.flavor 设置）
-COPY .mise.toml .
+COPY .unirtm.toml .
 
 # 安装工具（会自动使用环境变量）
-RUN mise install
+RUN unirtm install
 ```
 
-#### .mise.toml 配置（方案 3）
+#### .unirtm.toml 配置（方案 3）
 
 ```toml
-# .mise.toml - 不包含 node.flavor 设置
+# .unirtm.toml - 不包含 node.flavor 设置
 [tools]
 node = "25.9.0"  # 可以指定精确版本
 python = "3.14.3"
@@ -83,40 +83,40 @@ go = "1.26.2"
 
 ```bash
 # 不设置任何环境变量，使用默认的 glibc 版本
-mise install
+unirtm install
 ```
 
 ---
 
 ## 方案 4: 多阶段构建 + 官方包（生产推荐）✅
 
-结合两种方案的优点：开发用 mise，生产用官方包。
+结合两种方案的优点：开发用 unirtm，生产用官方包。
 
 ### Dockerfile（方案 4）
 
 ```dockerfile
 # ============================================
-# 阶段 1: 构建阶段（使用 mise 获取最新版本）
+# 阶段 1: 构建阶段（使用 unirtm 获取最新版本）
 # ============================================
 FROM alpine:3.19 AS builder
 
 # 安装构建依赖
 RUN apk add --no-cache bash curl git ca-certificates
 
-# 安装 mise
-RUN curl https://mise.run | sh
+# 安装 unirtm
+RUN curl https://unirtm.run | sh
 ENV PATH="/root/.local/bin:$PATH"
 
 # 配置 Node.js musl 构建
-ENV MISE_NODE_MIRROR_URL="https://unofficial-builds.nodejs.org/download/release/"
-ENV MISE_NODE_FLAVOR="musl"
+ENV UNIRTM_NODE_MIRROR_URL="https://unofficial-builds.nodejs.org/download/release/"
+ENV UNIRTM_NODE_FLAVOR="musl"
 
 # 复制配置并安装
-COPY .mise.toml package*.json ./
-RUN mise install
+COPY .unirtm.toml package*.json ./
+RUN unirtm install
 
 # 安装项目依赖
-RUN mise exec -- npm ci --production
+RUN unirtm exec -- npm ci --production
 
 # ============================================
 # 阶段 2: 运行阶段（最小化镜像）
@@ -127,7 +127,7 @@ FROM alpine:3.19
 RUN apk add --no-cache libstdc++ libgcc
 
 # 从构建阶段复制 Node.js 和应用
-COPY --from=builder /root/.local/share/mise/installs/node /usr/local/
+COPY --from=builder /root/.local/share/unirtm/installs/node /usr/local/
 COPY --from=builder /app /app
 
 WORKDIR /app
@@ -144,18 +144,18 @@ CMD ["node", "index.js"]
 
 ## 方案 5: 使用 .tool-versions 条件配置 ✅
 
-mise 支持根据环境变量选择不同的配置文件。
+unirtm 支持根据环境变量选择不同的配置文件。
 
 ### 项目结构（方案 5）
 
 ```
 .
-├── .mise.toml              # 默认配置（glibc）
-├── .mise.alpine.toml       # Alpine 专用配置
+├── .unirtm.toml              # 默认配置（glibc）
+├── .unirtm.alpine.toml       # Alpine 专用配置
 └── Dockerfile
 ```
 
-### .mise.toml（默认配置）
+### .unirtm.toml（默认配置）
 
 ```toml
 [tools]
@@ -166,7 +166,7 @@ go = "1.26.2"
 # 默认不设置 flavor（使用 glibc）
 ```
 
-### .mise.alpine.toml（Alpine 专用）
+### .unirtm.alpine.toml（Alpine 专用）
 
 ```toml
 [tools]
@@ -185,20 +185,20 @@ node.flavor = "musl"
 FROM alpine:3.19
 
 RUN apk add --no-cache bash curl git ca-certificates
-RUN curl https://mise.run | sh
+RUN curl https://unirtm.run | sh
 ENV PATH="/root/.local/bin:$PATH"
 
 # 复制 Alpine 专用配置
-COPY .mise.alpine.toml .mise.toml
+COPY .unirtm.alpine.toml .unirtm.toml
 
-RUN mise install
+RUN unirtm install
 ```
 
 ### 本地开发
 
 ```bash
 # 使用默认配置（glibc）
-mise install
+unirtm install
 ```
 
 **优势**:
@@ -217,19 +217,19 @@ mise install
 # 使用官方 Node.js Alpine 镜像（包含最新版本）
 FROM node:25.9.0-alpine3.19
 
-# 安装 mise 用于其他工具
+# 安装 unirtm 用于其他工具
 RUN apk add --no-cache bash curl git
-RUN curl https://mise.run | sh
+RUN curl https://unirtm.run | sh
 ENV PATH="/root/.local/bin:$PATH"
 
 # 复制配置（注释掉 node）
-COPY .mise.toml .
+COPY .unirtm.toml .
 
 # 只安装其他工具（不安装 node）
-RUN mise install
+RUN unirtm install
 ```
 
-### .mise.toml（方案 6）
+### .unirtm.toml（方案 6）
 
 ```toml
 [tools]
@@ -269,13 +269,13 @@ go = "1.26.2"
 
 ```
 .
-├── .mise.toml
+├── .unirtm.toml
 ├── Dockerfile.alpine       # Alpine 专用
 ├── Dockerfile.node-alpine  # 使用官方 Node 镜像
 └── docker-compose.yml
 ```
 
-### .mise.toml（完整示例）
+### .unirtm.toml（完整示例）
 
 ```toml
 # 本地开发配置（glibc）
@@ -297,15 +297,15 @@ FROM node:25.9.0-alpine3.19
 # 安装基础工具
 RUN apk add --no-cache bash curl git ca-certificates
 
-# 安装 mise
-RUN curl https://mise.run | sh
+# 安装 unirtm
+RUN curl https://unirtm.run | sh
 ENV PATH="/root/.local/bin:$PATH"
 
 # 复制配置
-COPY .mise.toml package*.json ./
+COPY .unirtm.toml package*.json ./
 
 # 安装其他工具（跳过 node）
-RUN mise install python go
+RUN unirtm install python go
 
 # 安装 npm 依赖
 RUN npm ci
@@ -359,7 +359,7 @@ services:
    FROM node:25.9.0-alpine3.19
    ```
 
-2. **.mise.toml 保持简洁**
+2. **.unirtm.toml 保持简洁**
 
    ```toml
    # 本地开发用 glibc 版本
@@ -371,7 +371,7 @@ services:
    ```yaml
    # .github/workflows/ci.yml
    env:
-     MISE_NODE_FLAVOR: musl  # 仅在 Alpine 容器中设置
+     UNIRTM_NODE_FLAVOR: musl  # 仅在 Alpine 容器中设置
    ```
 
 这样：
@@ -387,5 +387,5 @@ services:
 
 - [Docker Hub - Node.js Official Images](https://hub.docker.com/_/node)
 - [Node.js Unofficial Builds](https://unofficial-builds.nodejs.org/)
-- [mise Environment Variables](https://mise.jdx.dev/configuration.html#environment-variables)
+- [unirtm Environment Variables](https://github.com/snowdreamtech/UniRTMconfiguration.html#environment-variables)
 - [Alpine Linux Packages](https://pkgs.alpinelinux.org/)

@@ -9,9 +9,9 @@ The CI PATH cache mechanism (`.ci_path_cache`) is used to persist tool installat
 The `.ci_path_cache` file contains **only directory paths**, for example:
 
 ```
-/home/runner/.local/share/mise/shims
-/home/runner/.local/share/mise/installs/osv-scanner/2.3.5/bin
-/home/runner/.local/share/mise/installs/zizmor/1.23.1/bin
+/home/runner/.local/share/unirtm/shims
+/home/runner/.local/share/unirtm/installs/osv-scanner/2.3.5/bin
+/home/runner/.local/share/unirtm/installs/zizmor/1.23.1/bin
 ```
 
 ## Security Assessment
@@ -138,13 +138,13 @@ GitHub Actions provides a native `$GITHUB_PATH` file for PATH persistence:
 ### Threats NOT Mitigated (Out of Scope)
 
 1. **CI Log Disclosure** - Paths may appear in public CI logs
-2. **Workspace Compromise** - If attacker has workspace access, they can read the file
+2. **Workspace Comprounirtm** - If attacker has workspace access, they can read the file
 3. **CI Platform Vulnerabilities** - Relies on CI platform's workspace isolation
 
 These are acceptable risks because:
 
 - CI logs typically show tool paths anyway
-- Workspace compromise implies broader security breach
+- Workspace comprounirtm implies broader security breach
 - CI platform security is the platform's responsibility
 
 ## Compliance
@@ -181,8 +181,8 @@ grep -E '(password|token|key|secret)' .ci_path_cache
 
 ```
 -rw------- 1 runner runner 245 Apr 5 12:34 .ci_path_cache
-/home/runner/.local/share/mise/shims
-/home/runner/.local/share/mise/installs/osv-scanner/2.3.5/bin
+/home/runner/.local/share/unirtm/shims
+/home/runner/.local/share/unirtm/installs/osv-scanner/2.3.5/bin
 ```
 
 ### Red Flags

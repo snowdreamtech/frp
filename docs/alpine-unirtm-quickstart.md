@@ -1,21 +1,21 @@
-# Alpine Linux + mise 快速启动指南
+# Alpine Linux + unirtm 快速启动指南
 
 ## 问题诊断
 
-如果你在 Alpine 上遇到 mise 安装失败，通常是因为缺少基础依赖。
+如果你在 Alpine 上遇到 unirtm 安装失败，通常是因为缺少基础依赖。
 
 ### 常见错误信息
 
 ```bash
 # 错误 1: Python 未找到
 ./configure: exec: line 8: python: not found
-mise ERROR sh failed
+unirtm ERROR sh failed
 
 # 错误 2: Bash 未找到
 env: 'bash': No such file or directory
 
 # 错误 3: GPG 未找到（警告）
-mise WARN gpg not found, skipping verification
+unirtm WARN gpg not found, skipping verification
 ```
 
 ## 快速解决方案
@@ -33,10 +33,10 @@ apk add --no-cache \
     python3
 ```
 
-### 步骤 2: 安装 mise
+### 步骤 2: 安装 unirtm
 
 ```bash
-curl https://mise.run | sh
+curl https://unirtm.run | sh
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
@@ -44,16 +44,16 @@ export PATH="$HOME/.local/bin:$PATH"
 
 ```bash
 # 安装 Node.js（会自动下载 musl 预编译包）
-mise install node@25.9.0
+unirtm install node@25.9.0
 
 # 安装 Python
-mise install python@3.14.3
+unirtm install python@3.14.3
 
 # 安装 Go
-mise install go@1.26.2
+unirtm install go@1.26.2
 
 # 激活工具
-mise use node@25.9.0 python@3.14.3 go@1.26.2
+unirtm use node@25.9.0 python@3.14.3 go@1.26.2
 ```
 
 ## 完整 Dockerfile 示例
@@ -72,13 +72,13 @@ RUN apk add --no-cache \
     gpg \
     python3
 
-# 安装 mise
-RUN curl https://mise.run | sh
+# 安装 unirtm
+RUN curl https://unirtm.run | sh
 ENV PATH="/root/.local/bin:$PATH"
 
 # 复制配置并安装工具
-COPY .mise.toml .
-RUN mise install
+COPY .unirtm.toml .
+RUN unirtm install
 
 WORKDIR /app
 COPY . .
@@ -103,13 +103,13 @@ RUN apk add --no-cache \
     linux-headers \
     binutils-gold
 
-# 安装 mise
-RUN curl https://mise.run | sh
+# 安装 unirtm
+RUN curl https://unirtm.run | sh
 ENV PATH="/root/.local/bin:$PATH"
 
 # 复制配置并安装工具
-COPY .mise.toml .
-RUN mise install
+COPY .unirtm.toml .
+RUN unirtm install
 
 WORKDIR /app
 COPY . .
@@ -123,8 +123,8 @@ CMD ["node", "index.js"]
 
 | 包 | 用途 | 是否必需 |
 |---|------|---------|
-| `bash` | mise 和构建脚本需要 | ✅ 必需 |
-| `curl` | 下载 mise 和工具 | ✅ 必需 |
+| `bash` | unirtm 和构建脚本需要 | ✅ 必需 |
+| `curl` | 下载 unirtm 和工具 | ✅ 必需 |
 | `git` | 版本控制和某些工具安装 | ✅ 必需 |
 | `ca-certificates` | HTTPS 下载 | ✅ 必需 |
 | `gpg` | 验证下载签名 | ⚠️ 推荐 |
@@ -143,11 +143,11 @@ CMD ["node", "index.js"]
 ## 验证安装
 
 ```bash
-# 检查 mise 版本
-mise --version
+# 检查 unirtm 版本
+unirtm --version
 
 # 检查已安装的工具
-mise list
+unirtm list
 
 # 检查 Node.js
 node --version
@@ -160,7 +160,7 @@ python --version
 go version
 
 # 验证二进制文件类型（确认是 musl）
-file $(mise which node)
+file $(unirtm which node)
 # 应该显示: dynamically linked, interpreter /lib/ld-musl-x86_64.so.1
 ```
 
@@ -168,12 +168,12 @@ file $(mise which node)
 
 ### 使用国内镜像加速
 
-在 `.mise.toml` 中配置：
+在 `.unirtm.toml` 中配置：
 
 ```toml
 [env]
 # Node.js 镜像
-MISE_NODE_MIRROR_URL = "https://npmmirror.com/mirrors/node/"
+UNIRTM_NODE_MIRROR_URL = "https://npmmirror.com/mirrors/node/"
 NPM_CONFIG_REGISTRY = "https://registry.npmmirror.com"
 
 # Python 镜像
@@ -182,8 +182,8 @@ PYTHON_BUILD_MIRROR_URL = "https://mirrors.aliyun.com/python/"
 
 # Go 镜像
 GOPROXY = "https://mirrors.aliyun.com/goproxy/,direct"
-MISE_GO_DOWNLOAD_MIRROR = "https://mirrors.aliyun.com/golang/"
-MISE_GO_SKIP_CHECKSUM = "1"
+UNIRTM_GO_DOWNLOAD_MIRROR = "https://mirrors.aliyun.com/golang/"
+UNIRTM_GO_SKIP_CHECKSUM = "1"
 ```
 
 ### 多阶段构建优化
@@ -199,18 +199,18 @@ RUN apk add --no-cache \
     bash curl git ca-certificates gpg python3 \
     build-base linux-headers binutils-gold
 
-# 安装 mise
-RUN curl https://mise.run | sh
+# 安装 unirtm
+RUN curl https://unirtm.run | sh
 ENV PATH="/root/.local/bin:$PATH"
 
 # 安装工具
-COPY .mise.toml .
-RUN mise install
+COPY .unirtm.toml .
+RUN unirtm install
 
 # 构建应用
 WORKDIR /app
 COPY . .
-RUN mise exec -- npm ci --production
+RUN unirtm exec -- npm ci --production
 
 # ============================================
 # 阶段 2: 运行阶段（最小化）
@@ -221,11 +221,11 @@ FROM alpine:3.22
 RUN apk add --no-cache libstdc++ libgcc
 
 # 从构建阶段复制工具和应用
-COPY --from=builder /root/.local/share/mise/installs /root/.local/share/mise/installs
+COPY --from=builder /root/.local/share/unirtm/installs /root/.local/share/unirtm/installs
 COPY --from=builder /app /app
 
 # 设置环境变量
-ENV PATH="/root/.local/share/mise/installs/node/25.9.0/bin:$PATH"
+ENV PATH="/root/.local/share/unirtm/installs/node/25.9.0/bin:$PATH"
 
 WORKDIR /app
 CMD ["node", "index.js"]
@@ -233,40 +233,40 @@ CMD ["node", "index.js"]
 
 ## 故障排除
 
-### 问题 1: mise 安装卡住
+### 问题 1: unirtm 安装卡住
 
 ```bash
 # 检查网络连接
-ping -c 3 mise.run
+ping -c 3 unirtm.run
 
 # 使用代理
 export HTTP_PROXY=http://proxy.example.com:8080
 export HTTPS_PROXY=http://proxy.example.com:8080
-curl https://mise.run | sh
+curl https://unirtm.run | sh
 ```
 
 ### 问题 2: 工具安装失败
 
 ```bash
 # 启用详细日志
-MISE_DEBUG=1 mise install node@25.9.0
+UNIRTM_DEBUG=1 unirtm install node@25.9.0
 
 # 清除缓存重试
-rm -rf ~/.cache/mise
-mise install node@25.9.0
+rm -rf ~/.cache/unirtm
+unirtm install node@25.9.0
 ```
 
 ### 问题 3: 预编译包不可用
 
 ```bash
 # 检查可用版本
-mise ls-remote node
+unirtm ls-remote node
 
 # 如果没有 musl 预编译包，安装编译依赖
 apk add build-base linux-headers binutils-gold
 
 # 重新安装
-mise install node@25.9.0
+unirtm install node@25.9.0
 ```
 
 ### 问题 4: ARM64 架构支持
@@ -291,7 +291,7 @@ docker pull node:25.9.0-alpine3.22
 
 ## 参考资源
 
-- [mise 官方文档](https://mise.jdx.dev/)
+- [unirtm 官方文档](https://github.com/snowdreamtech/UniRTM)
 - [Alpine Linux 包搜索](https://pkgs.alpinelinux.org/)
 - [Node.js Unofficial Builds](https://unofficial-builds.nodejs.org/)
 - [Docker Hub - Alpine](https://hub.docker.com/_/alpine)

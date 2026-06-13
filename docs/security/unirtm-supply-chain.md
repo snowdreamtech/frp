@@ -1,14 +1,14 @@
-# mise Supply Chain Security Analysis
+# unirtm Supply Chain Security Analysis
 
 ## Overview
 
-This document analyzes the supply chain risks associated with mise's default registry and provides mitigation strategies.
+This document analyzes the supply chain risks associated with unirtm's default registry and provides mitigation strategies.
 
 ## Risk Analysis
 
 ### 1. Implicit Registry Redirection
 
-**Risk**: mise's built-in registry can silently redirect tool installations to different backends.
+**Risk**: unirtm's built-in registry can silently redirect tool installations to different backends.
 
 **Example**:
 
@@ -16,7 +16,7 @@ This document analyzes the supply chain risks associated with mise's default reg
 # You specify:
 "github:checkmake/checkmake" = "v0.3.2"
 
-# But mise's registry maps 'checkmake' to:
+# But unirtm's registry maps 'checkmake' to:
 aqua:mrtazz/checkmake
 ```
 
@@ -24,11 +24,11 @@ aqua:mrtazz/checkmake
 
 - Different maintainer (`mrtazz` vs `checkmake` organization)
 - Additional layer (aqua registry) increases attack surface
-- Potential for supply chain attacks if registry is compromised
+- Potential for supply chain attacks if registry is comprounirtmd
 
 ### 2. Affected Tools in This Project
 
-Based on mise registry inspection, the following tools have registry mappings:
+Based on unirtm registry inspection, the following tools have registry mappings:
 
 ```bash
 checkmake                     aqua:mrtazz/checkmake
@@ -40,7 +40,7 @@ hadolint                      aqua:hadolint/hadolint
 
 ### ✅ Already Implemented
 
-1. **Explicit Backend Specification**: All tools in `.mise.toml` use explicit backends:
+1. **Explicit Backend Specification**: All tools in `.unirtm.toml` use explicit backends:
    - `github:owner/repo` for GitHub releases
    - `npm:package` for npm packages
    - `pipx:package` for Python packages
@@ -49,18 +49,18 @@ hadolint                      aqua:hadolint/hadolint
 
    ```bash
    checkmake)
-     _MISE_TOOL_SPEC="github:checkmake/checkmake"
+     _UNIRTM_TOOL_SPEC="github:checkmake/checkmake"
      _LINTER_BIN="checkmake"
      ;;
    ```
 
-3. **Version Pinning**: All tools are pinned to specific versions in `.mise.toml`
+3. **Version Pinning**: All tools are pinned to specific versions in `.unirtm.toml`
 
 ### 🔒 Additional Recommendations
 
-#### 1. Disable mise Registry (Future)
+#### 1. Disable unirtm Registry (Future)
 
-When mise supports it, consider disabling the default registry:
+When unirtm supports it, consider disabling the default registry:
 
 ```toml
 [settings]
@@ -72,29 +72,29 @@ disable_default_registry = true  # Not yet supported
 Regularly verify that installed tools match expected sources:
 
 ```bash
-# Check what mise actually installed
-mise list
+# Check what unirtm actually installed
+unirtm list
 
 # Verify binary checksums against official releases
-mise exec -- <tool> --version
+unirtm exec -- <tool> --version
 ```
 
-#### 3. Use mise.lock for Reproducibility
+#### 3. Use unirtm.lock for Reproducibility
 
-The `mise.lock` file ensures consistent installations across environments:
+The `unirtm.lock` file ensures consistent installations across environments:
 
 ```bash
 # Verify lock file matches configuration
-mise install --frozen
+unirtm install --frozen
 ```
 
-#### 4. Monitor mise Registry Changes
+#### 4. Monitor unirtm Registry Changes
 
-Watch for changes in mise's registry that might affect your tools:
+Watch for changes in unirtm's registry that might affect your tools:
 
 ```bash
 # Check current registry mappings
-mise registry | grep -E "(checkmake|gitleaks|hadolint)"
+unirtm registry | grep -E "(checkmake|gitleaks|hadolint)"
 ```
 
 ## Verification Steps
@@ -104,13 +104,13 @@ mise registry | grep -E "(checkmake|gitleaks|hadolint)"
 1. **Verify Tool Sources**:
 
    ```bash
-   mise list | grep -v "npm:" | grep -v "pipx:"
+   unirtm list | grep -v "npm:" | grep -v "pipx:"
    ```
 
 2. **Check for Unexpected Backends**:
 
    ```bash
-   mise list | grep "aqua:"
+   unirtm list | grep "aqua:"
    ```
 
    Should only show tools you explicitly configured with aqua backend.
@@ -119,39 +119,39 @@ mise registry | grep -E "(checkmake|gitleaks|hadolint)"
 
    ```bash
    # For GitHub releases, verify against official checksums
-   mise where github:checkmake/checkmake
-   sha256sum $(mise where github:checkmake/checkmake)/bin/checkmake
+   unirtm where github:checkmake/checkmake
+   sha256sum $(unirtm where github:checkmake/checkmake)/bin/checkmake
    ```
 
 ### During CI/CD
 
 Our CI workflows already implement:
 
-- ✅ Locked mise versions (`MISE_LOCKED=1`)
+- ✅ Locked unirtm versions (`UNIRTM_LOCKED=1`)
 - ✅ Explicit tool specs in lint-wrapper.sh
-- ✅ Version pinning in .mise.toml
-- ✅ mise.lock committed to repository
+- ✅ Version pinning in .unirtm.toml
+- ✅ unirtm.lock committed to repository
 
 ## Related Security Measures
 
-1. **Dependabot**: Monitors mise tool versions
+1. **Dependabot**: Monitors unirtm tool versions
 2. **Trivy**: Scans for vulnerabilities in binaries
 3. **SBOM Generation**: Documents all tool dependencies
 4. **Signed Commits**: Ensures code integrity
 
 ## References
 
-- [mise Registry Documentation](https://mise.jdx.dev/registry.html)
-- [mise Security Policy](https://github.com/jdx/mise/blob/main/SECURITY.md)
-- [mise Paranoid Mode](https://mise.jdx.dev/paranoid)
+- [unirtm Registry Documentation](https://github.com/snowdreamtech/UniRTMregistry.html)
+- [unirtm Security Policy](https://github.com/jdx/unirtm/blob/main/SECURITY.md)
+- [unirtm Paranoid Mode](https://github.com/snowdreamtech/UniRTMparanoid)
 - [SLSA Framework](https://slsa.dev/)
 
 ## Action Items
 
-- [ ] Monitor mise for registry disable feature
+- [ ] Monitor unirtm for registry disable feature
 - [ ] Set up automated alerts for registry changes
 - [ ] Document tool source verification in CI
-- [ ] Consider contributing to mise for better registry transparency
+- [ ] Consider contributing to unirtm for better registry transparency
 
 ---
 

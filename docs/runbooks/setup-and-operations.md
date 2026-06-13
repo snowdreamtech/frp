@@ -18,7 +18,7 @@ behavioral rules distributed to 50+ IDEs via a symlink/redirect pattern.
 
 | Dependency | Version  | Purpose                      |
 | ---------- | -------- | ---------------------------- |
-| `mise`     | ≥ 2024.x | Toolchain version management |
+| `unirtm`     | ≥ 2024.x | Toolchain version management |
 | `make`     | System   | Task orchestration           |
 | `git`      | ≥ 2.x    | Version control and hooks    |
 | `node`     | ≥ 20.x   | Documentation (VitePress)    |
@@ -43,17 +43,17 @@ behavioral rules distributed to 50+ IDEs via a symlink/redirect pattern.
 git clone <repo-url>
 cd <repo>
 git config core.ignorecase false   # MANDATORY on macOS/Windows
-make setup                          # installs mise + core tools
-make install                        # installs project dependencies (Node, Python venv)
-make verify                         # validates everything is green
+unirtm run setup                          # installs unirtm + core tools
+unirtm run install                        # installs project dependencies (Node, Python venv)
+unirtm run verify                         # validates everything is green
 ```
 
 ### Run Quality Checks
 
 ```bash
-make lint          # run all local linters
-make audit         # run security audit (Gitleaks + dependency scan)
-make verify        # run all checks in sequence
+unirtm run lint          # run all local linters
+unirtm run audit         # run security audit (Gitleaks + dependency scan)
+unirtm run verify        # run all checks in sequence
 ```
 
 ### Update Dependencies
@@ -66,7 +66,7 @@ cd docs && pnpm update
 pre-commit autoupdate
 
 # Tool versions
-mise upgrade
+unirtm upgrade
 ```
 
 ### Build Documentation
@@ -95,10 +95,10 @@ cd docs && pnpm run dev         # development server (hot-reload)
 
 ```bash
 # Reproduce locally
-make lint
+unirtm run lint
 
 # Check specific linter output
-make lint 2>&1 | grep -A5 "error\|failed"
+unirtm run lint 2>&1 | grep -A5 "error\|failed"
 ```
 
 **Likely causes**:
@@ -113,7 +113,7 @@ make lint 2>&1 | grep -A5 "error\|failed"
 
 ### Pre-commit Hook Fails on macOS
 
-**Symptom**: `make install` completes but hooks fail with Python/binary not found errors.
+**Symptom**: `unirtm run install` completes but hooks fail with Python/binary not found errors.
 
 **Diagnosis**:
 
@@ -128,7 +128,7 @@ pre-commit --version
 ```bash
 # Rebuild the venv
 rm -rf .venv
-make install
+unirtm run install
 ```
 
 ---
@@ -166,7 +166,7 @@ find . -xtype l   # list broken symlinks
 
 ```bash
 # Re-initialize symlinks
-make setup
+unirtm run setup
 ```
 
 ---
@@ -189,9 +189,9 @@ make setup
 git stash                    # save local changes
 git checkout main            # switch to main
 git pull origin main         # fetch latest
-make setup                   # re-initialize toolchain
-make install                 # re-install dependencies
-make verify                  # confirm clean state
+unirtm run setup                   # re-initialize toolchain
+unirtm run install                 # re-install dependencies
+unirtm run verify                  # confirm clean state
 ```
 
 ### Rollback a Bad Commit
