@@ -731,7 +731,7 @@ repos:
       #        exclude: |
       #          (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
       #        description: "Comprehensive Go linter aggregator."
-      
+
       - id: cargo-fmt
         name: cargo format
         language: system
