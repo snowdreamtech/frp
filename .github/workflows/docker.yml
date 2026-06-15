@@ -13,7 +13,6 @@ name: "🐳 Docker Multi-Platform Build"
 "on":
   push:
     branches:
-      - "main"
       - "dev"
     tags:
       # Release-Please generated tags for Alpine (primary format)
