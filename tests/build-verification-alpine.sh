@@ -8,7 +8,7 @@
 # Requirements: 2.1, 2.4, 2.5
 # Validates:
 #   - Alpine Dockerfile builds successfully
-#   - Base image is snowdreamtech/alpine:3.23.4
+#   - Base image is snowdreamtech/alpine:3.24.0
 #   - OCI labels are present and correct
 
 set -eu
@@ -49,14 +49,14 @@ log_error() {
 TEST_IMAGE_NAME="base-alpine-test"
 TEST_IMAGE_TAG="build-verification"
 DOCKERFILE_PATH="docker/alpine/Dockerfile"
-EXPECTED_BASE_IMAGE="snowdreamtech/alpine:3.23.4"
-EXPECTED_VERSION="3.23.4"
+EXPECTED_BASE_IMAGE="snowdreamtech/alpine:3.24.0"
+EXPECTED_VERSION="3.24.0"
 
 # Expected OCI labels
 EXPECTED_LABELS="
 org.opencontainers.image.authors=Snowdream Tech
 org.opencontainers.image.title=Base Image Based On Alpine
-org.opencontainers.image.version=3.23.4
+org.opencontainers.image.version=3.24.0
 org.opencontainers.image.licenses=MIT
 org.opencontainers.image.vendor=Snowdream Tech
 "

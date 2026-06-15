@@ -1,7 +1,7 @@
 # Base Image (Rocky Variant)
 # Extends snowdreamtech/rocky with additional tooling and configuration.
 
-FROM snowdreamtech/rocky:10.1.0
+FROM snowdreamtech/rocky:10.2.0
 
 # Build-time Configuration
 ARG BUILDTIME \
@@ -27,7 +27,7 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.licenses="MIT" \
     org.opencontainers.image.source="https://github.com/snowdreamtech/base" \
     org.opencontainers.image.vendor="Snowdream Tech" \
-    org.opencontainers.image.version="${VERSION:-10.1.0}" \
+    org.opencontainers.image.version="${VERSION:-10.2.0}" \
     org.opencontainers.image.created="${BUILDTIME}" \
     org.opencontainers.image.revision="${REVISION}" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/base"

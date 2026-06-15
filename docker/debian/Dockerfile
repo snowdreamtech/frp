@@ -1,7 +1,7 @@
 # Base Image (Debian Variant)
 # Extends snowdreamtech/debian with additional tooling and configuration.
 
-FROM snowdreamtech/debian:13.4.0
+FROM snowdreamtech/debian:13.5.0
 
 # Build-time Configuration
 ARG BUILDTIME \
@@ -28,7 +28,7 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.licenses="MIT" \
     org.opencontainers.image.source="https://github.com/snowdreamtech/base" \
     org.opencontainers.image.vendor="Snowdream Tech" \
-    org.opencontainers.image.version="${VERSION:-13.4.0}" \
+    org.opencontainers.image.version="${VERSION:-13.5.0}" \
     org.opencontainers.image.created="${BUILDTIME}" \
     org.opencontainers.image.revision="${REVISION}" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/base"

@@ -8,7 +8,7 @@
 # Requirements: 2.3, 2.4, 2.5
 # Validates:
 #   - Rocky Dockerfile builds successfully
-#   - Base image is snowdreamtech/rocky:10.1.0
+#   - Base image is snowdreamtech/rocky:10.2.0
 #   - OCI labels are present and correct
 
 set -eu
@@ -49,14 +49,14 @@ log_error() {
 TEST_IMAGE_NAME="base-rocky-test"
 TEST_IMAGE_TAG="build-verification"
 DOCKERFILE_PATH="docker/rocky/Dockerfile"
-EXPECTED_BASE_IMAGE="snowdreamtech/rocky:10.1.0"
-EXPECTED_VERSION="10.1.0"
+EXPECTED_BASE_IMAGE="snowdreamtech/rocky:10.2.0"
+EXPECTED_VERSION="10.2.0"
 
 # Expected OCI labels
 EXPECTED_LABELS="
 org.opencontainers.image.authors=Snowdream Tech
 org.opencontainers.image.title=Base Image Based On Rocky
-org.opencontainers.image.version=10.1.0
+org.opencontainers.image.version=10.2.0
 org.opencontainers.image.licenses=MIT
 org.opencontainers.image.vendor=Snowdream Tech
 "

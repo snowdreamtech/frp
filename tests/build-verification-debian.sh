@@ -8,7 +8,7 @@
 # Requirements: 2.2, 2.4, 2.5
 # Validates:
 #   - Debian Dockerfile builds successfully
-#   - Base image is snowdreamtech/debian:13.4.0
+#   - Base image is snowdreamtech/debian:13.5.0
 #   - OCI labels are present and correct
 
 set -eu
@@ -49,14 +49,14 @@ log_error() {
 TEST_IMAGE_NAME="base-debian-test"
 TEST_IMAGE_TAG="build-verification"
 DOCKERFILE_PATH="docker/debian/Dockerfile"
-EXPECTED_BASE_IMAGE="snowdreamtech/debian:13.4.0"
-EXPECTED_VERSION="13.4.0"
+EXPECTED_BASE_IMAGE="snowdreamtech/debian:13.5.0"
+EXPECTED_VERSION="13.5.0"
 
 # Expected OCI labels
 EXPECTED_LABELS="
 org.opencontainers.image.authors=Snowdream Tech
 org.opencontainers.image.title=Base Image Based On Debian
-org.opencontainers.image.version=13.4.0
+org.opencontainers.image.version=13.5.0
 org.opencontainers.image.licenses=MIT
 org.opencontainers.image.vendor=Snowdream Tech
 "

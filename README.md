@@ -45,7 +45,7 @@ docker run -d \
 
 **Supported Architectures**: i386, amd64, arm32v5, arm32v7, arm64, mips64le, ppc64le, s390x
 
-**Base Image**: `snowdreamtech/debian:13.4.0`
+**Base Image**: `snowdreamtech/debian:13.5.0`
 
 ### Alpine
 
@@ -61,7 +61,7 @@ docker run -d \
 
 **Supported Architectures**: i386, amd64, arm32v6, arm32v7, arm64, ppc64le, riscv64, s390x
 
-**Base Image**: `snowdreamtech/alpine:3.23.4`
+**Base Image**: `snowdreamtech/alpine:3.24.0`
 
 ### Rocky
 
@@ -77,7 +77,7 @@ docker run -d \
 
 **Supported Architectures**: i386, amd64, arm32v5, arm32v7, arm64, mips64le, ppc64le, s390x
 
-**Base Image**: `snowdreamtech/rocky:10.1.0`
+**Base Image**: `snowdreamtech/rocky:10.2.0`
 
 ## Build Instructions
 
@@ -209,14 +209,14 @@ Images follow semantic versioning with the format: `{major}-v{major}.{minor}.{pa
 
 Examples:
 
-- `snowdreamtech/base:debian-13-v13.4.0`
-- `snowdreamtech/base:alpine-3-v3.23.4`
-- `snowdreamtech/base:rocky-10-v10.1.0`
+- `snowdreamtech/base:debian-13-v13.5.0`
+- `snowdreamtech/base:alpine-3-v3.24.0`
+- `snowdreamtech/base:rocky-10-v10.2.0`
 
 This format allows:
 
 - **Major version pinning**: `debian-13` (tracks latest 13.x.x)
-- **Full version pinning**: `debian-13-v13.4.0` (exact version)
+- **Full version pinning**: `debian-13-v13.5.0` (exact version)
 - **Latest tag**: `debian` or `latest` (tracks most recent release)
 
 ## Architecture Support

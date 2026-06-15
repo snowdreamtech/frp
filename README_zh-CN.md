@@ -45,7 +45,7 @@ docker run -d \
 
 **支持的架构**：i386、amd64、arm32v5、arm32v7、arm64、mips64le、ppc64le、s390x
 
-**基础镜像**：`snowdreamtech/debian:13.4.0`
+**基础镜像**：`snowdreamtech/debian:13.5.0`
 
 ### Alpine
 
@@ -61,7 +61,7 @@ docker run -d \
 
 **支持的架构**：i386、amd64、arm32v6、arm32v7、arm64、ppc64le、riscv64、s390x
 
-**基础镜像**：`snowdreamtech/alpine:3.23.4`
+**基础镜像**：`snowdreamtech/alpine:3.24.0`
 
 ### Rocky
 
@@ -77,7 +77,7 @@ docker run -d \
 
 **支持的架构**：i386、amd64、arm32v5、arm32v7、arm64、mips64le、ppc64le、s390x
 
-**基础镜像**：`snowdreamtech/rocky:10.1.0`
+**基础镜像**：`snowdreamtech/rocky:10.2.0`
 
 ## 构建说明
 
@@ -209,14 +209,14 @@ services:
 
 示例：
 
-- `snowdreamtech/base:debian-13-v13.4.0`
-- `snowdreamtech/base:alpine-3-v3.23.4`
-- `snowdreamtech/base:rocky-10-v10.1.0`
+- `snowdreamtech/base:debian-13-v13.5.0`
+- `snowdreamtech/base:alpine-3-v3.24.0`
+- `snowdreamtech/base:rocky-10-v10.2.0`
 
 此格式允许：
 
 - **主版本固定**：`debian-13`（跟踪最新的 13.x.x）
-- **完整版本固定**：`debian-13-v13.4.0`（精确版本）
+- **完整版本固定**：`debian-13-v13.5.0`（精确版本）
 - **最新标签**：`debian` 或 `latest`（跟踪最新版本）
 
 ## 架构支持
