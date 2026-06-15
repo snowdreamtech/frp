@@ -4,7 +4,7 @@
 ---
 # Dependabot Smart Sync
 # Purpose: Automatically regenerates .github/dependabot.yml based on detected ecosystems.
-# Trigger: Push to dev/main (manifest file changes), monthly schedule, or manual dispatch.
+# Trigger: Push to dev (manifest file changes), monthly schedule, or manual dispatch.
 # Design:
 #   - Uses .unirtm.toml to scan for manifest files via git ls-files.
 #   - Only commits if the generated config differs from the current one.
