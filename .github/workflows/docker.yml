@@ -230,7 +230,7 @@ jobs:
 
       - name: "📂 Checkout Repository Code"
         if: steps.variant-filter.outputs.skip != 'true'
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           token: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
           persist-credentials: false
@@ -592,7 +592,7 @@ jobs:
       - name: "📤 Upload Image Security Scan (SARIF)"
         if: steps.variant-filter.outputs.skip != 'true' && steps.build.conclusion == 'success' && steps.trivy.outcome == 'success'
         continue-on-error: true
-        uses: github/codeql-action/upload-sarif@7211b7c8077ea37d8641b6271f6a365a22a5fbfa # v4.36.0
+        uses: github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4.36.2
         with:
           sarif_file: "trivy-image-${{ matrix.variant }}.sarif"
           category: "trivy-image-base-${{ matrix.variant }}"
@@ -621,7 +621,7 @@ jobs:
 
       - name: "🔏 Install Cosign Tool"
         if: steps.variant-filter.outputs.skip != 'true' && steps.build.conclusion == 'success'
-        uses: sigstore/cosign-installer@d7d6bc7722e3daa8354c50bcb52f4837da5e9b6a # v3.8.1
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
 
       - name: "🖊️ Sign the Docker Image"
         if: steps.variant-filter.outputs.skip != 'true' && steps.build.conclusion == 'success'
