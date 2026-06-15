@@ -9,7 +9,7 @@
 - **Bug_Condition (C)**: 在 CI 环境中，`run_mise install` 成功安装工具后，工具路径被写入 `$GITHUB_PATH` 文件，但当前 shell 的 `$PATH` 未包含该路径
 - **Property (P)**: 安装工具后，工具路径应同时存在于 `$GITHUB_PATH` 文件和当前 shell 的 `$PATH` 环境变量中
 - **Preservation**: 非 CI 环境的行为、已存在路径的幂等性检查、错误处理逻辑必须保持不变
-- **run_mise()**: `scripts/lib/common.sh` 中的函数，负责执行 mise 命令并管理工具安装
+- **run_mise()**: `.unirtm.toml` 中的函数，负责执行 mise 命令并管理工具安装
 - **$GITHUB_PATH**: GitHub Actions 提供的特殊文件路径，写入该文件的路径会在后续 step 中自动添加到 `$PATH`
 - **$\_G_MISE_SHIMS_BASE**: mise shims 目录的全局变量，通常为 `~/.local/share/mise/shims`
 - **mise where**: mise 命令，返回已安装工具的安装路径
@@ -98,7 +98,7 @@ Validates: Requirements 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8
 
 假设我们的根因分析正确：
 
-**File**: `scripts/lib/common.sh`
+**File**: `.unirtm.toml`
 
 **Function**: `run_mise()`
 

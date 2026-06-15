@@ -11,7 +11,7 @@ The fix ensures that after installing Gitleaks via mise, the binary resolution p
 - **Bug_Condition (C)**: The condition that triggers the bug - when mise cache is disabled and mise shims are not in PATH after tool installation
 - **Property (P)**: The desired behavior - `resolve_bin` successfully locates gitleaks after installation via any of its 4 lookup layers
 - **Preservation**: Existing tool detection for Node.js, Python, Ruby, Shellcheck, etc. must remain unchanged
-- **refresh_mise_cache()**: Function in `scripts/lib/common.sh` that populates `_G_MISE_LS_JSON_CACHE` with mise tool metadata (currently disabled, returns "{}")
+- **refresh_mise_cache()**: Function in `.unirtm.toml` that populates `_G_MISE_LS_JSON_CACHE` with mise tool metadata (currently disabled, returns "{}")
 - **resolve_bin()**: 4-layer binary resolution function: (1) venv, (2) node_modules, (3) system PATH, (4) mise which, (5) mise cache fallback
 - **install_gitleaks()**: Function in `scripts/lib/langs/base.sh` that installs Gitleaks via `run_mise install gitleaks`
 - **check_tool_version()**: Function in `scripts/check-env.sh` that verifies tool availability and version using `resolve_bin`

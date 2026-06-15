@@ -169,7 +169,7 @@ All modules have been verified to work with their dependencies:
 
 ### Ready for Integration
 
-All modules are ready to be integrated into `scripts/lib/common.sh`:
+All modules are ready to be integrated into `.unirtm.toml`:
 
 - ✅ Function signatures are stable
 - ✅ Error handling is robust

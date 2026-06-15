@@ -17,7 +17,7 @@
     path: |
       ~/.local/share/mise
       ~/.local/bin
-    key: ${{ runner.os }}-mise-${{ hashFiles('.mise.toml', 'scripts/lib/versions.sh') }}
+    key: ${{ runner.os }}-mise-${{ hashFiles('.mise.toml', '.unirtm.toml') }}
     restore-keys: |
       ${{ runner.os }}-mise-
 ```
@@ -190,7 +190,7 @@ run: make setup  # 安装 gitleaks
 #### 4.1 在 `run_mise` 中添加 CI PATH 持久化
 
 ```bash
-# scripts/lib/common.sh (修复后)
+# .unirtm.toml (修复后)
 if [ ${_STATUS:-} -eq 0 ] &&
   { [ "${_CMD:-}" = "install" ] || [ "${_CMD:-}" = "i" ]; }; then
 
@@ -228,7 +228,7 @@ Windows 使用不同的路径格式和可执行文件扩展名。
 #### 5.1 PATH 分隔符
 
 ```bash
-# scripts/lib/common.sh:67-99
+# .unirtm.toml:67-99
 case "$(uname -s)" in
 Darwin)
   _G_MISE_SHIMS_BASE="$HOME/.local/share/mise/shims"
@@ -308,7 +308,7 @@ fi
 #### 7.1 重新启用缓存（带超时保护）
 
 ```bash
-# scripts/lib/common.sh (修复后)
+# .unirtm.toml (修复后)
 refresh_mise_cache() {
   if command -v mise >/dev/null 2>&1; then
     # 使用 MISE_OFFLINE=1 避免网络调用
@@ -482,7 +482,7 @@ path: |
 **当前代码**:
 
 ```bash
-# scripts/lib/common.sh:1744-1761
+# .unirtm.toml:1744-1761
 persist_mise_to_github_path() {
   # ... 实现 ...
 }
@@ -515,7 +515,7 @@ fi
 **当前代码**:
 
 ```bash
-# scripts/lib/common.sh:1748-1756
+# .unirtm.toml:1748-1756
 if [ "${_G_OS:-}" = "windows" ] && command -v cygpath >/dev/null 2>&1; then
   _M_BIN_CI=$(cygpath -w "${_G_MISE_BIN_BASE:-}")
   _M_SHIMS_CI=$(cygpath -w "${_G_MISE_SHIMS_BASE:-}")

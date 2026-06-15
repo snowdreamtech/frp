@@ -1,3 +1,6 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
 ---
 name: "🐛 Bug Report"
 description: "Report a bug to help us improve."
@@ -14,7 +17,7 @@ body:
     attributes:
       label: "Current Behavior"
       description: "A concise description of what's happening."
-      placeholder: "e.g. 'make setup' fails on macOS 14."
+      placeholder: "e.g. 'unirtm install' fails on macOS 14."
     validations:
       required: true
   - type: textarea
@@ -34,6 +37,6 @@ body:
     attributes:
       label: "Steps to Reproduce"
       description: "Steps to trigger the issue."
-      placeholder: "1. Run make setup\n2. ..."
+      placeholder: "1. Run unirtm install\n2. ..."
     validations:
       required: true

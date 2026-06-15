@@ -1,0 +1,3 @@
+{
+  "Exclude": ["internal/addlicense/testdata", ".*\\.go$"]
+}

@@ -10,14 +10,10 @@
 
 我们的项目采用了标准化的环境，目标平台为 **Node.js 22** 和 **Python 3.12**。
 
-请按照以下统一的 4 步顺序设置您的本地开发环境：
+请按照以下统一的顺序设置您的本地开发环境：
 
-1. **初始化**: `make init` (填充项目品牌信息)
-2. **环境准备**: `make setup` (安装系统级 linter/安全工具)
-3. **依赖安装**: `make install` (安装依赖并激活 git 钩子)
-4. **验证**: `make verify` (最终项目健康检查)
-
-运行 `make help` 查看完整的自动化指令矩阵。
+1. **环境准备与依赖安装**: `unirtm install` (安装开发所需核心工具与项目依赖)
+2. **验证**: `make verify` (最终项目健康检查)
 
 ### 2. 一般工作流
 
@@ -25,7 +21,7 @@
 2. **Clone** 您 fork 的仓库到本地。
 3. 从 `main` **创建分支**，使用具有描述性的分支名称（例如：`feat/add-new-ai-rule`, `fix/ci-memory-leak`）。
 4. **开发** 您的特性或修复 bug。
-5. 遵循我们的 [Conventional Commits](https://www.conventionalcommits.org/zh-hans/) 标准进行 **Commit**。我们强烈建议使用我们的交互式 Commitizen CLI 来自动组装 commit 消息。只需运行 `make commit` (或 `npm run commit`) 即可启动交互式提示。
+5. 遵循我们的 [Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/) 标准进行 **Commit**。我们强烈建议使用我们的交互式 Commitizen CLI 来自动组装 commit 消息。只需运行 `npm run commit` 或使用 `git commit` 手动撰写规范化消息。
 6. **Push** 到您的 fork。
 7. 对我们的 `main` 分支提交 **Pull Request (PR)**。
 
@@ -38,8 +34,6 @@
 ```bash
 git commit -s -m "fix(script): resolve posix portability issue"
 ```
-
-> **提示：** 如果您使用 `make commit`，可以通过全局配置 git 来添加签署标志：`git config --global commit.gpgsign true` 或 `git config --global format.signOff true`。
 
 ### 4. 代码与架构规范
 

@@ -12,7 +12,7 @@
   # Install exact version
   go install github.com/zeromicro/go-zero/tools/goctl@v1.6.6
 
-  # Or via mise/.tool-versions
+  # Or via unirtm/.tool-versions
   goctl = "1.6.6"
   ```
 

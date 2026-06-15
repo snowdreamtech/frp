@@ -1,4 +1,4 @@
-- **Virtual Environments REQUIRED**: All development and testing MUST be performed within a virtual environment. Use `make setup` to create and configure the environment (defaulting to `.venv`).
+- **Virtual Environments REQUIRED**: All development and testing MUST be performed within a virtual environment. Use `unirtm install` to create and configure the environment (defaulting to `.venv`).
 - **Dependency Management**: Dev dependencies (linters, testers) MUST be locked in `requirements-dev.txt`.
 
 > Objective: Define standards for modern, clean, and maintainable Python code, covering version management, tooling, type hints, code style, async patterns, and testing.
@@ -6,9 +6,9 @@
 ## 1. Version, Environment & Project Structure
 
 - **Package Management Hierarchy**:
-  - **mise**: Manages the `python` and `uv` **executors** (binary runtimes).
+  - **unirtm**: Manages the `python` and `uv` **executors** (binary runtimes).
   - **uv**: Manages **project dependencies** (libraries) and **virtual environments** (`.venv`) with O(1) performance.
-- Target **Python 3.12+** for new projects. Specify exact version strictly in `.mise.toml`.
+- Target **Python 3.12+** for new projects. Specify exact version strictly in `.unirtm.toml`.
 - Never install project dependencies into the system Python. Always use a virtual environment managed by `uv`.
 
 - **Strict Version Pinning (MANDATORY)**: All dependencies in `pyproject.toml` MUST use **exact version numbers**. Never use range operators (`>=`, `~=`, `^`, `*`). Unpinned versions introduce non-reproducible builds and supply-chain risk.

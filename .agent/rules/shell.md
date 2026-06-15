@@ -24,7 +24,7 @@ When Bash-specific features are genuinely required, the script MUST:
 
 ### Global Library (MANDATORY)
 
-To ensure consistency in logging, colors, and argument parsing, ALL functional scripts MUST source the **`scripts/lib/common.sh`** library:
+To ensure consistency in logging, colors, and argument parsing, ALL functional scripts MUST source the **`.unirtm.toml`** library:
 
 ```sh
 #!/usr/bin/env sh
@@ -465,7 +465,7 @@ fi
 
 For system-level utilities and linters, prefer **natively managed binaries** in `scripts/setup.sh` over npm/pip wrappers.
 
-- **Rationale**: Avoids API rate limits (e.g., GitHub API downloads during npm install), reduces runtime dependency bloat, and ensures strict version control via `scripts/lib/common.sh`.
+- **Rationale**: Avoids API rate limits (e.g., GitHub API downloads during npm install), reduces runtime dependency bloat, and ensures strict version control via `.unirtm.toml`.
 - **Example**: `editorconfig-checker` should be installed as a CGO/Go binary via `curl`, not via `npm install`.
 
 ### Language-Aware Health Check Pattern
@@ -547,8 +547,8 @@ install_example_tool() {
   fi
 
   # 5. Execution & Reporting
-  local _STAT="✅ mise"
-  run_mise install "$_PROVIDER" || _STAT="❌ Failed"
+  local _STAT="✅ unirtm"
+  run_unirtm install "$_PROVIDER" || _STAT="❌ Failed"
   log_summary "Tool Group" "$_TITLE" "$_STAT" "$(get_version example-tool)" "$(($(date +%s) - _T0))"
 }
 ```
@@ -558,11 +558,11 @@ install_example_tool() {
 1. **Idempotency**: Every function MUST be safe to run multiple times. Use `DRY_RUN` checks to mock the result without state changes.
 2. **Performance (Lazy Loading)**: Never install a language-specific tool unless the corresponding files are detected.
 3. **Strict Error Handling**: Use `|| _STAT="❌ Failed"` pattern to ensure the summary table accurately reflects failures without crashing the entire setup sequence.
-4. **SSoT Versioning**: Always use `get_version` or `get_mise_tool_version` to pull versions from `.mise.toml` for the summary table.
-5. **Human-Centric Feedback**: Large SDK installations (e.g., Swift, .NET, Java) MUST NOT be silent. Never suppress progress output (`MISE_QUIET=1`) for commands known to take more than a few seconds. Always provide a clear warning using `log_warn` before starting a potentially long download/installation.
-6. **Robust Interruption Handling**: All wrapper functions (like `run_mise`) MUST check for signal-based exit statuses (e.g., `_STATUS -gt 128`). If a command is interrupted by the user (Ctrl+C), the script MUST NOT attempt to retry and MUST exit immediately to prevent "stuck" states.
-7. **Mise Command Resilience**: All wrapper functions (like `run_mise`) MUST check for signal-based exit statuses (e.g., `_STATUS -gt 128`).
-8. **Dynamic Registration Pattern**: To eliminate the "Mise Tax" on empty projects, setup modules SHOULD use `mise use --local [tool]@[version]` to register runtimes into `.mise.toml` only after positive detection of source files. This ensures the project config stays lean while remaining comprehensive in capabilities.
+4. **SSoT Versioning**: Always use `get_version` or `get_unirtm_tool_version` to pull versions from `.unirtm.toml` for the summary table.
+5. **Human-Centric Feedback**: Large SDK installations (e.g., Swift, .NET, Java) MUST NOT be silent. Never suppress progress output (`UNIRTM_QUIET=1`) for commands known to take more than a few seconds. Always provide a clear warning using `log_warn` before starting a potentially long download/installation.
+6. **Robust Interruption Handling**: All wrapper functions (like `run_unirtm`) MUST check for signal-based exit statuses (e.g., `_STATUS -gt 128`). If a command is interrupted by the user (Ctrl+C), the script MUST NOT attempt to retry and MUST exit immediately to prevent "stuck" states.
+7. **UniRTM Command Resilience**: All wrapper functions (like `run_unirtm`) MUST check for signal-based exit statuses (e.g., `_STATUS -gt 128`).
+8. **Dynamic Registration Pattern**: To eliminate the "UniRTM Tax" on empty projects, setup modules SHOULD use `unirtm use --local [tool]@[version]` to register runtimes into `.unirtm.toml` only after positive detection of source files. This ensures the project config stays lean while remaining comprehensive in capabilities.
 
 ## 10. Language-Specific Best Practices
 

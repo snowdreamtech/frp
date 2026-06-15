@@ -1,3 +1,6 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
 # Lychee Link Checker Configuration
 # https://lychee.cli.rs/#/usage/config
 
@@ -5,6 +8,7 @@
 exclude_path = [
   ".git",
   "node_modules",
+  "cmd/unirtm_data",
   ".venv",
   "venv",
   "env",
@@ -23,14 +27,17 @@ exclude_path = [
 # Exclude URL patterns
 # Ignore unreleased version compare links in CHANGELOG
 exclude = [
-  # Unreleased version compare links (tags don't exist yet)
+  "https://unirtm.snowdream.tech.*",
+  "https://github.com/snowdreamtech/UniRTM/discussions",
+  ".*docs/glossary.md",
+  ".*docs/index.md",                                        # Unreleased version compare links (tags don't exist yet)
   'https://github\.com/.*/compare/.*\.\.\.v\d+\.\d+\.\d+$',
 ]
 
 # Accept status codes
 # 200-299: Success
 # 429: Too Many Requests (rate limiting, will retry)
-accept = [200, 429]
+accept = [200, 202, 429]
 
 # Retry configuration
 max_retries = 3

@@ -1,3 +1,6 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
 ---
 # CodeQL Security Analysis
 # Purpose: Performs deep static analysis to detect security vulnerabilities and coding errors.
@@ -33,14 +36,14 @@ name: "🔬 CodeQL Analysis"
 permissions: {}
 
 env:
-  MISE_LOCKED: 1
+  UNIRTM_LOCKED: 1
 
 jobs:
   analyze:
     name: "🛡️ Deep Semantic Analysis (${{ matrix.language }})"
     runs-on: ubuntu-latest
     concurrency:
-      group: codeql-${{ github.workflow }}-${{ matrix.language }}-${{ github.event.pull_request.number || github.ref }}
+      group: codeql-${{ github.workflow }}-${{ matrix.language }}-${{ github.ref }}
       cancel-in-progress: true
     permissions:
       security-events: write # Required to upload SARIF results to the GitHub Security tab
@@ -54,7 +57,7 @@ jobs:
         language:
           - actions
           # Uncomment the following lines when source files exist in the repo:
-          # - go                    # Go (*.go) — golangci-lint, gofmt
+          # - go # Go (*.go) — golangci-lint, gofmt
           # - python                # Python (*.py) — ruff, ansible-lint
           # - javascript-typescript # JS/TS (*.js, *.ts, *.jsx, *.tsx) — eslint
           # - c-cpp                 # C/C++/Obj-C (*.c, *.cpp, *.h) — clang-format
@@ -64,63 +67,87 @@ jobs:
           # - swift                 # Swift (*.swift) — swiftformat, swiftlint
 
     steps:
-      - name: "🔒 Harden Runner (Security Egress Audit)"
+      - name: "🔒 Harden Runner"
         uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
+          disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            api.github.com:443
-            *.githubusercontent.com:443
-            github.com:443
-            mise.run:443
-            install.mise.jdx.dev:443
-            *.mise.jdx.dev:443
-            packages.microsoft.com:443
-            *.ubuntu.com:80
-            *.ubuntu.com:443
-            *.debian.org:80
-            *.debian.org:443
-            *.rockylinux.org:443
+            *.aquasecurity.github.io:443
+            *.azurecr.io:443
             *.centos.org:443
+            *.debian.org:443
+            *.debian.org:80
+            *.dkr.ecr.*.amazonaws.com:443
+            *.gcr.io:443
+            *.githubusercontent.com:443
+            *.pkg.dev:443
+            *.quay.io:443
             *.redhat.com:443
+            *.rockylinux.org:443
+            *.sigstore.dev:443
+            *.ubuntu.com:443
+            *.ubuntu.com:80
+            api.github.com:443
+            api.osv.dev:443
+            api.securityscorecards.dev:443
+            auth.docker.io:443
+            cdn.deno.land:443
+            deno.land:443
             dl-cdn.alpinelinux.org:443
-            registry.npmjs.org:443
-            registry.yarnpkg.com:443
-            pypi.org:443
+            downloads.gradle-dn.com:443
+            downloads.gradle.org:443
             files.pythonhosted.org:443
-            proxy.golang.org:443
-            sum.golang.org:443
-            index.crates.io:443
-            static.rust-lang.org:443
-            packagist.org:443
-            repo.maven.apache.org:443
-            rubygems.org:443
-            registry.terraform.io:443
             formulae.brew.sh:443
+            get.trivy.dev:443
+            ghcr.io:443
+            github.com:443
+            index.crates.io:443
+            index.docker.io:443
+            nodejs.org:443
+            oss-fuzz-build-logs.storage.googleapis.com:443
+            osv-vulnerabilities.storage.googleapis.com:443
+            packages.microsoft.com:443
+            packagist.org:443
+            pkg-containers.githubusercontent.com:443
+            production.cloudflare.docker.com:443
+            proxy.golang.org:443
+            public.ecr.aws:443
+            pypi.org:443
+            registry-1.docker.io:443
+            registry.npmjs.org:443
+            registry.terraform.io:443
+            registry.yarnpkg.com:443
+            repo.maven.apache.org:443
             repo.yarnpkg.com:443
-
+            rubygems.org:443
+            services.gradle.org:443
+            static.rust-lang.org:443
+            sum.golang.org:443
+            www.bestpractices.dev:443
+            storage.googleapis.com:443
+            go.dev:443
+            golang.org:443
+            *.actions.githubusercontent.com:443
+            *.blob.core.windows.net:443
       - name: "📂 Checkout Repository Code"
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
-          # Pass GitHub Token to avoid triggering Rate Limit when accessing github.com links
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # Required to provide the full source tree for deep semantic analysis.
-          fetch-depth: 0
           persist-credentials: false
 
       - name: "🛡️ Initialize CodeQL Engine"
-        uses: github/codeql-action/init@7211b7c8077ea37d8641b6271f6a365a22a5fbfa # v4.36.0
+        uses: github/codeql-action/init@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4.36.2
         with:
           # Sets up the CodeQL database for the specified technical stack (e.g., Python, Go).
           languages: ${{ matrix.language }}
           config-file: .github/codeql/codeql-config.yml
 
       - name: "🚀 Bootstrap Target Build"
-        uses: github/codeql-action/autobuild@7211b7c8077ea37d8641b6271f6a365a22a5fbfa # v4.36.0
+        uses: github/codeql-action/autobuild@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4.36.2
         # Attempts to automatically compile the project to enable full-trace analysis.
 
       - name: "🔍 Perform Deep Security Analysis"
-        uses: github/codeql-action/analyze@7211b7c8077ea37d8641b6271f6a365a22a5fbfa # v4.36.0
+        uses: github/codeql-action/analyze@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4.36.2
         with:
           # Executes the semantic queries and generates the final vulnerability report.
           category: "/language:${{ matrix.language }}"

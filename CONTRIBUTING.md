@@ -10,14 +10,10 @@ We welcome contributions of all kinds, including bug fixes, new AI agent rules, 
 
 Our project uses a standardized environment targeting **Node.js 22** and **Python 3.12**.
 
-To set up your local development environment, follow the unified 4-step sequence:
+To set up your local development environment, follow the unified sequence:
 
-1. **Initialize**: `make init` (Hydrate project branding)
-2. **Setup**: `make setup` (Install system-level linter/security tools)
-3. **Install**: `make install` (Install dependencies and activate git hooks)
-4. **Verify**: `make verify` (Final project health check)
-
-Run `make help` for a complete automation matrix.
+1. **Setup & Install**: `unirtm install` (Install development tools and activate git hooks)
+2. **Verify**: `make verify` (Final project health check)
 
 ### 2. General Workflow
 
@@ -25,7 +21,7 @@ Run `make help` for a complete automation matrix.
 2. **Clone** your fork locally.
 3. **Branch** from `main` to a descriptively named branch (e.g., `feat/add-new-ai-rule`, `fix/ci-memory-leak`).
 4. **Develop** your feature or fix.
-5. **Commit** your changes following our [Conventional Commits](https://www.conventionalcommits.org/) standards. We highly recommend using our interactive Commitizen CLI to automatically assemble your commit message format. Simply run `make commit` (or `npm run commit`) to launch the interactive prompt.
+5. **Commit** your changes following our [Conventional Commits](https://www.conventionalcommits.org/) standards. We highly recommend using our interactive Commitizen CLI to automatically assemble your commit message format. Simply run `npm run commit` or `git commit` with a conventional message.
 6. **Push** to your fork.
 7. **Submit a Pull Request (PR)** against our `main` branch.
 
@@ -38,8 +34,6 @@ You can easily sign off your commits by using the `-s` or `--signoff` flag:
 ```bash
 git commit -s -m "fix(script): resolve posix portability issue"
 ```
-
-> **Tip:** If you use `make commit`, you can add the signoff flag by configuring your system git globally: `git config --global commit.gpgsign true` or `git config --global format.signOff true`.
 
 ### 4. Code & Architecture Standards
 

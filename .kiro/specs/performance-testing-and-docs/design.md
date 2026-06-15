@@ -133,7 +133,7 @@ Options:
 
 **Implementation Details**:
 
-- Sources `scripts/lib/common.sh` for consistent logging
+- Sources `.unirtm.toml` for consistent logging
 - Uses `date +%s` for timing measurements (POSIX-compatible)
 - Collects system metadata via `uname`, `/proc/cpuinfo`, `sysctl`
 - Groups tools by category based on `scripts/lib/langs/*.sh` structure
@@ -293,7 +293,7 @@ on:
       - 'scripts/lib/**/*.sh'
       - 'scripts/setup.sh'
       - '.mise.toml'
-      - 'scripts/lib/versions.sh'
+      - '.unirtm.toml'
 ```
 
 **Workflow Steps**:
@@ -357,13 +357,13 @@ Description of the install_tool_safe() pattern and its benefits
 
 #### 6.2 API Documentation Generator (`scripts/generate-api-docs.sh`)
 
-**Purpose**: Extract function signatures and docstrings from `scripts/lib/common.sh`
+**Purpose**: Extract function signatures and docstrings from `.unirtm.toml`
 
 **Extraction Pattern**:
 
 ```bash
 # Extract function signature + comments
-grep -B 10 "^install_tool_safe()" scripts/lib/common.sh | \
+grep -B 10 "^install_tool_safe()" .unirtm.toml | \
   sed -n '/^#/,/^install_tool_safe()/p'
 ```
 
@@ -834,7 +834,7 @@ The `install_tool_safe()` function uses a layered resolution strategy:
 
 **Update Triggers**:
 
-- Code changes to `scripts/lib/common.sh`
+- Code changes to `.unirtm.toml`
 - New tool migrations to `install_tool_safe()`
 - User-reported documentation issues
 - Quarterly documentation review

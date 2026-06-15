@@ -49,7 +49,7 @@ project-root/
 ├── ROADMAP.md                # Future plans
 ├── LICENSE                   # MIT License
 │
-├── Makefile                  # 🔧 Unified task runner
+├── .unirtm.toml                  # 🔧 Unified task runner
 ├── .editorconfig             # Editor-agnostic formatting rules
 ├── .pre-commit-config.yaml   # Pre-commit hook definitions (40+ hooks)
 ├── commitlint.config.js      # Conventional Commits enforcement

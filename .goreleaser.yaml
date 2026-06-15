@@ -1,26 +1,31 @@
----
-# This is an example .goreleaser.yml file with some sensible defaults.
-# Make sure to check the documentation at https://goreleaser.com
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
-# The lines below are called `modelines`. See `:help modeline`
-# Feel free to remove those if you don't want/need to use them.
+---
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 # vim: set ts=2 sw=2 tw=0 fo=cnqoj
 
 version: 2
+project_name: template
 
+report_sizes: true
 archives:
-  - formats: [tar.gz]
+  - id: template
+    formats: [tar.gz]
     # This name template makes the OS and Arch compatible with uname and includes the version.
     name_template: >-
-      {{ .ProjectName }}_{{ .Version }}_
+      {{- .ProjectName }}_
       {{- title .Os }}_
       {{- if eq .Arch "amd64" }}x86_64
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
-      {{- if .Arm }}v{{ .Arm }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end -}}
     # Wraps the files inside a top-level directory within the archive to prevent tarbombing (Best Practice)
     wrap_in_directory: true
+    builds_info:
+      group: root
+      owner: root
+      mtime: "{{ .CommitDate }}"
     # Use zip for windows archives
     format_overrides:
       - goos: windows
@@ -28,18 +33,30 @@ archives:
     # Include all relevant standard documentation arrays using Globs
     files:
       - src: "LICENSE*"
+        info:
+          owner: root
+          group: root
+          mtime: "{{ .CommitDate }}"
       - src: "README*"
+        info:
+          owner: root
+          group: root
+          mtime: "{{ .CommitDate }}"
       - src: "CHANGELOG*"
+        info:
+          owner: root
+          group: root
+          mtime: "{{ .CommitDate }}"
 
 snapshot:
   version_template: SNAPSHOT-{{ .Commit }}
 
 checksum:
-  disable: false
-  name_template: "{{ .ProjectName }}-{{ .Version }}-checksums.txt"
+  name_template: "checksums.txt"
 
 release:
-  skip_upload: false
+  name_template: "{{ .Tag }}"
+  prerelease: auto
   github:
     owner: snowdreamtech
     name: template
@@ -62,10 +79,15 @@ changelog:
       - "(?i)^build"
       - "(?i)^style"
       - "(?i)^revert"
+      - "(?i)^chore"
+      - "(?i)^deps"
       - "^Merge pull request"
       - "^Merge remote-tracking branch"
       - "^Merge branch"
       - "merge conflict"
+      - "^WIP"
+      - "^\\[skip ci\\]"
+      - "^Bump version"
   groups:
     - title: "🚀 Features"
       regexp: "^.*(?i)feat[(\\w)]*:+.*$"
@@ -89,13 +111,19 @@ changelog:
       order: 9999
 
 sboms:
-  - artifacts: any
+  # Generate SBOMs for all release artifacts: archives (tar.gz/zip) and Linux packages (deb/rpm/apk/archlinux)
+  - id: archive
+    artifacts: archive
+  - id: package
+    artifacts: package
 
 signs:
-  - artifacts: checksum
+  - cmd: cosign
+    signature: "${artifact}.sigstore.json"
+    output: '{{ not (isEnvSet "CI") }}'
+    artifacts: checksum
     args:
-      - "sign-blob"
-      - "--output-certificate=${certificate}"
-      - "--output-signature=${signature}"
+      - sign-blob
+      - "--bundle=${signature}"
       - "${artifact}"
-      - "--yes" # Enables keyless signing via OIDC token
+      - --yes # Enables keyless signing via OIDC token

@@ -1,3 +1,6 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
 description = "Create or update the project constitution from interactive or provided principle inputs, ensuring all dependent templates stay in sync."
 
 prompt = """

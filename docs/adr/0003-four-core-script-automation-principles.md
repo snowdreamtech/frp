@@ -22,7 +22,7 @@ scripts in `scripts/`:
 
 ### Principle 1: Idempotency
 
-Every script MUST be safely re-executable without side effects or errors. Running `make setup` ten
+Every script MUST be safely re-executable without side effects or errors. Running `unirtm run setup` ten
 times must produce the same result as running it once. This means:
 
 - Tools are only installed if not already present at the required version.
@@ -93,14 +93,14 @@ Maintain separate scripts for macOS, Linux, and Windows with no shared code.
 Use a higher-level language (Python or Node.js) for all automation to gain native cross-platform
 support and richer libraries.
 
-- **Reason rejected:** Requires Python or Node.js to be pre-installed before `make setup` can run,
+- **Reason rejected:** Requires Python or Node.js to be pre-installed before `unirtm run setup` can run,
   creating a bootstrapping paradox. POSIX shell is universally available on all target platforms and
   has zero external dependencies.
 
-### Option C: Makefile-only Automation
+### Option C: .unirtm.toml-only Automation
 
-Express all automation as Makefile targets with no shell scripts.
+Express all automation as .unirtm.toml targets with no shell scripts.
 
 - **Reason rejected:** GNU Make has subtle cross-platform differences, particularly regarding
   Windows compatibility. Complex conditional logic (OS detection, retry loops) is unwieldy in
-  Makefile syntax. A hybrid approach (`Makefile` targets invoke `scripts/*.sh`) is used instead.
+  .unirtm.toml syntax. A hybrid approach (`.unirtm.toml` targets invoke `scripts/*.sh`) is used instead.

@@ -10,7 +10,7 @@ The project uses a unified tool installation pattern that:
 - Handles platform-specific binary names (e.g., `ec-linux-amd64`, `ec-darwin-arm64`, `hadolint.exe`)
 - Provides atomic verification steps for debugging
 - Supports both CI and local development environments
-- Integrates with mise for version management
+- Integrates with unirtm for version management
 
 ## The Six-Step Installation Process
 
@@ -18,7 +18,7 @@ The `install_tool_safe()` function implements a six-step process for reliable to
 
 ### Step 1: Binary-First Detection
 
-Before attempting installation, the function checks if the tool binary already exists in the system PATH or mise installation directory.
+Before attempting installation, the function checks if the tool binary already exists in the system PATH or unirtm installation directory.
 
 **Benefits:**
 
@@ -35,9 +35,9 @@ if command -v "$BIN_NAME" >/dev/null 2>&1; then
   return 0
 fi
 
-# Check mise installation directory
-if mise which "$BIN_NAME" >/dev/null 2>&1; then
-  # Binary found in mise
+# Check unirtm installation directory
+if unirtm which "$BIN_NAME" >/dev/null 2>&1; then
+  # Binary found in unirtm
   return 0
 fi
 ```
@@ -68,14 +68,14 @@ Based on the environment (CI vs local development), decide whether to proceed wi
 
 If a non-functional binary is found, remove it before reinstalling.
 
-### Step 5: Mise Installation
+### Step 5: UniRTM Installation
 
-Use mise to install the tool with the specified version.
+Use unirtm to install the tool with the specified version.
 
 **Implementation:**
 
 ```bash
-mise install "$PROVIDER"
+unirtm install "$PROVIDER"
 ```
 
 ### Step 6: Post-Install Verification
@@ -86,7 +86,7 @@ After installation, verify the binary is accessible and functional.
 
 ```bash
 # Refresh PATH to include newly installed tools
-eval "$(mise activate bash)"
+eval "$(unirtm activate bash)"
 
 # Verify binary exists
 if ! command -v "$BIN_NAME" >/dev/null 2>&1; then
@@ -126,18 +126,18 @@ Many tools provide platform-specific binaries with different names. The installa
 
 The system uses a layered resolution strategy:
 
-1. **Mise Which** (Primary): `mise which <tool>` - handles platform-specific binaries automatically
+1. **UniRTM Which** (Primary): `unirtm which <tool>` - handles platform-specific binaries automatically
 2. **Command -v** (Fallback 1): `command -v <tool>` - for tools in PATH
-3. **Mise Where + Find** (Fallback 2): Search mise installation directory with pattern matching
+3. **UniRTM Where + Find** (Fallback 2): Search unirtm installation directory with pattern matching
 
 **Example:**
 
 ```bash
 # For editorconfig-checker on Linux x86_64
-# Mise automatically resolves to: ec-linux-amd64
+# UniRTM automatically resolves to: ec-linux-amd64
 
 # For hadolint on Windows
-# Mise automatically resolves to: hadolint.exe
+# UniRTM automatically resolves to: hadolint.exe
 ```
 
 ### Performance Considerations
@@ -193,15 +193,15 @@ Each verification step is atomic and reports its status:
 
 **Possible causes:**
 
-- Mise installation directory not in PATH
+- UniRTM installation directory not in PATH
 - Platform-specific binary name not recognized
 - Installation failed silently
 
 **Solution:**
 
-1. Check mise installation: `mise list`
-2. Verify PATH includes mise shims: `echo $PATH`
-3. Try manual installation: `mise install tool-name`
+1. Check unirtm installation: `unirtm list`
+2. Verify PATH includes unirtm shims: `echo $PATH`
+3. Try manual installation: `unirtm install tool-name`
 
 #### Scenario 2: Binary Not Functional
 
@@ -217,7 +217,7 @@ Each verification step is atomic and reports its status:
 
 **Solution:**
 
-1. Remove and reinstall: `mise uninstall tool-name && mise install tool-name`
+1. Remove and reinstall: `unirtm uninstall tool-name && unirtm install tool-name`
 2. Check tool documentation for dependencies
 3. Verify platform compatibility
 
@@ -230,12 +230,12 @@ Each verification step is atomic and reports its status:
 **Possible causes:**
 
 - Tool doesn't provide binaries for your platform
-- Mise provider doesn't support platform-specific names
+- UniRTM provider doesn't support platform-specific names
 
 **Solution:**
 
 1. Check tool's GitHub releases for your platform
-2. Update mise provider configuration
+2. Update unirtm provider configuration
 3. Use alternative installation method
 
 ## Code Examples
@@ -250,7 +250,7 @@ install_tool_safe "shfmt" "${VER_SHFMT_PROVIDER:-}" "Shfmt" "--version" 0 "*.sh 
 **Parameters:**
 
 - `BIN_NAME`: "shfmt" - binary name to verify
-- `PROVIDER`: mise provider string (e.g., "github:mvdan/sh")
+- `PROVIDER`: unirtm provider string (e.g., "github:mvdan/sh")
 - `DISPLAY_NAME`: "Shfmt" - human-readable name for logging
 - `VERSION_FLAG`: "--version" - flag to check version
 - `SKIP_FILE_CHECK`: 0 - check for relevant files before installing
@@ -327,9 +327,9 @@ Indicates CI environment.
 CI=true ./scripts/setup.sh
 ```
 
-### MISE_OFFLINE
+### UNIRTM_OFFLINE
 
-Use mise in offline mode (no network access).
+Use unirtm in offline mode (no network access).
 
 **Values:**
 
@@ -339,12 +339,12 @@ Use mise in offline mode (no network access).
 **Example:**
 
 ```bash
-MISE_OFFLINE=1 ./scripts/setup.sh
+UNIRTM_OFFLINE=1 ./scripts/setup.sh
 ```
 
 ## Performance Characteristics
 
-Based on performance testing (see [Performance Testing](../../benchmarks/README.md)):
+Based on performance testing:
 
 - **Total setup time**: ~5 minutes (300 seconds) for all tools
 - **Binary verification**: < 5 seconds per tool
@@ -394,11 +394,10 @@ For a complete list, see the implementation in `scripts/lib/langs/*.sh`.
 ## Related Documentation
 
 - [Alpine Linux Compatibility](../alpine-compatibility.md)
-- [Performance Testing](../../benchmarks/README.md)
 - [API Documentation](./api-common.md)
-- [Troubleshooting](../troubleshooting-mise-provenance.md)
+- [Troubleshooting](../troubleshooting-unirtm-provenance.md)
 
 ## References
 
-- [Mise Documentation](https://mise.jdx.dev/)
+- [UniRTM Documentation](https://github.com/snowdreamtech/UniRTM)
 - [Performance Testing Spec](../../.kiro/specs/performance-testing-and-docs/design.md)

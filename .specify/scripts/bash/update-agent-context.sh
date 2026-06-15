@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
 
 # Update agent context files with information from plan.md
 #
@@ -50,7 +53,7 @@ set -o pipefail
 
 # Get script directory and load common functions
 SCRIPT_DIR="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/common.sh"
+
 
 # Get all paths and variables from common functions
 eval $(get_feature_paths)

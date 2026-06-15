@@ -22,7 +22,7 @@
 
 ## 修复内容
 
-### 核心修复 (scripts/lib/common.sh)
+### 核心修复 (.unirtm.toml)
 
 1. **`refresh_mise_cache()`** - 超时保护
    - 使用 `run_with_timeout_robust 5` 包装 `mise ls --json`

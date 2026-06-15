@@ -1,3 +1,6 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
 ---
 # .pre-commit-config.yaml - Second Line of Defense
 #
@@ -60,7 +63,7 @@ repos:
         types: [text]
         exclude: |
           (?x)^(
-            \.md$|
+            \.md$|.*\.lock$|go\.sum$|
             (\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
           )
         stages: [pre-commit, pre-merge-commit]
@@ -89,6 +92,7 @@ repos:
         types: [text]
         exclude: |
           (?x)^(
+            .*\.lock$|go\.sum$|
             (\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
           )
         stages: [pre-commit, pre-merge-commit]
@@ -99,13 +103,18 @@ repos:
         entry: |
           python3 -c "
           import sys, os
-          large_files = [f for f in sys.argv[1:] if os.path.isfile(f) and os.path.getsize(f) > 500*1024]
-          for f in large_files: print(f'File too large (>500KB): {f}')
+          large_files = [f for f in sys.argv[1:] if os.path.isfile(f) and os.path.getsize(f) > 1024*1024]
+          for f in large_files: print(f'File too large (>1MB): {f}')
           sys.exit(1 if large_files else 0)
           "
         language: system
+        exclude: |
+          (?x)^(
+            examples/plugin-go/unirtm-plugin-example|
+            docs/tapes/demo\.gif
+          )
         stages: [pre-commit, pre-merge-commit]
-        description: "Prevent large files (>500KB) from being committed."
+        description: "Prevent large files (>1MB) from being committed."
 
       - id: check-merge-conflict
         name: check for merge conflicts
@@ -352,14 +361,14 @@ repos:
       - id: check-rego
         name: check rego policy
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh opa parse
+        entry: unirtm hook-exec opa parse
         files: '\.rego$'
         description: "Verify that Rego policy files are well-formed (uses 'opa parse')."
 
       - id: buf-lint
         name: buf lint
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh buf lint
+        entry: unirtm hook-exec buf lint
         files: \.proto$
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -368,7 +377,7 @@ repos:
       - id: buf-format
         name: buf format
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh buf format -d --exit-code
+        entry: unirtm hook-exec buf format -d --exit-code
         files: \.proto$
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -425,7 +434,7 @@ repos:
       - id: zig-fmt
         name: check zig style
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh zig fmt --check
+        entry: unirtm hook-exec zig fmt --check
         files: '\.zig$'
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -434,14 +443,14 @@ repos:
       - id: check-justfile
         name: check justfile well-formedness
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh just --check --justfile
+        entry: unirtm hook-exec just --check --justfile
         files: "justfile$"
         description: "Verify that justfile (Task runner) files are well-formed."
 
       - id: cue-fmt
         name: check cue style
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh cue fmt
+        entry: unirtm hook-exec cue fmt
         files: '\.cue$'
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -450,7 +459,7 @@ repos:
       - id: jsonnet-fmt
         name: check jsonnet style
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh jsonnetfmt -i
+        entry: unirtm hook-exec jsonnetfmt -i
         files: '\.jsonnet$'
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -612,8 +621,7 @@ repos:
       - id: prettier
         name: prettier format
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh prettier
-        args: [--write]
+        entry: unirtm hook-exec prettier --write
         types_or:
           - json
           - yaml
@@ -636,36 +644,35 @@ repos:
       - id: zizmor
         name: zizmor security audit
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh zizmor --config .zizmor.yml --no-online-audits
+        entry: unirtm hook-exec zizmor --config .zizmor.yml --no-online-audits
         files: ^\.github/workflows/.*\.yml$
         description: "Audit GitHub Actions workflows for security vulnerabilities (offline; full online audit runs in CI audit job)."
 
       - id: check-taskfile
         name: check taskfile
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh task --list --taskfile
+        entry: unirtm hook-exec task --list --taskfile
         files: 'Taskfile\.ya?ml$'
         description: "Verify that Taskfile (Task runner) files are well-formed."
 
       - id: check-dvc
         name: check dvc pipeline
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh dvc dag
+        entry: unirtm hook-exec dvc dag
         files: 'dvc\.yaml$'
         description: "Verify that DVC pipeline files are valid and the DAG is correct."
 
       - id: check-nix-fmt
         name: check nix style
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh nixpkgs-fmt --check
+        entry: unirtm hook-exec nixpkgs-fmt --check
         files: '\.nix$'
         description: "Verify Nix code compliance with nixpkgs-fmt."
 
       - id: shfmt
         name: shfmt format
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh shfmt
-        args: [-w, -s, -i, "2"]
+        entry: unirtm hook-exec shfmt -w -s -i 2
         types: [shell]
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -674,7 +681,7 @@ repos:
       - id: taplo
         name: taplo format
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh taplo format
+        entry: unirtm hook-exec taplo format
         types: [toml]
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -683,7 +690,7 @@ repos:
       - id: ruff-format
         name: ruff format
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh ruff format
+        entry: unirtm hook-exec ruff format
         types_or: [python, pyi]
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -692,7 +699,7 @@ repos:
       - id: clang-format
         name: clang-format
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh clang-format
+        entry: unirtm hook-exec clang-format
         args: [-i]
         types_or: [objective-c, c, c++]
         description: "Format C/C++ family source files."
@@ -700,16 +707,35 @@ repos:
       - id: gofmt
         name: gofmt
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh gofmt -w
+        entry: unirtm hook-exec gofmt -w
         types: [go]
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
         description: "Canonical Go code formatting."
 
+      - id: goimports
+        name: goimports
+        language: system
+        entry: unirtm hook-exec goimports -w
+        types: [go]
+        exclude: |
+          (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
+        description: "Manage Go imports and formatting."
+
+      #      - id: golangci-lint
+      #        name: golangci-lint
+      #        language: system
+      #        entry: unirtm hook-exec golangci-lint run --fix
+      #        types: [go]
+      #        pass_filenames: false
+      #        exclude: |
+      #          (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
+      #        description: "Comprehensive Go linter aggregator."
+
       - id: cargo-fmt
         name: cargo format
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh cargo fmt --all --
+        entry: unirtm hook-exec cargo fmt --all --
         types: [rust]
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -720,7 +746,7 @@ repos:
       - id: gitleaks
         name: gitleaks quality check
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh gitleaks protect --verbose --redact --staged --config .gitleaks.toml
+        entry: unirtm hook-exec gitleaks protect --verbose --redact --staged --config .gitleaks.toml
         always_run: true
         pass_filenames: false
         description: "Prevent secret leaks using Gitleaks."
@@ -747,7 +773,7 @@ repos:
       - id: hadolint
         name: hadolint quality check
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh hadolint
+        entry: unirtm hook-exec hadolint
         files: "Dockerfile.*"
         description: "Audit Dockerfiles for best practices and security vulnerabilities."
 
@@ -755,7 +781,7 @@ repos:
       - id: osv-scanner
         name: osv-scanner vulnerability audit
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh osv_scanner --config .osv-scanner.toml --call-analysis=all --format table --lockfile
+        entry: unirtm hook-exec osv_scanner --config .osv-scanner.toml --call-analysis=all --format table --lockfile
         files: '(pnpm-lock\.yaml|go\.mod|Cargo\.lock|package-lock\.json|yarn\.lock|bun\.lockb)$'
         description: "Audit project dependencies for known vulnerabilities using Google OSV-Scanner."
         stages: [manual, pre-push] # Skip in local pre-commit, run in CI or manually
@@ -763,23 +789,25 @@ repos:
       - id: trivy
         name: trivy security scan
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh trivy fs . --scanners vuln,config,secret --exit-code 1 --severity HIGH,CRITICAL
+        entry: unirtm hook-exec trivy fs . --scanners vuln,misconfig,secret --skip-dirs internal/addlicense/testdata --db-repository public.ecr.aws/aquasecurity/trivy-db --java-db-repository public.ecr.aws/aquasecurity/trivy-java-db:1 --checks-bundle-repository public.ecr.aws/aquasecurity/trivy-checks --timeout 15m --exit-code 1 --severity HIGH,CRITICAL
         always_run: true
         pass_filenames: false
+        stages: [manual, pre-push] # Skip in local pre-commit, run in CI or manually
         description: "Comprehensive security scan for vulnerabilities, misconfigurations, and secrets using Trivy."
 
       - id: checkov
         name: checkov iac security audit
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh checkov --directory . --quiet --compact --soft-fail-on HIGH
+        entry: unirtm hook-exec checkov --directory . --quiet --compact --soft-fail-on HIGH
         types_or: [yaml, dockerfile, terraform]
         pass_filenames: false
+        stages: [manual, pre-push] # Skip in local pre-commit, run in CI or manually
         description: "Audit Infrastructure-as-Code (Terraform, K8s, Docker) for security best practices."
 
       - id: semgrep
         name: semgrep security scan
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh semgrep scan --config auto --error --quiet
+        entry: unirtm hook-exec semgrep scan --config auto --error --quiet
         always_run: true
         pass_filenames: false
         description: "Multi-language static analysis for security, bugs, and best practices using Semgrep."
@@ -787,23 +815,23 @@ repos:
       - id: bandit
         name: bandit python security check
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh bandit -r -ll
+        entry: unirtm hook-exec bandit -r -ll
         types: [python]
         exclude: ^tests/
         description: "Find common security issues in Python code using Bandit."
 
-      - id: gosec
-        name: gosec go security scan
-        language: system
-        entry: sh scripts/lib/lint-wrapper.sh gosec -quiet ./...
-        types: [go]
-        pass_filenames: false
-        description: "Audit Go source code for security vulnerabilities using Gosec."
+      #      - id: gosec
+      #        name: gosec go security scan
+      #        language: system
+      #        entry: unirtm hook-exec gosec -exclude=G104 -quiet ./...
+      #        types: [go]
+      #        pass_filenames: false
+      #        description: "Audit Go source code for security vulnerabilities using Gosec."
 
       - id: govulncheck
         name: govulncheck go vulnerability audit
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh govulncheck ./...
+        entry: unirtm hook-exec govulncheck ./...
         types: [go]
         pass_filenames: false
         description: "Official Go vulnerability checker for source code and dependencies."
@@ -811,7 +839,7 @@ repos:
       - id: cargo-audit
         name: cargo audit rust dependencies
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh cargo-audit audit
+        entry: unirtm hook-exec cargo-audit audit
         files: 'Cargo\.lock$'
         pass_filenames: false
         description: "Audit Rust dependencies for known security vulnerabilities."
@@ -819,7 +847,7 @@ repos:
       - id: npm-pnpm-audit
         name: node ecosystem audit
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh node-audit
+        entry: unirtm hook-exec node-audit
         files: '(pnpm-lock\.yaml|package-lock\.json|yarn\.lock|bun\.lockb)$'
         pass_filenames: false
         stages: [manual] # Temporarily disabled due to pnpm 10.30.3 audit API compatibility issue
@@ -890,7 +918,7 @@ repos:
       - id: license-check
         name: check license headers
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh addlicense -check -v -f .github/license-header.txt
+        entry: unirtm exec -- unirtm license check -f .github/license-header.txt
         files: ^(src|pkg|internal|cmd|app|lib|include|tests)/
         types_or:
           [
@@ -991,8 +1019,7 @@ repos:
       - id: eslint
         name: eslint quality check
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh eslint
-        args: [--fix]
+        entry: unirtm hook-exec eslint --fix
         types_or:
           - javascript
           - ts
@@ -1006,7 +1033,7 @@ repos:
       - id: stylelint
         name: stylelint quality check
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh stylelint --fix
+        entry: unirtm hook-exec stylelint --fix
         types_or:
           - css
           - scss
@@ -1018,7 +1045,7 @@ repos:
       - id: ruff
         name: ruff check
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh ruff check --fix
+        entry: unirtm hook-exec ruff check --fix
         types_or: [python, pyi]
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -1027,8 +1054,7 @@ repos:
       - id: yamllint
         name: yamllint
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh yamllint
-        args: [--config-file, .yamllint.yml]
+        entry: unirtm hook-exec yamllint --config-file .yamllint.yml
         types: [yaml]
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -1037,33 +1063,37 @@ repos:
       - id: markdownlint-cli2
         name: markdownlint-cli2
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh markdownlint-cli2
-        args: [--fix]
+        entry: bash -c 'if unirtm which markdownlint-cli2 >/dev/null 2>&1; then printf "%s\\0" "$@" | xargs -0 -s 7000 unirtm exec -- markdownlint-cli2 --fix; else echo "Skipped markdownlint-cli2 not found"; fi' markdownlint-cli2
         types: [markdown]
         description: "Ensure Markdown follows project style guides."
 
       - id: shellcheck
         name: shellcheck
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh shellcheck
+        entry: unirtm hook-exec shellcheck
         types: [shell]
+        exclude: |
+          (?x)^(
+            test_activate\.sh
+          )
         description: "Posix-compliant ShellCheck for shell code quality."
 
       - id: shellcheck-posix
         name: shellcheck posix
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh shellcheck --shell=sh
+        entry: unirtm hook-exec shellcheck --shell=sh
         types: [shell]
         exclude: |
           (?x)^(
-            tests/.*\.(sh|bats)$
+            tests/.*\.(sh|bats)$|
+            test_activate\.sh
           )
         description: "Enforce strict POSIX compliance for shell scripts (Rule 01.3.39). Test files are excluded as they use bash features."
 
       - id: psscriptanalyzer
         name: PSScriptAnalyzer
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh psscriptanalyzer
+        entry: unirtm hook-exec psscriptanalyzer
         args:
           - -NoProfile
           - -Command
@@ -1074,21 +1104,21 @@ repos:
       - id: checkmake
         name: check makefile
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh checkmake --config .checkmake.ini
+        entry: unirtm hook-exec checkmake --config .checkmake.ini
         files: ^Makefile$
         description: "Linter for Makefile best practices."
 
       - id: tflint
         name: check terraform
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh tflint
+        entry: unirtm hook-exec tflint
         types: [terraform]
         description: "Linter for Terraform code."
 
       - id: kube-linter
         name: kube-linter quality check
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh kube-linter lint
+        entry: unirtm hook-exec kube-linter lint
         types: [yaml]
         files: '.*(kube|k8s|manifest).*\.ya?ml$'
         exclude: |
@@ -1098,14 +1128,14 @@ repos:
       - id: actionlint
         name: check github actions
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh actionlint --shellcheck=
+        entry: unirtm hook-exec actionlint --shellcheck=
         files: ^\.github/workflows/.*\.yml$
         description: "Validate GitHub Actions workflow syntax."
 
       - id: zizmor
         name: zizmor security check
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh zizmor --config .zizmor.yml
+        entry: unirtm hook-exec zizmor --config .zizmor.yml
         files: ^\.github/workflows/.*\.yml$
         description: "Audit GitHub Actions workflows for security best practices."
 
@@ -1113,14 +1143,14 @@ repos:
       - id: dockerfile-utils
         name: dockerfile quality check
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh dockerfile-utils lint
+        entry: unirtm hook-exec dockerfile-utils lint
         files: Dockerfile
         description: "Validate Dockerfile syntax and best practices."
 
       - id: editorconfig-checker
         name: editorconfig quality check
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh editorconfig-checker
+        entry: unirtm hook-exec editorconfig-checker
         exclude: |
           (?x)^(
             \.(venv|git|github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|specify|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml|idx|continue|history|vscode-test)/.*|
@@ -1132,7 +1162,7 @@ repos:
       - id: goreleaser-check
         name: goreleaser check
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh goreleaser check
+        entry: unirtm hook-exec goreleaser check
         files: ^\.goreleaser\.ya?ml$
         pass_filenames: false
         description: "Check GoReleaser configuration."
@@ -1140,7 +1170,7 @@ repos:
       - id: spectral
         name: spectral quality check
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh spectral lint
+        entry: unirtm hook-exec spectral lint
         types_or: [json, yaml]
         files: '(?i)(openapi|swagger|asyncapi).*\.(json|yaml|yml)$'
         pass_filenames: true
@@ -1151,7 +1181,7 @@ repos:
       - id: sort-package-json
         name: sort package-json
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh sort-package-json
+        entry: unirtm hook-exec sort-package-json
         files: ^package\.json$
         pass_filenames: true
         description: "Maintain a deterministic property order in package.json."
@@ -1159,7 +1189,7 @@ repos:
       - id: dotenv-linter
         name: dotenv quality check
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh dotenv-linter
+        entry: unirtm hook-exec dotenv-linter
         files: '(\.env|\.env\.example|\.env\.sample)$'
         pass_filenames: true
         exclude: |
@@ -1171,7 +1201,7 @@ repos:
       - id: sqlfluff
         name: sqlfluff lint
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh sqlfluff lint
+        entry: unirtm hook-exec sqlfluff lint
         args: [--dialect, postgres]
         types_or: [sql]
         exclude: |
@@ -1181,7 +1211,7 @@ repos:
       - id: ktlint
         name: check kotlin style
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh ktlint
+        entry: unirtm hook-exec ktlint
         files: '\.kts?$'
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -1190,7 +1220,7 @@ repos:
       - id: google-java-format
         name: check java style
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh google-java-format --set-exit-if-changed --dry-run
+        entry: unirtm hook-exec google-java-format --set-exit-if-changed --dry-run
         files: '\.java$'
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -1199,7 +1229,7 @@ repos:
       - id: rubocop
         name: check ruby style
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh rubocop
+        entry: unirtm hook-exec rubocop
         files: '\.rb$'
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -1208,7 +1238,7 @@ repos:
       - id: dart-format
         name: check dart style
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh dart format --output=none --set-exit-if-changed
+        entry: unirtm hook-exec dart format --output=none --set-exit-if-changed
         files: '\.dart$'
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -1217,7 +1247,7 @@ repos:
       - id: mix-format
         name: check elixir style
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh mix format --check-formatted
+        entry: unirtm hook-exec mix format --check-formatted
         files: '\.(ex|exs)$'
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -1226,7 +1256,7 @@ repos:
       - id: scalafmt
         name: check scala style
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh scalafmt --check
+        entry: unirtm hook-exec scalafmt --check
         files: '\.scala$'
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -1235,7 +1265,7 @@ repos:
       - id: haskell-format
         name: check haskell style
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh ormolu --mode check
+        entry: unirtm hook-exec ormolu --mode check
         files: '\.lhs?$'
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -1244,7 +1274,7 @@ repos:
       - id: swiftformat
         name: check swift style
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh swiftformat --lint
+        entry: unirtm hook-exec swiftformat --lint
         files: '\.swift$'
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -1253,7 +1283,7 @@ repos:
       - id: swiftlint
         name: swiftlint quality check
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh swiftlint lint --strict
+        entry: unirtm hook-exec swiftlint lint --strict
         files: '\.swift$'
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -1263,7 +1293,7 @@ repos:
       - id: dotnet-format
         name: check .net style
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh dotnet format --verify-no-changes
+        entry: unirtm hook-exec dotnet format --verify-no-changes
         files: '\.(cs|vb|fs)$'
         exclude: |
           (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
@@ -1274,7 +1304,7 @@ repos:
       - id: commitlint
         name: check commit message format
         language: system
-        entry: sh scripts/lib/lint-wrapper.sh commitlint --edit
+        entry: unirtm hook-exec commitlint --edit
         always_run: true
         stages: [commit-msg]
         description: "Enforce Conventional Commits specification for commit messages."

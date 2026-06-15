@@ -1,3 +1,6 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
 ---
 # GoReleaser (Build & Release Automation)
 # Purpose: Orchestrates the compilation, packaging, and distribution of Go binaries and artifacts.
@@ -146,7 +149,10 @@ name: "📦 GoReleaser"
 permissions: {}
 
 env:
-  MISE_LOCKED: 1
+  UNIRTM_LOCKED: 1
+  # Opt into Node.js 24 now ahead of GitHub's June 16, 2026 forced migration.
+  # See: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "1"
 
 jobs:
   goreleaser:
@@ -157,79 +163,212 @@ jobs:
       group: goreleaser-${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: false # Release processes must complete to avoid partial releases
     permissions:
-      contents: write # Required to create GitHub Releases, upload assets, and push tags
-      packages: write # Required for container registry publishing if configured
+      contents: write
+      id-token: write # Required for keyless signing via Sigstore if configured
       statuses: write # Required for updating commit statuses
       security-events: write # Required if release includes security reports
-      id-token: write # Required for requesting the JWT for SLSA attestation
       attestations: write # Required for uploading attestations
-    timeout-minutes: 30 # Go compilation and asset upload usually completes in <10m
+    timeout-minutes: 60 # Increased to accommodate snapcraft + flatpak SDK downloads and cross-platform compilation
     steps:
-      - name: "🔒 Harden Runner (Security Egress Audit)"
-        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+      - name: "🔒 Harden Runner"
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
+          disable-sudo: false
           egress-policy: block
           allowed-endpoints: >
-            api.github.com:443
+            *.aquasecurity.github.io:443
+            *.azurecr.io:443
+            *.centos.org:443
+            *.debian.org:443
+            *.debian.org:80
+            *.dkr.ecr.*.amazonaws.com:443
+            *.gcr.io:443
             *.githubusercontent.com:443
+            *.pkg.dev:443
+            *.quay.io:443
+            *.redhat.com:443
+            *.rockylinux.org:443
+            *.sigstore.dev:443
+            *.ubuntu.com:443
+            *.ubuntu.com:80
+            api.github.com:443
+            api.osv.dev:443
+            api.securityscorecards.dev:443
+            auth.docker.io:443
+            cdn.deno.land:443
+            deno.land:443
+            dl-cdn.alpinelinux.org:443
+            downloads.gradle-dn.com:443
+            downloads.gradle.org:443
+            files.pythonhosted.org:443
+            formulae.brew.sh:443
+            get.trivy.dev:443
+            ghcr.io:443
             github.com:443
-            mise.run:443
-            install.mise.jdx.dev:443
-            *.mise.jdx.dev:443
+            index.crates.io:443
+            index.docker.io:443
+            nodejs.org:443
+            oss-fuzz-build-logs.storage.googleapis.com:443
+            osv-vulnerabilities.storage.googleapis.com:443
+            packages.microsoft.com:443
+            packagist.org:443
+            pkg-containers.githubusercontent.com:443
+            production.cloudflare.docker.com:443
+            proxy.golang.org:443
+            public.ecr.aws:443
+            pypi.org:443
+            registry-1.docker.io:443
+            registry.npmjs.org:443
+            registry.terraform.io:443
+            registry.yarnpkg.com:443
+            repo.maven.apache.org:443
+            repo.yarnpkg.com:443
+            rubygems.org:443
+            services.gradle.org:443
+            static.rust-lang.org:443
+            sum.golang.org:443
+            www.bestpractices.dev:443
+            storage.googleapis.com:443
+            go.dev:443
+            golang.org:443
+            *.actions.githubusercontent.com:443
+            *.blob.core.windows.net:443
+            api.snapcraft.io:443
+            dashboard.snapcraft.io:443
+            upload.snapcraft.io:443
+            login.ubuntu.com:443
+            *.snapcraftcontent.com:443
+            dl.flathub.org:443
+            *.freedesktop.org:443
+            ostree.freedesktop.org:443
+            aur.archlinux.org:22
+      - name: "🧹 Free Disk Space (Ubuntu)"
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # main
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
 
       - name: "📂 Checkout Repository Code"
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
-          # Pass GitHub Token to avoid triggering Rate Limit when accessing github.com links
-          token: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
           # Required: Fetch all tags and historical context for GoReleaser to accurately determine the next version.
           fetch-depth: 0
           persist-credentials: false
 
-      - name: "🩺 Verify Docker Daemon Health"
-        shell: sh
-        run: |
-          echo "=== Docker Version ==="
-          docker version
-          echo ""
-          echo "=== Docker Info ==="
-          docker info
-          echo ""
-          echo "=== Cleanup Stale Buildx Builders ==="
-          docker buildx ls || true
-          # Remove any stale builders to prevent conflicts
-          docker buildx rm --all-inactive --force || true
-          echo ""
-          echo "=== Docker System Prune ==="
-          docker system prune -f --volumes || true
-
-      - name: "🐳 Set up Docker Buildx"
-        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
+      - name: "⚡ Setup UniRTM"
+        uses: snowdreamtech/setup-unirtm@cacfb4d739ee46d4a4b2528b02b508df2f560706 # v0.4.0
         with:
-          driver: docker-container
-          driver-opts: |
-            image=moby/buildkit:latest
-            network=host
-          buildkitd-flags: --oci-worker-no-cache
-          cache-binary: false
-          cleanup: true
-        timeout-minutes: 5
-
-      - name: "🚀 Distribute Artifacts (GoReleaser)"
-        uses: goreleaser/goreleaser-action@ec59f474b9834571250b370d4735c50f8e2d1e29 # v7.0.0
+          unirtm-version: "0.23.0"
+          install: true
+          trust: true
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
+      - name: "🧹 Clean Git State (Discard Lockfile Changes)"
+        shell: sh
+        run: |
+          # setup-unirtm runs 'unirtm install' which might update unirtm.lock if version bumped.
+          # GoReleaser requires a strict clean state, so we forcefully reset the working tree.
+          git reset --hard HEAD
+          git clean -fd
+
+      - name: "📦 Install Syft (for GoReleaser SBOM)"
+        uses: anchore/sbom-action/download-syft@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+
+      - name: "📦 Install Snapcraft (for GoReleaser Snap packages)"
+        shell: sh
+        run: |
+          sudo snap install snapcraft --classic
+
+      - name: "📦 Install Flatpak (for GoReleaser Flatpak packages)"
+        run: |
+          sudo apt update -q
+          sudo apt install -yq flatpak flatpak-builder
+          sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install -y --noninteractive flathub \
+            org.freedesktop.Platform/x86_64/24.08 \
+            org.freedesktop.Sdk/x86_64/24.08 \
+            org.freedesktop.Platform/aarch64/24.08 \
+            org.freedesktop.Sdk/aarch64/24.08
+
+      - name: "🔧 Set up QEMU for multi-architecture builds"
+        uses: docker/setup-qemu-action@06116385d9baf250c9f4dcb4858b16962ea869c3 # v4.1.0
+
+      - name: "🔧 Install Cosign (for keyless artifact signing)"
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+      - name: "❄️ Install Nix (for GoReleaser nix pipe)"
+        uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "�🚀 Distribute Artifacts (GoReleaser)"
+        uses: goreleaser/goreleaser-action@5daf1e915a5f0af01ddbcd89a43b8061ff4f1a89 # v7.2.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          WORKFLOW_SECRET: ${{ secrets.WORKFLOW_SECRET }}
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+          AUR_KEY: ${{ secrets.AUR_KEY }}
         with:
           # Orchestrates the optimized build and distribution of cross-compiled Go binaries.
           distribution: goreleaser
           version: "~> v2" # Pins to the latest stable v2 series binary
-          args: ${{ startsWith(github.ref, 'refs/tags/') && 'release --clean' || 'release --snapshot --clean --skip=publish' }}
+          args: ${{ startsWith(github.ref, 'refs/tags/') && 'release --clean --timeout 60m' || 'release --snapshot --clean --skip=publish --timeout 60m' }}
+
+      - name: "📦 Setup Node.js for npm Publishing"
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: "🔨 Build npm Platform Packages"
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: sh
+        run: |
+          # Read the clean version from GoReleaser's metadata (already normalized:
+          # v-prefix stripped, date formats converted, etc.)
+          # Use node (already set up) instead of jq to avoid tool dependency
+          VERSION=$(node -p "require('./dist/metadata.json').version")
+          echo "Building npm packages for version: ${VERSION}"
+          sh npm/scripts/build.sh --version "${VERSION}"
+
+      - name: "🚀 Publish npm Platform Packages"
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: sh
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # npm/scripts/build.sh was already executed by GoReleaser after_hooks.
+          # Platform packages (npm/unirtm-*/bin/) and package.json files are ready.
+          echo '=== Publishing platform sub-packages ==='
+          for pkg in npm/unirtm-*/; do
+            pkg_name=$(node -p "require('./${pkg}package.json').name" 2>/dev/null || echo "${pkg}")
+            echo "[publish] ${pkg_name} ..."
+            npm publish "${pkg}" --access public --registry=https://registry.npmjs.org
+          done
+
+          echo ""
+          echo '=== Publishing root package ==='
+          echo '[publish] @snowdreamtech/unirtm ...'
+          npm publish npm/unirtm/ --access public --registry=https://registry.npmjs.org
+
+          echo ""
+          echo '[done] All npm packages published successfully!'
 
       - name: "🛡️ Attest Build Provenance (SLSA)"
         if: startsWith(github.ref, 'refs/tags/')
-        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
         with:
-          subject-path: "dist/**"
+          subject-checksums: dist/checksums.txt
 
       - name: "🧹 Cleanup on Failure (Rollback)"
         if: failure() && startsWith(github.ref, 'refs/tags/')
@@ -240,3 +379,47 @@ jobs:
           echo "⚠️ Release process failed for ${GITHUB_REF_NAME}. Rolling back partial release..."
           # Delete the partial GitHub release and the associated tag to allow for a clean retry.
           gh release delete "${GITHUB_REF_NAME}" --yes --cleanup-tag
+
+  verify:
+    name: "🔍 Verify Release Signature"
+    runs-on: ubuntu-latest
+    needs: [goreleaser]
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: "🔧 Install Cosign (for keyless artifact signing)"
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: "📥 Get tag name"
+        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> "$GITHUB_ENV"
+
+      - name: "📥 Download release artifacts"
+        env:
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download "$TAG" \
+            --repo snowdreamtech/UniRTM \
+            --pattern 'unirtm_Linux_x86_64.tar.gz' \
+            --pattern 'checksums.txt' \
+            --pattern 'checksums.txt.sigstore.json'
+
+      - name: "✅ Verify checksums"
+        run: shasum -a 256 --check --ignore-missing checksums.txt
+
+      - name: "🔒 Verify cosign signature"
+        run: |
+          cosign verify-blob \
+            --certificate-identity "https://github.com/snowdreamtech/UniRTM/.github/workflows/goreleaser.yml@refs/tags/$TAG" \
+            --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
+            --bundle checksums.txt.sigstore.json \
+            checksums.txt
+
+      - name: "🛡️ Verify SLSA attestations"
+        env:
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+        run: |
+          gh attestation verify unirtm_Linux_x86_64.tar.gz \
+            --repo snowdreamtech/UniRTM \
+            --signer-repo snowdreamtech/UniRTM

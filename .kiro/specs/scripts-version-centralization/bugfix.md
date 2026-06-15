@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Many scripts in `scripts/lib/langs/` have hardcoded provider values instead of using the centralized version variables from `scripts/lib/versions.sh`. This creates inconsistency and makes version management difficult. When versions need to be updated, developers must manually search and update multiple files instead of changing a single centralized location. This violates the Single Source of Truth (SSoT) principle and increases the risk of version drift across the codebase.
+Many scripts in `scripts/lib/langs/` have hardcoded provider values instead of using the centralized version variables from `.unirtm.toml`. This creates inconsistency and makes version management difficult. When versions need to be updated, developers must manually search and update multiple files instead of changing a single centralized location. This violates the Single Source of Truth (SSoT) principle and increases the risk of version drift across the codebase.
 
 ## Bug Analysis
 

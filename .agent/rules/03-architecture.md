@@ -7,10 +7,13 @@
 - **Path Handling**: Always use `path.join()` or equivalent cross-platform path functions. Never hard-code `/` or `\` separators.
 - **Line Endings**: Configure `.gitattributes` to normalize line endings (`* text=auto`). This prevents CRLF/LF conflicts across platforms.
 - **Shell Scripts**: When shell scripts are necessary, provide both `.sh` (Unix/POSIX) and `.ps1` or `.cmd` (Windows) variants, or use cross-platform runners (e.g., `python`, `node`).
-  - **Preferred Method**: Use direct execution of pre-installed binaries (via `make setup`).
+  - **Preferred Method**: Use direct execution of pre-installed binaries (via `unirtm install`).
   - **Local Path**: For project-specific tools, use `npm run <command>` which safely includes `node_modules/.bin` in the path without `npx` overhead.
-- **Environment Variables**: Use `.env` files with a `.env.example` template. Never commit actual `.env` files. Support `HTTP_PROXY`/`HTTPS_PROXY`/`NO_PROXY` for network operations.
-- **OS Detection**: Detect the operating system at runtime for conditional logic. Use `process.platform` (Node.js), `sys.platform` (Python), `runtime.GOOS` (Go), or `std::env::consts::OS` (Rust). Never hard-code OS-specific command paths.
+- **Environment Variables**:
+  - Use `.env` files with a `.env.example` template. Never commit actual `.env.local` files.
+  - **UniRTM Prefix Strategy**: All internal configuration MUST support a hierarchical lookup via `internal/pkg/env.Get()`: `UNIRTM_KEY` > `UNIRTM_KEY` > `KEY`.
+  - **Network Synchronization**: On startup, prefixed variables (e.g., `UNIRTM_HTTP_PROXY`) MUST be synchronized to native ones (e.g., `HTTP_PROXY`) if native ones are missing, to ensure compatibility with standard libraries.
+- **OS Detection**: Detect the operating system at runtime for conditional logic. Use `runtime.GOOS` (Go). Never hard-code OS-specific command paths.
 - **Scripting Architecture (SSO)**: All automation tools must follow a **Triple-Entry Unified Pattern**:
   - **Core Logic**: POSIX-compliant Shell (`scripts/*.sh`) sourcing `lib/common.sh`.
   - **Windows Delegation**: Thin PowerShell wrappers (`scripts/*.ps1`) and Batch files (`scripts/*.bat`) that delegate to the shell logic.
@@ -19,7 +22,7 @@
 ## 2. Runtime & Dependency Strategy
 
 - **Runtime Classes**: To balance environment readiness with lean installation, runtimes are classified into two tiers:
-  - **Primary (First-Class)**: **Node.js** and **Python**. These are required for the vast majority of CLI tools, linters, and core automation. They are ALWAYS installed during `make setup`.
+  - **Primary (First-Class)**: **Node.js** and **Python**. These are required for the vast majority of CLI tools, linters, and core automation. They are ALWAYS installed during `unirtm install`.
   - **Secondary (On-Demand)**: **Go**, **Rust**, **Java**, **Swift**, **PHP**, etc. These are installed only when project-specific source files (e.g., `go.mod`, `pom.xml`, `Cargo.toml`) are detected.
 - **Dependency Isolation**: All project-level dependencies MUST be isolated.
   - **Node.js**: Use local `node_modules`.
@@ -31,8 +34,8 @@
 
 ### Dependency Management
 
-- Always pin dependency versions in lock files (`package-lock.json`, `poetry.lock`, `go.sum`, `Cargo.lock`, etc.).
-- Lock files MUST be committed to version control. The `node_modules/`, `venv/`, `.venv/`, `target/` directories MUST be in `.gitignore`.
+- Always pin dependency versions in lock files (`package-lock.json`, `poetry.lock`, `go.sum`, `Cargo.lock`, `unirtm.lock`, etc.).
+- Lock files MUST be committed to version control. The `node_modules/`, `venv/`, `.venv/`, `target/`, `dist/` directories MUST be in `.gitignore`.
 
 ### Configuration Hierarchy
 
@@ -171,3 +174,5 @@ Each directory contains a redirect `rules/rules.md` file, plus `commands/` (file
 - **Bounded Contexts**: In complex systems, define bounded contexts (DDD) with explicit integration points. Teams own their contexts; cross-context communication goes through well-defined APIs or events.
 - **Separation of Concerns**: Keep configuration, business logic, and infrastructure code strictly separated. Business logic MUST NOT contain infrastructure-specific code (SQL queries, HTTP calls, file I/O); use dependency injection and interfaces/adapters.
 - **Fail Fast**: Validate inputs and preconditions as early as possible in the call stack. Return clear errors immediately rather than propagating invalid state deeply into business logic.
+- **Provider Acceleration**: For tools frequently affected by network restrictions (e.g., Go SDK), implement mirror support via environment variables (e.g., `GO_DOWNLOAD_MIRROR` -> `golang.google.cn`).
+- **Asset Matching**: In NativeBackend, implement fuzzy matching and scoring logic to handle non-standard tool asset names across versions.

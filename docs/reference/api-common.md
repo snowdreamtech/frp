@@ -19,7 +19,7 @@ install_tool_safe BIN_NAME PROVIDER DISPLAY_NAME [VERSION_FLAG] [SKIP_FILE_CHECK
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | `BIN_NAME` | string | Yes | - | Binary name to verify (e.g., "shfmt", "ec-linux-amd64") |
-| `PROVIDER` | string | Yes | - | Mise provider string (e.g., "github:mvdan/sh") |
+| `PROVIDER` | string | Yes | - | UniRTM provider string (e.g., "github:mvdan/sh") |
 | `DISPLAY_NAME` | string | Yes | - | Human-readable name for logging |
 | `VERSION_FLAG` | string | No | "--version" | Flag to check version |
 | `SKIP_FILE_CHECK` | integer | No | 0 | Skip file detection (0=check, 1=skip) |
@@ -60,11 +60,11 @@ install_tool_safe "tool" "${VER_TOOL_PROVIDER:-}" "Tool Name" "--version" 0 "*.e
 
 The function follows a six-step process:
 
-1. **Binary Detection**: Checks if binary exists using `command -v`, `mise which`, or filesystem search
+1. **Binary Detection**: Checks if binary exists using `command -v`, `unirtm which`, or filesystem search
 2. **Version Verification**: Verifies binary responds to version flag
 3. **Installation Decision**: Decides whether to install based on environment (CI vs local)
 4. **Cleanup**: Removes non-functional binaries if found
-5. **Mise Installation**: Installs tool using mise
+5. **UniRTM Installation**: Installs tool using unirtm
 6. **Post-Install Verification**: Verifies installation was successful
 
 **Performance:**
@@ -120,7 +120,7 @@ fi
 
 ### `verify_binary_exists()`
 
-Checks if a binary exists in the system PATH or mise installation directory.
+Checks if a binary exists in the system PATH or unirtm installation directory.
 
 **Signature:**
 
@@ -151,8 +151,8 @@ fi
 **Resolution Strategy:**
 
 1. Check with `command -v`
-2. Check with `mise which`
-3. Search mise installation directory with `find`
+2. Check with `unirtm which`
+3. Search unirtm installation directory with `find`
 
 **Performance:**
 
@@ -311,7 +311,7 @@ run_with_timeout TIMEOUT_SECONDS COMMAND [ARGS...]
 
 ```bash
 # Run command with 30-second timeout
-if run_with_timeout 30 mise install shfmt; then
+if run_with_timeout 30 unirtm install shfmt; then
   echo "Installation completed"
 else
   echo "Installation failed or timed out"
@@ -490,7 +490,7 @@ Use timeouts for network operations:
 
 ```bash
 # 5-minute timeout for tool installation
-if ! run_with_timeout 300 mise install tool; then
+if ! run_with_timeout 300 unirtm install tool; then
   log_error "Installation timed out"
   exit 1
 fi
@@ -522,7 +522,7 @@ fi
 
 - Use `SKIP_FILE_CHECK=1` when file patterns are not relevant
 - Set appropriate timeouts based on tool size
-- Consider using `MISE_OFFLINE=1` when network is unavailable
+- Consider using `UNIRTM_OFFLINE=1` when network is unavailable
 
 ### Logging Best Practices
 
@@ -533,10 +533,9 @@ fi
 ## Related Documentation
 
 - [Tool Installation Architecture](./tool-installation.md)
-- [Performance Testing](../../benchmarks/README.md)
-- [Troubleshooting](../troubleshooting-mise-provenance.md)
+- [Troubleshooting](../troubleshooting-unirtm-provenance.md)
 
 ## References
 
-- [Mise Documentation](https://mise.jdx.dev/)
+- [UniRTM Documentation](https://github.com/snowdreamtech/UniRTM)
 - [POSIX Shell Scripting](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html)

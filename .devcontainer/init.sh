@@ -1,11 +1,16 @@
 #!/bin/sh
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
 # .devcontainer/init.sh — Devcontainer initialization script
-# Purpose: Set up mise, GPG, and git configuration for development environment
+# Purpose: Set up unirtm, GPG, and git configuration for development environment
 # Compatibility: POSIX shell (sh, bash, zsh, dash)
 
 set -eu
 
-# Disable mise config trust errors in this script
+# Disable unirtm/mise config trust errors in this script
+export UNIRTM_IGNORE_MISE_TOML=1
+export UNIRTM_WARN_UNTRUSTED=0
 export MISE_IGNORE_MISE_TOML=1
 export MISE_WARN_UNTRUSTED=0
 
@@ -62,21 +67,21 @@ log_detail() {
 echo "${BLUE}=== Initializing Devcontainer ===${NC}"
 log_detail "Start time: $(date)"
 
-# Step 0: Trust mise configuration early (before any operations)
-if command -v mise >/dev/null 2>&1; then
-  # Try to trust mise configurations - retry up to 3 times
-  MISE_TRUST_ATTEMPTS=0
-  MISE_TRUST_MAX=3
-  while [ $MISE_TRUST_ATTEMPTS -lt $MISE_TRUST_MAX ]; do
-    MISE_TRUST_ATTEMPTS=$((MISE_TRUST_ATTEMPTS + 1))
-    if mise trust -a 2>/dev/null; then
-      log_detail "mise configuration pre-trusted (attempt $MISE_TRUST_ATTEMPTS)"
+# Step 0: Trust unirtm configuration early (before any operations)
+if command -v unirtm >/dev/null 2>&1; then
+  # Try to trust unirtm configurations - retry up to 3 times
+  UNIRTM_TRUST_ATTEMPTS=0
+  UNIRTM_TRUST_MAX=3
+  while [ $UNIRTM_TRUST_ATTEMPTS -lt $UNIRTM_TRUST_MAX ]; do
+    UNIRTM_TRUST_ATTEMPTS=$((UNIRTM_TRUST_ATTEMPTS + 1))
+    if unirtm trust -a 2>/dev/null; then
+      log_detail "unirtm configuration pre-trusted (attempt $UNIRTM_TRUST_ATTEMPTS)"
       break
-    elif [ $MISE_TRUST_ATTEMPTS -lt $MISE_TRUST_MAX ]; then
-      log_detail "mise trust attempt $MISE_TRUST_ATTEMPTS/$MISE_TRUST_MAX failed, retrying..."
+    elif [ $UNIRTM_TRUST_ATTEMPTS -lt $UNIRTM_TRUST_MAX ]; then
+      log_detail "unirtm trust attempt $UNIRTM_TRUST_ATTEMPTS/$UNIRTM_TRUST_MAX failed, retrying..."
       sleep 1
     else
-      log_detail "mise trust failed after $MISE_TRUST_MAX attempts (continuing anyway)"
+      log_detail "unirtm trust failed after $UNIRTM_TRUST_MAX attempts (continuing anyway)"
     fi
   done || true
 fi
@@ -181,15 +186,15 @@ else
   log_success "Home directory accessible"
 fi
 
-# Step 5: Setup mise
-log_step "📦 Setting up mise..."
-if ! command -v mise >/dev/null 2>&1; then
-  log_error "mise not found in PATH - skipping"
+# Step 5: Setup unirtm
+log_step "📦 Setting up unirtm..."
+if ! command -v unirtm >/dev/null 2>&1; then
+  log_error "unirtm not found in PATH - skipping"
 else
-  if mise trust -a 2>/dev/null; then
-    log_success "mise configuration trusted"
+  if unirtm trust -a 2>/dev/null; then
+    log_success "unirtm configuration trusted"
   else
-    log_warning "Failed to trust mise configuration"
+    log_warning "Failed to trust unirtm configuration"
   fi
 fi
 
@@ -329,20 +334,18 @@ fi
 log_step "📥 Installing project dependencies..."
 if [ "$SKIP_DEPS" -eq 1 ]; then
   log_detail "Skipping dependency installation (SKIP_DEPS=1)"
-elif ! command -v make >/dev/null 2>&1; then
-  log_warning "make command not found - cannot install dependencies"
-elif [ ! -f "Makefile" ]; then
-  log_warning "Makefile not found - cannot install dependencies"
+elif ! command -v unirtm >/dev/null 2>&1; then
+  log_warning "unirtm command not found - cannot install dependencies"
 else
-  log_detail "Running: make setup install"
+  log_detail "Running: unirtm install"
   if [ -n "$LOG_FILE" ]; then
-    if make setup install 2>&1 | tee -a "$LOG_FILE"; then
+    if unirtm install 2>&1 | tee -a "$LOG_FILE"; then
       log_success "Dependencies installed successfully"
     else
       log_error "Dependency installation failed - continuing anyway"
     fi
   else
-    if make setup install 2>&1; then
+    if unirtm install 2>&1; then
       log_success "Dependencies installed successfully"
     else
       log_error "Dependency installation failed - continuing anyway"

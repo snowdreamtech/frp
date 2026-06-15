@@ -56,10 +56,10 @@ This triggers the AI agent to:
 Follow the standardized sequence for a robust environment:
 
 ```bash
-make init     # Step 1: Hydrate project from template
-make setup    # Step 2: Install system-level tools (binaries)
-make install  # Step 3: Install project dependencies & hooks
-make verify   # Step 4: Run comprehensive health check
+unirtm run init     # Step 1: Hydrate project from template
+unirtm run setup    # Step 2: Install system-level tools (binaries)
+unirtm run install  # Step 3: Install project dependencies & hooks
+unirtm run verify   # Step 4: Run comprehensive health check
 ```
 
 ## Step 4: Open in DevContainer
@@ -81,11 +81,11 @@ Your AI assistant will now follow the project rules automatically. Jump in:
 ## Verify Everything Works
 
 ```bash
-make lint    # Run all linters
-make test    # Run tests
-make build   # Build the project
+unirtm run lint    # Run all linters
+unirtm run test    # Run tests
+unirtm run build   # Build the project
 ```
 
 ::: tip
-Run `make help` to see all available commands.
+Run `unirtm run help` to see all available commands.
 :::

@@ -26,15 +26,15 @@
 All automation scripts (especially those in `scripts/`) MUST strictly adhere to these four rigid architectural benchmarks to guarantee performance, reliability, and cross-platform idempotency:
 
 1. **On-Demand Loading (按需加载，按需运行):**
-   - Scripts MUST exclusively install and invoke language tooling (linters, formatters, SDKs) ONLY when their specific source files are detected in the project tree (e.g., via `has_lang_files`). Global pre-installations are strictly forbidden to mitigate the "Mise Tax" and avoid "ghost tool" resolution.
+   - Scripts MUST exclusively install and invoke language tooling (linters, formatters, SDKs) ONLY when their specific source files are detected in the project tree (e.g., via `has_lang_files`). Global pre-installations are strictly forbidden to mitigate the "UniRTM Tax" and avoid "ghost tool" resolution.
 2. **Environment Weight Tiering (轻量级放本地，重量级放CI):**
    - Operations required before a local Git commit (e.g., source formatting, lightweight syntax linting) MUST run locally.
    - Heavyweight operations that are slow or severely network-dependent (e.g., pulling CVE vulnerability databases, large dependency audits like `trivy` or `osv-scanner`) MUST be locked behind an `is_ci_env` guard and gracefully skipped locally to prevent developer disruption.
 3. **Zero-Error Core Commands (确保核心套件正常无报错):**
-   - The unified command suite (`make setup`, `make test`, `make verify`, `make audit`) MUST always exit cleanly with `0` errors across all valid environments and must fail elegantly or skip rather than crashing on missing optional dependencies.
+   - The unified command suite (`unirtm install`, `make verify`, `make audit`) MUST always exit cleanly with `0` errors across all valid environments and must fail elegantly or skip rather than crashing on missing optional dependencies.
 4. **Universal Best Practices & Poly-Arch Constraints (最佳实践与多系统双架构统一):**
    - The installation pipelines and lint operations for all languages MUST implement the ecosystem's globally accepted "Best Practices".
-   - Compatibility MUST be natively maintained for all Target OSs (`windows`, `linux`, `macos`) and Target Architectures (`x86_64`, `arm64`). Arbitrary Bash fallback scripts for downloads (like heavy `curl` wrappers) are completely prohibited; delegate such logic natively to the toolchain orchestrator (`mise` TOML configuration arrays like `asset = [{match="aarch64"}]`).
+   - Compatibility MUST be natively maintained for all Target OSs (`windows`, `linux`, `macos`) and Target Architectures (`x86_64`, `arm64`). Arbitrary Bash fallback scripts for downloads (like heavy `curl` wrappers) are completely prohibited; delegate such logic natively to the toolchain orchestrator (`unirtm` TOML configuration arrays like `asset = [{match="aarch64"}]`).
 
 - **CLI-First Efficiency**: When performing research, validation, or environment inspection, command-line tools (CLI) MUST be prioritized over browser-based methods. Browser interaction should only be used as a secondary fallback when CLI tools are unavailable or insufficient for the task, to minimize latency and improve execution speed.
 - When a non-idempotent operation is unavoidable, guard it explicitly:

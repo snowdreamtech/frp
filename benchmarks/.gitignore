@@ -1,9 +1,0 @@
-# Ignore historical performance data (too large for git)
-history/*.json
-
-# Keep the directory structure
-!history/.gitkeep
-
-# Ignore baseline until it is officially established
-baseline.json
-baseline-*.json

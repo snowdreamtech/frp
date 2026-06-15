@@ -2,9 +2,9 @@
 
 ## 核心发现
 
-**重要更正**: 经过实际测试验证，mise 的 Node.js core backend **不会**自动检测 musl 并下载预编译包。
+**重要更正**: 经过实际测试验证，unirtm 的 Node.js core backend **不会**自动检测 musl 并下载预编译包。
 
-### mise 在不同平台的实际行为
+### unirtm 在不同平台的实际行为
 
 | 平台 | 默认行为 | 是否需要配置 |
 |------|---------|-------------|
@@ -16,7 +16,7 @@
 ### Alpine 上的默认行为（未配置）
 
 ```bash
-$ mise install node@25.9.0
+$ unirtm install node@25.9.0
 # 1. 下载源码包: node-v25.9.0.tar.gz
 # 2. 解压: extract node-v25.9.0.tar.gz
 # 3. 运行 ./configure
@@ -28,10 +28,10 @@ $ mise install node@25.9.0
 
 ### 方案 A: 条件环境变量（推荐）
 
-在 `.mise.toml` 中使用条件配置，根据系统自动选择：
+在 `.unirtm.toml` 中使用条件配置，根据系统自动选择：
 
 ```toml
-# .mise.toml
+# .unirtm.toml
 [tools]
 node = "25.9.0"
 python = "3.14.3"
@@ -39,8 +39,8 @@ go = "1.26.2"
 
 [env]
 # Alpine 自动检测：官方 Alpine 镜像会设置 ALPINE_VERSION
-MISE_NODE_MIRROR_URL = "{% if env.ALPINE_VERSION is defined %}https://unofficial-builds.nodejs.org/download/release/{% else %}https://nodejs.org/dist/{% endif %}"
-MISE_NODE_FLAVOR = "{% if env.ALPINE_VERSION is defined %}musl{% endif %}"
+UNIRTM_NODE_MIRROR_URL = "{% if env.ALPINE_VERSION is defined %}https://unofficial-builds.nodejs.org/download/release/{% else %}https://nodejs.org/dist/{% endif %}"
+UNIRTM_NODE_FLAVOR = "{% if env.ALPINE_VERSION is defined %}musl{% endif %}"
 ```
 
 **优势**:
@@ -60,17 +60,17 @@ FROM alpine:3.22
 # 安装基础依赖
 RUN apk add --no-cache bash curl git ca-certificates gpg
 
-# 安装 mise
-RUN curl https://mise.run | sh
+# 安装 unirtm
+RUN curl https://unirtm.run | sh
 ENV PATH="/root/.local/bin:$PATH"
 
-# ⭐ 关键：配置 mise 使用 musl 预编译包
-ENV MISE_NODE_MIRROR_URL="https://unofficial-builds.nodejs.org/download/release/"
-ENV MISE_NODE_FLAVOR="musl"
+# ⭐ 关键：配置 unirtm 使用 musl 预编译包
+ENV UNIRTM_NODE_MIRROR_URL="https://unofficial-builds.nodejs.org/download/release/"
+ENV UNIRTM_NODE_FLAVOR="musl"
 
 # 复制配置并安装
-COPY .mise.toml .
-RUN mise install
+COPY .unirtm.toml .
+RUN unirtm install
 
 WORKDIR /app
 COPY . .
@@ -80,7 +80,7 @@ CMD ["node", "index.js"]
 **优势**:
 
 - ✅ 配置清晰明确
-- ✅ 不影响 .mise.toml
+- ✅ 不影响 .unirtm.toml
 - ✅ 适合单一平台部署
 
 ### 方案 C: 使用官方 Node.js Alpine 镜像（最简单）
@@ -88,14 +88,14 @@ CMD ["node", "index.js"]
 ```dockerfile
 FROM node:25.9.0-alpine3.22
 
-# 安装 mise 用于其他工具
+# 安装 unirtm 用于其他工具
 RUN apk add --no-cache bash curl git
-RUN curl https://mise.run | sh
+RUN curl https://unirtm.run | sh
 ENV PATH="/root/.local/bin:$PATH"
 
-# 复制配置（node 已预装，mise 跳过）
-COPY .mise.toml .
-RUN mise install python go
+# 复制配置（node 已预装，unirtm 跳过）
+COPY .unirtm.toml .
+RUN unirtm install python go
 
 WORKDIR /app
 COPY . .
@@ -115,7 +115,7 @@ CMD ["node", "index.js"]
 ```dockerfile
 # 最小依赖 - 足以使用预编译包
 RUN apk add --no-cache \
-    bash \           # mise 需要
+    bash \           # unirtm 需要
     curl \           # 下载工具
     git \            # 版本控制
     ca-certificates \# HTTPS
@@ -139,7 +139,7 @@ RUN apk add --no-cache \
 
 ```bash
 # 启用调试日志
-MISE_DEBUG=1 mise install node@25.9.0
+UNIRTM_DEBUG=1 unirtm install node@25.9.0
 
 # 查找关键信息：
 # ✅ 预编译包: "Downloading https://unofficial-builds.nodejs.org/..."
@@ -149,7 +149,7 @@ MISE_DEBUG=1 mise install node@25.9.0
 ### 验证二进制文件类型
 
 ```bash
-file $(mise which node)
+file $(unirtm which node)
 
 # Alpine (musl): dynamically linked, interpreter /lib/ld-musl-x86_64.so.1
 # Ubuntu (glibc): dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2
@@ -162,13 +162,13 @@ file $(mise which node)
 
 ```
 .
-├── .mise.toml              # 跨平台配置
+├── .unirtm.toml              # 跨平台配置
 ├── Dockerfile.alpine       # Alpine 专用
 ├── Dockerfile.ubuntu       # Ubuntu 专用
 └── docker-compose.yml
 ```
 
-### .mise.toml（方案 A）
+### .unirtm.toml（方案 A）
 
 ```toml
 [tools]
@@ -178,8 +178,8 @@ go = "1.26.2"
 
 [env]
 # 自动检测 Alpine
-MISE_NODE_MIRROR_URL = "{% if env.ALPINE_VERSION is defined %}https://unofficial-builds.nodejs.org/download/release/{% else %}https://nodejs.org/dist/{% endif %}"
-MISE_NODE_FLAVOR = "{% if env.ALPINE_VERSION is defined %}musl{% endif %}"
+UNIRTM_NODE_MIRROR_URL = "{% if env.ALPINE_VERSION is defined %}https://unofficial-builds.nodejs.org/download/release/{% else %}https://nodejs.org/dist/{% endif %}"
+UNIRTM_NODE_FLAVOR = "{% if env.ALPINE_VERSION is defined %}musl{% endif %}"
 
 # 国内镜像加速（可选）
 NPM_CONFIG_REGISTRY = "{% if env.CI is defined %}https://registry.npmjs.org{% else %}https://registry.npmmirror.com{% endif %}"
@@ -193,17 +193,17 @@ FROM alpine:3.22
 # 安装基础依赖
 RUN apk add --no-cache bash curl git ca-certificates gpg
 
-# 安装 mise
-RUN curl https://mise.run | sh
+# 安装 unirtm
+RUN curl https://unirtm.run | sh
 ENV PATH="/root/.local/bin:$PATH"
 
 # 配置 musl 预编译包
-ENV MISE_NODE_MIRROR_URL="https://unofficial-builds.nodejs.org/download/release/"
-ENV MISE_NODE_FLAVOR="musl"
+ENV UNIRTM_NODE_MIRROR_URL="https://unofficial-builds.nodejs.org/download/release/"
+ENV UNIRTM_NODE_FLAVOR="musl"
 
 # 安装工具
-COPY .mise.toml .
-RUN mise install
+COPY .unirtm.toml .
+RUN unirtm install
 
 WORKDIR /app
 COPY . .
@@ -220,13 +220,13 @@ RUN apt-get update && apt-get install -y \
     bash curl git ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# 安装 mise
-RUN curl https://mise.run | sh
+# 安装 unirtm
+RUN curl https://unirtm.run | sh
 ENV PATH="/root/.local/bin:$PATH"
 
 # 安装工具（自动使用 glibc 预编译包）
-COPY .mise.toml .
-RUN mise install
+COPY .unirtm.toml .
+RUN unirtm install
 
 WORKDIR /app
 COPY . .
@@ -265,18 +265,18 @@ services:
 
 ## 常见问题
 
-### Q1: 为什么 mise 不自动检测 musl？
+### Q1: 为什么 unirtm 不自动检测 musl？
 
-mise 的 Node.js core backend 默认使用 nodejs.org 官方源，而官方源只提供 glibc 预编译包。musl 预编译包来自社区维护的 unofficial-builds，需要手动配置。
+unirtm 的 Node.js core backend 默认使用 nodejs.org 官方源，而官方源只提供 glibc 预编译包。musl 预编译包来自社区维护的 unofficial-builds，需要手动配置。
 
 ### Q2: 如何确认使用的是预编译包？
 
 ```bash
 # 方法 1: 查看调试日志
-MISE_DEBUG=1 mise install node@25.9.0 2>&1 | grep -i download
+UNIRTM_DEBUG=1 unirtm install node@25.9.0 2>&1 | grep -i download
 
 # 方法 2: 检查安装时间
-time mise install node@25.9.0
+time unirtm install node@25.9.0
 # 预编译包: ~30秒
 # 源码编译: ~10分钟
 ```
@@ -291,9 +291,9 @@ time mise install node@25.9.0
 # 安装编译依赖
 apk add python3 build-base linux-headers
 
-# 不设置 MISE_NODE_FLAVOR，让 mise 从源码编译
-unset MISE_NODE_FLAVOR
-mise install node@25.9.0
+# 不设置 UNIRTM_NODE_FLAVOR，让 unirtm 从源码编译
+unset UNIRTM_NODE_FLAVOR
+unirtm install node@25.9.0
 ```
 
 ## 最佳实践总结
@@ -306,7 +306,7 @@ mise install node@25.9.0
 
 ## 参考资源
 
-- [mise 官方文档](https://mise.jdx.dev/)
+- [unirtm 官方文档](https://github.com/snowdreamtech/UniRTM)
 - [Node.js 官方下载](https://nodejs.org/dist/)
 - [Node.js Unofficial Builds](https://unofficial-builds.nodejs.org/)
 - [Alpine Linux 包搜索](https://pkgs.alpinelinux.org/)

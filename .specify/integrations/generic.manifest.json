@@ -1,0 +1,16 @@
+{
+  "integration": "generic",
+  "version": "0.10.2",
+  "installed_at": "2026-06-12T12:46:41.387728+00:00",
+  "files": {
+    ".specify/commands/speckit.analyze.md": "699032fdd49afe31d23c7191f3fe7bcb1d14b081fbc94c2287e6ba3a57574fda",
+    ".specify/commands/speckit.clarify.md": "0acc9e8fa225d1519a1729ce9ee2a26ac5a426f527fe48e14bdea14170fd78a9",
+    ".specify/commands/speckit.constitution.md": "58d35eb026f56bb7364d91b8b0382d5dd1249ded6c1449a2b69546693afb85f7",
+    ".specify/commands/speckit.implement.md": "088b04952e9152ccc192bea842d92448b0aed26c748cb88d2dbd9dd96eb345e0",
+    ".specify/commands/speckit.plan.md": "1fc3978d678cabcca33f02c346b333b12da175ca0270be58d4c1797834fcb0e0",
+    ".specify/commands/speckit.checklist.md": "d258d63195c45d5c5900177194a1cecb865b7b81fc71cce096642c4b528bbf83",
+    ".specify/commands/speckit.specify.md": "2d638f512263cc658e85bc05c78897d77f4f48e92c752b2465853da1fd5bfb8c",
+    ".specify/commands/speckit.tasks.md": "6998de540ae9564c729062ca0a3d493c3902e4647514e4d1011e6680c4c9f0c9",
+    ".specify/commands/speckit.taskstoissues.md": "6fb1d3f1b6668282d41f45127faa427a93d8fdd88215d1c2c5c8ee3185037e7e"
+  }
+}

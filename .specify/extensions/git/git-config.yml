@@ -1,0 +1,65 @@
+# Git Branching Workflow Extension Configuration
+# Copied to .specify/extensions/git/git-config.yml on install
+
+# Branch numbering strategy: "sequential" (001, 002, ...) or "timestamp" (YYYYMMDD-HHMMSS)
+branch_numbering: sequential
+
+# Commit message used by `git commit` during repository initialization
+init_commit_message: "chore: initial commit"
+
+# Auto-commit before/after core commands.
+# Set "default" to enable for all commands, then override per-command.
+# Each key can be true/false. Message is customizable per-command.
+auto_commit:
+  default: true
+  manual:
+    enabled: true
+    message: "chore(speckit): manual auto-commit trigger"
+  before_clarify:
+    enabled: true
+    message: "chore(speckit): save progress before clarification"
+  before_plan:
+    enabled: true
+    message: "chore(speckit): save progress before planning"
+  before_tasks:
+    enabled: true
+    message: "chore(speckit): save progress before task generation"
+  before_implement:
+    enabled: true
+    message: "chore(speckit): save progress before implementation"
+  before_checklist:
+    enabled: true
+    message: "chore(speckit): save progress before checklist"
+  before_analyze:
+    enabled: true
+    message: "chore(speckit): save progress before analysis"
+  before_taskstoissues:
+    enabled: true
+    message: "chore(speckit): save progress before issue sync"
+  after_constitution:
+    enabled: true
+    message: "docs(speckit): add project constitution"
+  after_specify:
+    enabled: true
+    message: "docs(speckit): add specification"
+  after_clarify:
+    enabled: true
+    message: "docs(speckit): clarify specification"
+  after_plan:
+    enabled: true
+    message: "docs(speckit): add implementation plan"
+  after_tasks:
+    enabled: true
+    message: "docs(speckit): add tasks"
+  after_implement:
+    enabled: true
+    message: "feat(speckit): implementation progress"
+  after_checklist:
+    enabled: true
+    message: "docs(speckit): add checklist"
+  after_analyze:
+    enabled: true
+    message: "docs(speckit): add analysis report"
+  after_taskstoissues:
+    enabled: true
+    message: "chore(speckit): sync tasks to issues"

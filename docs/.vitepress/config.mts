@@ -31,7 +31,7 @@ export default defineConfig({
         ],
       },
       { text: "Workflows", link: "/workflows/speckit" },
-      { text: "Reference", link: "/reference/makefile" },
+      { text: "Reference", link: "/reference/unirtm-tasks" },
       {
         text: "Changelog",
         link: "https://github.com/snowdreamtech/template/blob/main/CHANGELOG.md",
@@ -104,17 +104,17 @@ export default defineConfig({
         {
           text: "Reference",
           items: [
-            { text: "Makefile Commands", link: "/reference/makefile" },
+            { text: ".unirtm.toml Commands", link: "/reference/unirtm-tasks" },
             { text: "Supported AI IDEs", link: "/reference/ai-ides" },
             { text: "Linting Tools", link: "/reference/linters" },
             { text: "Tool Installation", link: "/reference/tool-installation" },
-            { text: "Mise Configuration", link: "/reference/mise-configuration" },
+            { text: "UniRTM Configuration", link: "/reference/unirtm-configuration" },
             { text: "API Reference", link: "/reference/api-common" },
           ],
         },
         {
           text: "Troubleshooting",
-          items: [{ text: "Mise Attestation Error", link: "/troubleshooting/mise-attestation-error" }],
+          items: [{ text: "UniRTM Attestation Error", link: "/troubleshooting/unirtm-attestation-error" }],
         },
       ],
       "/rules/languages/": [
