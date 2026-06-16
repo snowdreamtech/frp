@@ -6,6 +6,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.0](https://github.com/snowdreamtech/template/compare/v0.14.0...v0.15.0) (2026-06-16)
+
+
+### Features
+
+* **devcontainer:** add volume cache for osv-scanner ([95891da](https://github.com/snowdreamtech/template/commit/95891daa85b4e4759ce3fe748d6107894a8f8cac))
+* **devcontainer:** add volume cache for trivy ([9f931a1](https://github.com/snowdreamtech/template/commit/9f931a1d4e63544dbc34dbb795635990587f86e9))
+* **devcontainer:** add vscode extension customizations for auto-installation ([efae646](https://github.com/snowdreamtech/template/commit/efae64695c1208107298d792e272f05128405b6d))
+* **devcontainer:** forward common development and web ports ([35ff5f6](https://github.com/snowdreamtech/template/commit/35ff5f6256f3f2e88ccce449121826eac48fdc2b))
+
 ## [0.14.0](https://github.com/snowdreamtech/template/compare/v0.13.1...v0.14.0) (2026-06-13)
 
 
