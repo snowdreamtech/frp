@@ -5,7 +5,7 @@
       "release-type": "simple",
       "component": "alpine",
       "include-component-in-tag": true,
-      "release-as": "3.23.4",
+      "release-as": "3.24.0",
       "changelog-path": "CHANGELOG.md",
       "extra-files": [
         {
@@ -19,7 +19,7 @@
       "release-type": "simple",
       "component": "debian",
       "include-component-in-tag": true,
-      "release-as": "13.4.0",
+      "release-as": "13.5.0",
       "changelog-path": "CHANGELOG.md",
       "extra-files": [
         {
@@ -33,7 +33,7 @@
       "release-type": "simple",
       "component": "rocky",
       "include-component-in-tag": true,
-      "release-as": "10.1.0",
+      "release-as": "10.2.0",
       "changelog-path": "CHANGELOG.md",
       "extra-files": [
         {
