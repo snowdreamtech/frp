@@ -4,7 +4,7 @@
   "service": "devcontainer",
   "remoteUser": "root",
   "workspaceFolder": "/workspaces/template",
-  "forwardPorts": [],
+  "forwardPorts": [80, 443, 3000, 5173, 8080, 8443],
   "containerEnv": {
     "XDG_CACHE_HOME": "/var/cache/xdg"
   },
