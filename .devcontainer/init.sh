@@ -11,8 +11,6 @@ set -eu
 # Disable unirtm/mise config trust errors in this script
 export UNIRTM_IGNORE_MISE_TOML=1
 export UNIRTM_WARN_UNTRUSTED=0
-export MISE_IGNORE_MISE_TOML=1
-export MISE_WARN_UNTRUSTED=0
 
 # Colors for output
 GREEN='\033[0;32m'
