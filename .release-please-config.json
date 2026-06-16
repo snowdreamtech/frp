@@ -4,13 +4,47 @@
   "changelog-path": "CHANGELOG.md",
   "comment--manifest-mode": "To enable Manifest (Monorepo/Flavor) mode: 1. Rename 'x-packages' to 'packages'. 2. Create '.release-please-manifest.json'. 3. Remove top-level 'initial-version'.",
   "x-packages": {
-    "dist/debian": {
+    "docker/alpine": {
       "release-type": "simple",
-      "component": "debian"
+      "component": "alpine",
+      "include-component-in-tag": true,
+      "release-as": "0.1.0",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "generic",
+          "path": "Dockerfile",
+          "glob": false
+        }
+      ]
     },
-    "dist/alpine": {
+    "docker/debian": {
       "release-type": "simple",
-      "component": "alpine"
+      "component": "debian",
+      "include-component-in-tag": true,
+      "release-as": "0.1.0",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "generic",
+          "path": "Dockerfile",
+          "glob": false
+        }
+      ]
+    },
+    "docker/rocky": {
+      "release-type": "simple",
+      "component": "rocky",
+      "include-component-in-tag": true,
+      "release-as": "0.1.0",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "generic",
+          "path": "Dockerfile",
+          "glob": false
+        }
+      ]
     }
   },
   "initial-version": "0.1.0",
