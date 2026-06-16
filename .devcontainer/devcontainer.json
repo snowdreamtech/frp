@@ -6,13 +6,15 @@
   "workspaceFolder": "/workspaces/template",
   "forwardPorts": [],
   "containerEnv": {
-    "TRIVY_CACHE_DIR": "/var/cache/trivy"
+    "TRIVY_CACHE_DIR": "/var/cache/trivy",
+    "XDG_CACHE_HOME": "/var/cache/xdg"
   },
   "mounts": [
-    "source=trivy-cache,target=/var/cache/trivy,type=volume"
+    "source=trivy-cache,target=/var/cache/trivy,type=volume",
+    "source=xdg-cache,target=/var/cache/xdg,type=volume"
   ],
   "onCreateCommand": "echo '⏳ Initializing Devcontainer...'",
-  "postCreateCommand": "sudo chown -R $(whoami) /var/cache/trivy || true && VERBOSE=1 sh /workspaces/template/.devcontainer/init.sh 2>&1 | tee /tmp/devcontainer-init.log",
+  "postCreateCommand": "sudo chown -R $(whoami) /var/cache/trivy /var/cache/xdg || true && VERBOSE=1 sh /workspaces/template/.devcontainer/init.sh 2>&1 | tee /tmp/devcontainer-init.log",
   "postStartCommand": "echo '✅ Devcontainer is ready!'",
   "updateContentCommand": "",
   "waitFor": "postCreateCommand"
