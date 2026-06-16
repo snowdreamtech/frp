@@ -205,19 +205,19 @@ services:
 
 ## 语义化版本标签
 
-镜像遵循语义化版本控制，格式为：`{major}-v{major}.{minor}.{patch}`
+镜像遵循语义化版本控制，格式为：`{major}.{minor}.{patch}-{variant}`
 
 示例：
 
-- `snowdreamtech/base:debian-13-v13.5.0`
-- `snowdreamtech/base:alpine-3-v3.24.0`
-- `snowdreamtech/base:rocky-10-v10.2.0`
+- `snowdreamtech/base:13.5.0-debian`
+- `snowdreamtech/base:3.24.0-alpine`
+- `snowdreamtech/base:10.2.0-rocky`
 
 此格式允许：
 
-- **主版本固定**：`debian-13`（跟踪最新的 13.x.x）
-- **完整版本固定**：`debian-13-v13.5.0`（精确版本）
-- **最新标签**：`debian` 或 `latest`（跟踪最新版本）
+- **完整版本固定**：`13.5.0-debian`（精确版本）
+- **变体最新标签**：`latest-debian`（跟踪 Debian 最新版本）
+- **全局最新标签**：`latest`（跟踪最新版本，默认指向 Debian）
 
 ## 架构支持
 

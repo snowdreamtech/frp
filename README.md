@@ -205,19 +205,19 @@ services:
 
 ## Semantic Versioning Tags
 
-Images follow semantic versioning with the format: `{major}-v{major}.{minor}.{patch}`
+Images follow semantic versioning with the format: `{major}.{minor}.{patch}-{variant}`
 
 Examples:
 
-- `snowdreamtech/base:debian-13-v13.5.0`
-- `snowdreamtech/base:alpine-3-v3.24.0`
-- `snowdreamtech/base:rocky-10-v10.2.0`
+- `snowdreamtech/base:13.5.0-debian`
+- `snowdreamtech/base:3.24.0-alpine`
+- `snowdreamtech/base:10.2.0-rocky`
 
 This format allows:
 
-- **Major version pinning**: `debian-13` (tracks latest 13.x.x)
-- **Full version pinning**: `debian-13-v13.5.0` (exact version)
-- **Latest tag**: `debian` or `latest` (tracks most recent release)
+- **Full version pinning**: `13.5.0-debian` (exact version)
+- **Variant latest tag**: `latest-debian` (tracks most recent release for Debian)
+- **Global latest tag**: `latest` (tracks most recent release, defaults to Debian)
 
 ## Architecture Support
 
