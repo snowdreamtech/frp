@@ -7,7 +7,7 @@ name: devcontainer
 
 services:
   devcontainer:
-    image: ghcr.io/snowdreamtech/devcontainers:debian
+    image: ghcr.io/snowdreamtech/devcontainers:latest
     container_name: devcontainer
     hostname: devcontainer
     user: root
