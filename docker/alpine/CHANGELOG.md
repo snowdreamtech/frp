@@ -1,5 +1,33 @@
 # Changelog
 
+## [3.24.0](https://github.com/snowdreamtech/base/compare/alpine-v3.24.0...alpine-v3.24.0) (2026-06-18)
+
+
+### 🐛 Bug Fixes
+
+* **alpine:** add empty line to trigger release pipeline test ([6f32fb1](https://github.com/snowdreamtech/base/commit/6f32fb1c9fae9bcd4e86beb2e3013a0138784372))
+
+
+### 🛠 Refactoring
+
+* **docker:** align Dockerfiles with base image structure ([232574f](https://github.com/snowdreamtech/base/commit/232574fed8418f8c7f257d001e951361dfa467a0))
+* remove redundant docker-entrypoint.sh files ([87c576b](https://github.com/snowdreamtech/base/commit/87c576b27731ad11c5bc0ebc661e07c5a09ff1c1))
+* reorganize distribution variants into docker directory ([67a8c91](https://github.com/snowdreamtech/base/commit/67a8c911e21801bf12b3e83d02e22f3b3f59a2ba))
+
+
+### 📖 Documentation
+
+* add detailed comments to entrypoint initialization scripts ([f42cbaa](https://github.com/snowdreamtech/base/commit/f42cbaab6edfbc5c38c2a636dfd8651fea900940))
+
+
+### ♻️ Miscellaneous Chores
+
+* **deps:** bump base images to alpine 3.24.0, debian 13.5.0, rocky 10.2.0 ([1688969](https://github.com/snowdreamtech/base/commit/168896956d2f4c7f91309c4c98ffef36ca7e8546))
+* release main ([495e18a](https://github.com/snowdreamtech/base/commit/495e18a4babcb06a12c2f5aec9ea571d97cb32e3))
+* release main ([d4a3a34](https://github.com/snowdreamtech/base/commit/d4a3a34b00a6b9f381cd5d556749c257516b2f08))
+* release main ([28d9426](https://github.com/snowdreamtech/base/commit/28d94263f4374017274707faef7183917b689be9))
+* **release:** implement automatic changelog deduplication step ([282c220](https://github.com/snowdreamtech/base/commit/282c22081e1ad7a1a010a7f297d20bc7c9b416a7))
+
 ## [3.24.0](https://github.com/snowdreamtech/base/compare/alpine-v3.24.0...alpine-v3.24.0) (2026-06-17)
 
 
