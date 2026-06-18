@@ -285,7 +285,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           find . -name "CHANGELOG.md" -type f | while read -r file; do
             awk '
             /^## \[/ {
@@ -305,7 +305,7 @@ jobs:
             }
             ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
           done
-          
+
           git add .
           git commit --signoff -m "chore(release): deduplicate CHANGELOG headers" || echo "No changes to sync"
           git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
@@ -331,20 +331,20 @@ jobs:
                 }
                 in_block && /^ *\}/ { in_block = 0 }
               ' .release-please-config.json)
-              
+
               if [ -z "$comp" ] || [ "$comp" = "null" ]; then
                 comp=$(basename "$path")
               fi
               tag_prefix="${comp}-v"
             fi
-            
+
             if [ ! -f "$file" ]; then continue; fi
-            
+
             ver=$(awk '/^## \[/ { match($0, /\[([^]]+)\]/); print substr($0, RSTART+1, RLENGTH-2); exit }' "$file")
-            
+
             if [ -n "$ver" ]; then
               tag="${tag_prefix}${ver}"
-              
+
               awk '
               /^## \[/ {
                 count++
@@ -352,12 +352,12 @@ jobs:
               }
               { if (count == 1) print $0 }
               ' "$file" > "log.tmp.md"
-              
+
               echo "Synchronizing GitHub Release for $tag..."
               gh release create "$tag" --notes-file "log.tmp.md" 2>/dev/null || \
               gh release edit "$tag" --notes-file "log.tmp.md" 2>/dev/null || \
               echo "Release sync skipped or failed for $tag"
-              
+
               rm -f "log.tmp.md"
             fi
           done
