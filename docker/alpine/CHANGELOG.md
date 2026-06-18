@@ -28,9 +28,6 @@
 * release main ([28d9426](https://github.com/snowdreamtech/base/commit/28d94263f4374017274707faef7183917b689be9))
 * **release:** implement automatic changelog deduplication step ([282c220](https://github.com/snowdreamtech/base/commit/282c22081e1ad7a1a010a7f297d20bc7c9b416a7))
 
-## [3.24.0](https://github.com/snowdreamtech/base/compare/alpine-v3.24.0...alpine-v3.24.0) (2026-06-17)
-
-
 ### 🛠 Refactoring
 
 * **docker:** align Dockerfiles with base image structure ([232574f](https://github.com/snowdreamtech/base/commit/232574fed8418f8c7f257d001e951361dfa467a0))
