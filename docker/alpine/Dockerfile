@@ -62,3 +62,4 @@ USER root
 WORKDIR /root
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["/bin/sh"]
+
