@@ -312,3 +312,34 @@ jobs:
           git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
+      - name: "🚀 Synchronize GitHub Releases"
+        if: startsWith(github.event.head_commit.message, 'chore(release):')
+        shell: sh
+        run: |
+          for file in docker/*/CHANGELOG.md; do
+            if [ ! -f "$file" ]; then continue; fi
+            comp=$(basename $(dirname "$file"))
+            ver=$(awk '/^## \[/ { match($0, /\[([^]]+)\]/); print substr($0, RSTART+1, RLENGTH-2); exit }' "$file")
+            
+            if [ -n "$ver" ]; then
+              tag="${comp}-v${ver}"
+              
+              awk '
+              /^## \[/ {
+                count++
+                if (count == 2) exit
+              }
+              { if (count == 1) print $0 }
+              ' "$file" > "log.tmp.md"
+              
+              echo "Synchronizing GitHub Release for $tag..."
+              gh release create "$tag" --notes-file "log.tmp.md" 2>/dev/null || \
+              gh release edit "$tag" --notes-file "log.tmp.md" 2>/dev/null || \
+              echo "Release sync skipped or failed for $tag"
+              
+              rm -f "log.tmp.md"
+            fi
+          done
+        env:
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
