@@ -313,7 +313,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
 
       - name: "🚀 Synchronize GitHub Releases"
-        if: startsWith(github.event.head_commit.message, 'chore(release):') || startsWith(github.event.head_commit.message, 'chore: release')
+        if: "${{ startsWith(github.event.head_commit.message, 'chore(release):') || startsWith(github.event.head_commit.message, 'chore: release') }}"
         shell: sh
         run: |
           for path in $(awk -F'"' '/":/ {print $2}' .release-please-manifest.json); do
