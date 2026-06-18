@@ -29,9 +29,6 @@
 * release main ([28d9426](https://github.com/snowdreamtech/base/commit/28d94263f4374017274707faef7183917b689be9))
 * **release:** implement automatic changelog deduplication step ([282c220](https://github.com/snowdreamtech/base/commit/282c22081e1ad7a1a010a7f297d20bc7c9b416a7))
 
-## [3.24.0](https://github.com/snowdreamtech/base/compare/alpine-v3.24.0...alpine-v3.24.0) (2026-06-18)
-
-
 ### 🐛 Bug Fixes
 
 * **alpine:** add empty line to trigger release pipeline test ([6f32fb1](https://github.com/snowdreamtech/base/commit/6f32fb1c9fae9bcd4e86beb2e3013a0138784372))
