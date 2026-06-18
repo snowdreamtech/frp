@@ -317,13 +317,25 @@ jobs:
         if: startsWith(github.event.head_commit.message, 'chore(release):')
         shell: sh
         run: |
-          for file in docker/*/CHANGELOG.md; do
+          for path in $(jq -r 'keys[]' .release-please-manifest.json); do
+            if [ "$path" = "." ]; then
+              file="CHANGELOG.md"
+              tag_prefix="v"
+            else
+              file="${path}/CHANGELOG.md"
+              comp=$(jq -r ".packages[\"${path}\"].component // empty" .release-please-config.json)
+              if [ -z "$comp" ] || [ "$comp" = "null" ]; then
+                comp=$(basename "$path")
+              fi
+              tag_prefix="${comp}-v"
+            fi
+            
             if [ ! -f "$file" ]; then continue; fi
-            comp=$(basename $(dirname "$file"))
+            
             ver=$(awk '/^## \[/ { match($0, /\[([^]]+)\]/); print substr($0, RSTART+1, RLENGTH-2); exit }' "$file")
             
             if [ -n "$ver" ]; then
-              tag="${comp}-v${ver}"
+              tag="${tag_prefix}${ver}"
               
               awk '
               /^## \[/ {
