@@ -40,9 +40,7 @@ name: "🐳 Docker Multi-Platform Build"
       - "alpine-*"
       - "debian-*"
       - "rocky-*"
-  release:
-    # Trigger when Release-Please publishes releases via GitHub API
-    types: [published]
+
   schedule:
     # Automatically run every day at 17:00 UTC
     - cron: "0 17 * * *"
