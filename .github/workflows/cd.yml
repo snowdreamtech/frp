@@ -237,6 +237,9 @@ jobs:
       security-events: write
     timeout-minutes: 50
     steps:
+      - name: "🏗️ Checkout Repository"
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
       - name: "📝 Orchestrate Release Lifecycle (Release Please)"
         id: release
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
