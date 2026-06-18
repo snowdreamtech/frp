@@ -293,16 +293,15 @@ jobs:
               ver = substr($0, RSTART+1, RLENGTH-2)
               if (seen[ver] == 1) {
                 skip = 1
-                next
+              } else {
+                seen[ver] = 1
+                skip = 0
               }
-              seen[ver] = 1
             }
             {
-              if (skip && /^$/) {
-                next
+              if (!skip) {
+                print $0
               }
-              skip = 0
-              print $0
             }
             ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
           done
