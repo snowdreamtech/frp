@@ -317,13 +317,22 @@ jobs:
         if: startsWith(github.event.head_commit.message, 'chore(release):')
         shell: sh
         run: |
-          for path in $(jq -r 'keys[]' .release-please-manifest.json); do
+          for path in $(awk -F'"' '/":/ {print $2}' .release-please-manifest.json); do
             if [ "$path" = "." ]; then
               file="CHANGELOG.md"
               tag_prefix="v"
             else
               file="${path}/CHANGELOG.md"
-              comp=$(jq -r ".packages[\"${path}\"].component // empty" .release-please-config.json)
+              comp=$(awk -F'"' -v p="$path" '
+                $0 ~ "\"" p "\": \\{" { in_block = 1 }
+                in_block && $0 ~ /"component":/ {
+                  for(i=1; i<=NF; i++) {
+                    if($i=="component") { print $(i+2); exit }
+                  }
+                }
+                in_block && /^ *\}/ { in_block = 0 }
+              ' .release-please-config.json)
+              
               if [ -z "$comp" ] || [ "$comp" = "null" ]; then
                 comp=$(basename "$path")
               fi
