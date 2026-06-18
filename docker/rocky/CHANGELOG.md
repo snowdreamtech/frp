@@ -25,9 +25,6 @@
 * release main ([28d9426](https://github.com/snowdreamtech/base/commit/28d94263f4374017274707faef7183917b689be9))
 * **release:** v0.4.0 - Fix Dependabot docker-compose detection ([e91f7d8](https://github.com/snowdreamtech/base/commit/e91f7d882f3c7b23260f4da02f0e5e53d6399968))
 
-## [10.2.0](https://github.com/snowdreamtech/base/compare/rocky-v10.2.0...rocky-v10.2.0) (2026-06-16)
-
-
 ### 🛠 Refactoring
 
 * **docker:** align Dockerfiles with base image structure ([232574f](https://github.com/snowdreamtech/base/commit/232574fed8418f8c7f257d001e951361dfa467a0))

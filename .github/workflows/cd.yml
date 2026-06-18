@@ -278,3 +278,37 @@ jobs:
           git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
+      - name: "🧹 Deduplicate CHANGELOGs"
+        if: ${{ steps.release.outputs.pr }}
+        shell: sh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          find . -name "CHANGELOG.md" -type f | while read -r file; do
+            awk '
+            /^## \[/ {
+              match($0, /\[([^]]+)\]/)
+              ver = substr($0, RSTART+1, RLENGTH-2)
+              if (seen[ver] == 1) {
+                skip = 1
+                next
+              }
+              seen[ver] = 1
+            }
+            {
+              if (skip && /^$/) {
+                next
+              }
+              skip = 0
+              print $0
+            }
+            ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+          done
+          
+          git add .
+          git commit --signoff -m "chore(release): deduplicate CHANGELOG headers [skip ci]" || echo "No changes to sync"
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
