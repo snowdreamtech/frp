@@ -245,6 +245,7 @@ jobs:
           config-file: .release-please-config.json
           manifest-file: .release-please-manifest.json
           target-branch: ${{ github.ref_name }}
+          skip-github-release: true
 
       - name: "🏗️ Checkout Release PR Branch"
         if: ${{ steps.release.outputs.pr }}
