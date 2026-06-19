@@ -369,8 +369,12 @@ jobs:
           # Cleanup: skip-github-release prevents release-please from updating PR labels.
           # We must manually clear "autorelease: pending" on merged PRs to avoid blocking future releases.
           echo "Cleaning up pending release labels..."
-          merged_prs=$(gh api search/issues -f q="repo:$GITHUB_REPOSITORY is:pr is:merged label:\"autorelease: pending\"" --jq '.items[].number' 2>/dev/null || true)
+          merged_prs=$(gh api -X GET search/issues -f q="repo:$GITHUB_REPOSITORY is:pr is:merged label:\"autorelease: pending\"" --jq '.items[].number' 2>/dev/null) || merged_prs=""
           for pr in $merged_prs; do
+            # Validate that $pr is a number to avoid invalid CLI queries
+            case "$pr" in
+              ''|*[!0-9]*) continue ;;
+            esac
             echo "Marking PR #$pr as tagged..."
             gh pr edit "$pr" --remove-label "autorelease: pending" --add-label "autorelease: tagged" || true
           done
