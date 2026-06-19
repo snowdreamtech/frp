@@ -237,14 +237,18 @@ jobs:
       security-events: write
     timeout-minutes: 50
     steps:
+      - name: "🏗️ Checkout Repository"
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
       - name: "📝 Orchestrate Release Lifecycle (Release Please)"
         id: release
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         with:
           token: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
-          release-type: simple
           config-file: .release-please-config.json
+          manifest-file: .release-please-manifest.json
           target-branch: ${{ github.ref_name }}
+          skip-github-release: true
 
       - name: "🏗️ Checkout Release PR Branch"
         if: ${{ steps.release.outputs.pr }}
@@ -278,3 +282,103 @@ jobs:
           git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
+      - name: "🧹 Deduplicate CHANGELOGs"
+        if: ${{ steps.release.outputs.pr }}
+        shell: sh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          find . -name "CHANGELOG.md" -type f | while read -r file; do
+            awk '
+            /^## \[/ {
+              match($0, /\[([^]]+)\]/)
+              ver = substr($0, RSTART+1, RLENGTH-2)
+              if (seen[ver] == 1) {
+                skip = 1
+              } else {
+                seen[ver] = 1
+                skip = 0
+              }
+            }
+            {
+              if (!skip) {
+                print $0
+              }
+            }
+            ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+          done
+
+          git add .
+          git commit --signoff -m "chore(release): deduplicate CHANGELOG headers" || echo "No changes to sync"
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
+      - name: "🚀 Synchronize GitHub Releases"
+        if: "${{ startsWith(github.event.head_commit.message, 'chore(release):') || startsWith(github.event.head_commit.message, 'chore: release') }}"
+        shell: sh
+        run: |
+          for path in $(awk -F'"' '/":/ {print $2}' .release-please-manifest.json); do
+            if [ "$path" = "." ]; then
+              file="CHANGELOG.md"
+              tag_prefix="v"
+            else
+              file="${path}/CHANGELOG.md"
+              comp=$(awk -F'"' -v p="$path" '
+                $0 ~ "\"" p "\": \\{" { in_block = 1 }
+                in_block && $0 ~ /"component":/ {
+                  for(i=1; i<=NF; i++) {
+                    if($i=="component") { print $(i+2); exit }
+                  }
+                }
+                in_block && /^ *\}/ { in_block = 0 }
+              ' .release-please-config.json)
+
+              if [ -z "$comp" ] || [ "$comp" = "null" ]; then
+                comp=$(basename "$path")
+              fi
+              tag_prefix="${comp}-v"
+            fi
+
+            if [ ! -f "$file" ]; then continue; fi
+
+            ver=$(awk '/^## \[/ { match($0, /\[([^]]+)\]/); print substr($0, RSTART+1, RLENGTH-2); exit }' "$file")
+
+            if [ -n "$ver" ]; then
+              tag="${tag_prefix}${ver}"
+
+              awk '
+              /^## \[/ {
+                count++
+                if (count == 2) exit
+              }
+              { if (count == 1) print $0 }
+              ' "$file" > "log.tmp.md"
+
+              echo "Synchronizing GitHub Release for $tag..."
+              gh release create "$tag" --notes-file "log.tmp.md" 2>/dev/null || \
+              gh release edit "$tag" --notes-file "log.tmp.md" 2>/dev/null || \
+              echo "Release sync skipped or failed for $tag"
+
+              rm -f "log.tmp.md"
+            fi
+          done
+
+          # Cleanup: skip-github-release prevents release-please from updating PR labels.
+          # We must manually clear "autorelease: pending" on merged PRs to avoid blocking future releases.
+          echo "Cleaning up pending release labels..."
+          merged_prs=$(gh api -X GET search/issues -f q="repo:$GITHUB_REPOSITORY is:pr is:merged label:\"autorelease: pending\"" --jq '.items[].number' 2>/dev/null) || merged_prs=""
+          for pr in $merged_prs; do
+            # Validate that $pr is a number to avoid invalid CLI queries
+            case "$pr" in
+              ''|*[!0-9]*) continue ;;
+            esac
+            echo "Marking PR #$pr as tagged..."
+            # Use REST API to avoid GraphQL scope errors (read:org) from 'gh pr edit'
+            gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$pr/labels" -f "labels[]=autorelease: tagged" >/dev/null 2>&1 || true
+            gh api -X DELETE "repos/$GITHUB_REPOSITORY/issues/$pr/labels/autorelease:%20pending" >/dev/null 2>&1 || true
+          done
+        env:
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
