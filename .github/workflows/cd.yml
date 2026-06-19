@@ -279,7 +279,7 @@ jobs:
           fi
           git add .
           git commit --signoff -m "chore(release): synchronize lockfiles for version bump" || echo "No changes to sync"
-          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
+          git push "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
 
@@ -312,7 +312,7 @@ jobs:
 
           git add .
           git commit --signoff -m "chore(release): deduplicate CHANGELOG headers" || echo "No changes to sync"
-          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
+          git push "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
 
