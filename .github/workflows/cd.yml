@@ -376,7 +376,9 @@ jobs:
               ''|*[!0-9]*) continue ;;
             esac
             echo "Marking PR #$pr as tagged..."
-            gh pr edit "$pr" --remove-label "autorelease: pending" --add-label "autorelease: tagged" || true
+            # Use REST API to avoid GraphQL scope errors (read:org) from 'gh pr edit'
+            gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$pr/labels" -f "labels[]=autorelease: tagged" >/dev/null 2>&1 || true
+            gh api -X DELETE "repos/$GITHUB_REPOSITORY/issues/$pr/labels/autorelease:%20pending" >/dev/null 2>&1 || true
           done
         env:
           GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
