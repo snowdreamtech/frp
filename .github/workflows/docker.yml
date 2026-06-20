@@ -737,7 +737,7 @@ jobs:
               echo "### 🏗️ Build Configuration"
               echo ""
               echo "- **Variant:** ${{ matrix.variant }}"
-              echo "- **Base Version:** ${{ matrix.version }}"
+              echo "- **OS Version:** ${{ matrix.version }}"
               # Set platform count based on variant
               case "${{ matrix.variant }}" in
                 alpine|debian)
