@@ -6,6 +6,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.2](https://github.com/snowdreamtech/template/compare/v0.15.1...v0.15.2) (2026-06-20)
+
+
+### 🐛 Bug Fixes
+
+* **cd:** delete remote tag before re-push to trigger downstream docker build ([be75906](https://github.com/snowdreamtech/template/commit/be759064255c0e8f8e24f45efb260d5a26466c2a))
+* **cd:** disable persist-credentials to ensure WORKFLOW_SECRET PAT is used for tag push ([bedf7bf](https://github.com/snowdreamtech/template/commit/bedf7bf3bdabc083f6fd60d69d99dd2d482ea0ee))
+
+
+### ♻️ Miscellaneous Chores
+
+* release main ([76bafd6](https://github.com/snowdreamtech/template/commit/76bafd6d4eecbe14ec4b7fbe707280b4b4db9c07))
+* **release:** deduplicate CHANGELOG headers ([639b069](https://github.com/snowdreamtech/template/commit/639b0695d7325f2d2a827301a2f3a41111fcab6d))
+
 ## [0.15.1](https://github.com/snowdreamtech/template/compare/v0.15.0...v0.15.1) (2026-06-19)
 
 
