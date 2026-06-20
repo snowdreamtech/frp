@@ -357,9 +357,10 @@ jobs:
               { if (count == 1) print $0 }
               ' "$file" > "log.tmp.md"
 
-              echo "Force updating Git tag $tag to current commit..."
+              echo "Recreating Git tag $tag to trigger downstream workflows..."
               git tag -f "$tag"
-              git push --force "https://${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "refs/tags/$tag" || true
+              git push "https://${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" --delete "refs/tags/$tag" 2>/dev/null || true
+              git push "https://${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "refs/tags/$tag"
 
               echo "Synchronizing GitHub Release for $tag..."
               gh release create "$tag" --notes-file "log.tmp.md" 2>/dev/null || \
