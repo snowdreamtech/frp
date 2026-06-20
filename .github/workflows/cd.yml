@@ -281,7 +281,7 @@ jobs:
           fi
           git add .
           git commit --signoff -m "chore(release): synchronize lockfiles for version bump" || echo "No changes to sync"
-          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
+          git push "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
 
@@ -314,7 +314,7 @@ jobs:
 
           git add .
           git commit --signoff -m "chore(release): deduplicate CHANGELOG headers" || echo "No changes to sync"
-          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
+          git push "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
 
@@ -361,7 +361,7 @@ jobs:
 
               echo "Force updating Git tag $tag to current commit..."
               git tag -f "$tag"
-              git push --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "refs/tags/$tag" || true
+              git push --force "https://${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "refs/tags/$tag" || true
 
               echo "Synchronizing GitHub Release for $tag..."
               gh release create "$tag" --notes-file "log.tmp.md" 2>/dev/null || \
