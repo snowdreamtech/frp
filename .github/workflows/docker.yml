@@ -187,6 +187,10 @@ jobs:
             *.rockylinux.org:443
             *.centos.org:443
             *.redhat.com:443
+            *.fedoraproject.org:443
+            *.fedoraproject.org:80
+            mirrors.fedoraproject.org:443
+            mirrors.fedoraproject.org:80
             dl-cdn.alpinelinux.org:443
             registry.npmjs.org:443
             registry.yarnpkg.com:443
