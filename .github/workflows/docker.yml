@@ -553,6 +553,19 @@ jobs:
 
           echo "✓ Registry verification completed"
 
+      - name: "🏷️ Determine Image for Trivy Scan"
+        id: trivy-image
+        if: steps.variant-filter.outputs.skip != 'true' && steps.build.conclusion == 'success'
+        run: |
+          # Use GHCR tag for Trivy scan to avoid Docker Hub rate limits
+          # Fallback to the first generated tag if GHCR is not found
+          SCAN_TAG=$(echo "${{ steps.meta.outputs.tags }}" | grep '^ghcr.io/' | head -n 1)
+          if [ -z "${SCAN_TAG}" ]; then
+            SCAN_TAG="${{ fromJSON(steps.meta.outputs.json).tags[0] }}"
+          fi
+          echo "tag=${SCAN_TAG}" >> "$GITHUB_OUTPUT"
+          echo "→ Scanning image: ${SCAN_TAG}"
+
       - name: "🕵️ Scan Image for Vulnerabilities (Trivy)"
         id: trivy
         if: steps.variant-filter.outputs.skip != 'true' && steps.build.conclusion == 'success'
@@ -563,7 +576,7 @@ jobs:
           TRIVY_CHECKS_BUNDLE_REPOSITORY: "public.ecr.aws/aquasecurity/trivy-checks"
         with:
           scan-type: "image"
-          image-ref: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+          image-ref: ${{ steps.trivy-image.outputs.tag }}
           format: "sarif"
           output: "trivy-image-${{ matrix.variant }}.sarif"
           severity: "CRITICAL,HIGH,MEDIUM,LOW"
