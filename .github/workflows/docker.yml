@@ -170,9 +170,16 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             api.github.com:443
+            codeload.github.com:443
             *.githubusercontent.com:443
             github.com:443
             packages.microsoft.com:443
+            docker.io:443
+            *.docker.io:443
+            docker.com:443
+            *.docker.com:443
+            quay.io:443
+            *.quay.io:443
             *.ubuntu.com:80
             *.ubuntu.com:443
             *.debian.org:80
@@ -198,10 +205,8 @@ jobs:
             ghcr.io:443
             pkg-containers.githubusercontent.com:443
             public.ecr.aws:443
-            production.cloudflare.docker.com:443
             *.gcr.io:443
             *.pkg.dev:443
-            *.quay.io:443
             *.dkr.ecr.*.amazonaws.com:443
             *.azurecr.io:443
             osv-vulnerabilities.storage.googleapis.com:443
