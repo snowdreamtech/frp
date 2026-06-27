@@ -172,9 +172,6 @@ jobs:
             api.github.com:443
             *.githubusercontent.com:443
             github.com:443
-            mise.run:443
-            install.mise.jdx.dev:443
-            *.mise.jdx.dev:443
             packages.microsoft.com:443
             *.ubuntu.com:80
             *.ubuntu.com:443
@@ -198,7 +195,6 @@ jobs:
             registry.terraform.io:443
             formulae.brew.sh:443
             repo.yarnpkg.com:443
-            mise.jdx.dev:443
             ghcr.io:443
             pkg-containers.githubusercontent.com:443
             public.ecr.aws:443
