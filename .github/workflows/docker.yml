@@ -217,6 +217,8 @@ jobs:
             *.azurecr.io:443
             osv-vulnerabilities.storage.googleapis.com:443
             api.osv.dev:443
+            168.63.129.16:53
+            check.trivy.dev:443
             get.trivy.dev:443
             *.aquasecurity.github.io:443
             *.sigstore.dev:443
