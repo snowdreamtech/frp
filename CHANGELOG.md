@@ -6,6 +6,55 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.3](https://github.com/snowdreamtech/template/compare/v0.15.2...v0.15.3) (2026-06-28)
+
+
+### ♻️ Miscellaneous Chores
+
+* **deps:** bump unirtm version to 0.25.3 ([49f7888](https://github.com/snowdreamtech/template/commit/49f788808736ba4e1d2902e1911192ad1ad77ede))
+* **deps:** regenerate unirtm.lock with v0.25.0 format ([9227ed1](https://github.com/snowdreamtech/template/commit/9227ed1faa7f52f24dea36a7de6c458d22620f9e))
+* **deps:** sync dependabot config and unirtm toolchain ([b70d42e](https://github.com/snowdreamtech/template/commit/b70d42ee1c936de486631a5579fce9c88075185a))
+* **deps:** sync dependabot config and unirtm toolchain ([2de6141](https://github.com/snowdreamtech/template/commit/2de614154fc5abf1b011618a96bd21161e0f846c))
+* regenerate unirtm.lock with algorithm prefix ([de2b74b](https://github.com/snowdreamtech/template/commit/de2b74b0d0efbad5fa742a7324331504895e1c73))
+* remove unirtm.lock ([2da4f50](https://github.com/snowdreamtech/template/commit/2da4f50852d8a6b97f334b1c533dffaa08394cb5))
+
+## [0.15.2](https://github.com/snowdreamtech/template/compare/v0.15.1...v0.15.2) (2026-06-20)
+
+
+### 🐛 Bug Fixes
+
+* **cd:** delete remote tag before re-push to trigger downstream docker build ([be75906](https://github.com/snowdreamtech/template/commit/be759064255c0e8f8e24f45efb260d5a26466c2a))
+* **cd:** disable persist-credentials to ensure WORKFLOW_SECRET PAT is used for tag push ([bedf7bf](https://github.com/snowdreamtech/template/commit/bedf7bf3bdabc083f6fd60d69d99dd2d482ea0ee))
+
+
+### ♻️ Miscellaneous Chores
+
+* release main ([76bafd6](https://github.com/snowdreamtech/template/commit/76bafd6d4eecbe14ec4b7fbe707280b4b4db9c07))
+* **release:** deduplicate CHANGELOG headers ([639b069](https://github.com/snowdreamtech/template/commit/639b0695d7325f2d2a827301a2f3a41111fcab6d))
+
+## [0.15.1](https://github.com/snowdreamtech/template/compare/v0.15.0...v0.15.1) (2026-06-19)
+
+
+### 🚀 Features
+
+* **cd:** sync release orchestration enhancements from base repo ([b00fee8](https://github.com/snowdreamtech/template/commit/b00fee866cebcb89c24604a96bdfcd8816c60467))
+
+
+### ♻️ Miscellaneous Chores
+
+* **release:** configure root package in config ([6d6254d](https://github.com/snowdreamtech/template/commit/6d6254dbe4df6d791e5f045ebab89def451bf089))
+* **release:** update packages to use docker prefix and add rocky support ([81f21b2](https://github.com/snowdreamtech/template/commit/81f21b2115a96934213a15e66d6937560aabaa62))
+
+## [0.15.0](https://github.com/snowdreamtech/template/compare/v0.14.0...v0.15.0) (2026-06-16)
+
+
+### Features
+
+* **devcontainer:** add volume cache for osv-scanner ([95891da](https://github.com/snowdreamtech/template/commit/95891daa85b4e4759ce3fe748d6107894a8f8cac))
+* **devcontainer:** add volume cache for trivy ([9f931a1](https://github.com/snowdreamtech/template/commit/9f931a1d4e63544dbc34dbb795635990587f86e9))
+* **devcontainer:** add vscode extension customizations for auto-installation ([efae646](https://github.com/snowdreamtech/template/commit/efae64695c1208107298d792e272f05128405b6d))
+* **devcontainer:** forward common development and web ports ([35ff5f6](https://github.com/snowdreamtech/template/commit/35ff5f6256f3f2e88ccce449121826eac48fdc2b))
+
 ## [0.14.0](https://github.com/snowdreamtech/template/compare/v0.13.1...v0.14.0) (2026-06-13)
 
 

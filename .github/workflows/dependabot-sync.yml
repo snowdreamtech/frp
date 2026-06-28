@@ -154,26 +154,32 @@ jobs:
       - name: "⚡ Setup UniRTM"
         uses: snowdreamtech/setup-unirtm@cacfb4d739ee46d4a4b2528b02b508df2f560706 # v0.4.0
         with:
-          unirtm-version: "0.25.0"
+          unirtm-version: "0.25.3"
           install: true
           trust: true
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
 
       - name: "🤖 Generate Dependabot Config"
         shell: sh
         run: |
           unirtm generate dependabot --output .github/dependabot.yml
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
           UNIRTM_YES: 1
 
       - name: "🔧 Update UniRTM Toolchain & Lockfile"
         shell: sh
         run: |
+          # 1. Update lockfile for all platforms
           unirtm lock --all-platforms
+          # 2. Double-check lockfile integrity (fails if tools are omitted due to API errors)
+          unirtm lock --check
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
           UNIRTM_YES: 1
 
       - name: "📝 Commit Changes (if any)"
@@ -182,13 +188,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
           GITHUB_REF: ${{ github.ref }}
         run: |
-          if git diff --quiet .github/dependabot.yml unirtm.lock .unirtm.toml 2>/dev/null; then
+          if [ -z "$(git status --porcelain .github/dependabot.yml unirtm.lock .unirtm.toml)" ]; then
             echo "✅ No changes detected. Dependabot config and UniRTM toolchain are up-to-date."
           else
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add .github/dependabot.yml unirtm.lock .unirtm.toml
-            git commit --signoff -m "chore(deps): sync dependabot config and unirtm toolchain [skip ci]"
+            git commit --signoff -m "chore(deps): sync dependabot config and unirtm toolchain"
             git push origin HEAD:"$GITHUB_REF"
             echo "✅ Dependabot config and UniRTM toolchain updated and pushed."
           fi

@@ -7,7 +7,7 @@ name: devcontainer
 
 services:
   devcontainer:
-    image: ghcr.io/snowdreamtech/devcontainers:debian
+    image: ghcr.io/snowdreamtech/devcontainers:latest
     container_name: devcontainer
     hostname: devcontainer
     user: root
@@ -16,9 +16,9 @@ services:
     command: sleep infinity
     environment:
       ENABLE_GITHUB_PROXY: "0"
-      MISE_QUIET: "0"
-      MISE_IGNORE_MISE_TOML: "1"
-      MISE_WARN_UNTRUSTED: "0"
+      UNIRTM_QUIET: "0"
+      UNIRTM_IGNORE_MISE_TOML: "1"
+      UNIRTM_WARN_UNTRUSTED: "0"
       HOST_HOME: /host-home
     volumes:
       - ${HOME}:/host-home:ro,cached
