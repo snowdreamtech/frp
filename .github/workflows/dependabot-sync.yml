@@ -173,8 +173,7 @@ jobs:
       - name: "🔧 Update UniRTM Toolchain & Lockfile"
         shell: sh
         run: |
-          # 1. Force regenerate lockfile to apply latest format (e.g., sha256: checksum prefix in v0.25.0+)
-          rm -f unirtm.lock
+          # 1. Update lockfile for all platforms
           unirtm lock --all-platforms
           # 2. Double-check lockfile integrity (fails if tools are omitted due to API errors)
           unirtm lock --check
