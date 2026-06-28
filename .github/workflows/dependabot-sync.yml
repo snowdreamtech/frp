@@ -189,7 +189,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
           GITHUB_REF: ${{ github.ref }}
         run: |
-          if git diff --quiet .github/dependabot.yml unirtm.lock .unirtm.toml 2>/dev/null; then
+          if [ -z "$(git status --porcelain .github/dependabot.yml unirtm.lock .unirtm.toml)" ]; then
             echo "✅ No changes detected. Dependabot config and UniRTM toolchain are up-to-date."
           else
             git config user.name "github-actions[bot]"
