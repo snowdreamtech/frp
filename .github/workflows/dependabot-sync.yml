@@ -159,13 +159,15 @@ jobs:
           trust: true
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
 
       - name: "🤖 Generate Dependabot Config"
         shell: sh
         run: |
           unirtm generate dependabot --output .github/dependabot.yml
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
           UNIRTM_YES: 1
 
       - name: "🔧 Update UniRTM Toolchain & Lockfile"
@@ -182,6 +184,7 @@ jobs:
           unirtm lock --check
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
           UNIRTM_YES: 1
 
       - name: "📝 Commit Changes (if any)"
