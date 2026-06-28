@@ -173,14 +173,9 @@ jobs:
       - name: "🔧 Update UniRTM Toolchain & Lockfile"
         shell: sh
         run: |
-          # 1. Run lock and stream output to log for visibility
-          unirtm lock --all-platforms 2>&1 | tee unirtm-lock.log
-          # 2. If the output contains unresolved warnings, force exit to prevent silent commits
-          if grep -q "could not resolve download info" unirtm-lock.log; then
-            echo "❌ Fatal: unirtm lock failed to resolve some tools due to API limits or network issues."
-            exit 1
-          fi
-          # 3. Double-check lockfile integrity
+          # 1. Run lock
+          unirtm lock --all-platforms
+          # 2. Double-check lockfile integrity (fails if tools are omitted due to API errors)
           unirtm lock --check
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
