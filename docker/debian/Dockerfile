@@ -1,7 +1,7 @@
 # Base Image (Debian Variant)
 # Extends snowdreamtech/debian with additional tooling and configuration.
 
-FROM snowdreamtech/debian:13.5.0
+FROM ghcr.io/snowdreamtech/debian:13.5.0
 
 # Build-time Configuration
 ARG BUILDTIME \
