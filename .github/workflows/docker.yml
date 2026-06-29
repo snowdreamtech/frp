@@ -394,8 +394,11 @@ jobs:
         env:
           IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
         run: |
-          # Get the first tag for inspection
-          first_tag=$(echo "${{ steps.meta.outputs.tags }}" | head -n 1)
+          # Use GHCR tag for inspection to avoid DockerHub rate limits
+          first_tag=$(echo "${{ steps.meta.outputs.tags }}" | grep '^ghcr.io/' | head -n 1)
+          if [ -z "$first_tag" ]; then
+            first_tag=$(echo "${{ steps.meta.outputs.tags }}" | head -n 1)
+          fi
 
           echo "→ Inspecting manifest for: ${first_tag}"
 
