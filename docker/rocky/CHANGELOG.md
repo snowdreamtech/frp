@@ -12,13 +12,6 @@
 
 * release main ([b3a5cc9](https://github.com/snowdreamtech/base/commit/b3a5cc9ef0a64a7bc04ed7c2acf0cca5327c5c26))
 
-## [10.2.0](https://github.com/snowdreamtech/base/compare/rocky-v10.2.0...rocky-v10.2.0) (2026-06-29)
-
-
-### 🐛 Bug Fixes
-
-* use ghcr.io for base images to avoid rate limits ([9f1d73a](https://github.com/snowdreamtech/base/commit/9f1d73a75a61f2f368f5572c4bd28f4c92ef8fd5))
-
 ## [10.1.0](https://github.com/snowdreamtech/base/compare/rocky-v10.1.0...rocky-v10.1.0) (2026-04-29)
 
 
