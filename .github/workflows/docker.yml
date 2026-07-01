@@ -333,10 +333,6 @@ jobs:
             type=schedule,enable=true,priority=1000,prefix=,suffix=-${{ matrix.variant }},pattern=nightly
             # Nightly builds - global nightly tag (only for is_latest variant, no suffix)
             type=schedule,enable=${{ matrix.is_latest }},priority=1000,prefix=,suffix=,pattern=nightly
-            # Date-based tags for traceability (YYYYMMDD) - variant-suffixed
-            type=schedule,enable=true,priority=900,prefix=,suffix=-${{ matrix.variant }},pattern={{date 'YYYYMMDD'}}
-            # Date-based tags - global tag (only for is_latest variant, no suffix)
-            type=schedule,enable=${{ matrix.is_latest }},priority=900,prefix=,suffix=,pattern={{date 'YYYYMMDD'}}
             # Semantic version tags from Release Please (variant-x.y.z) - variant-suffixed
             type=match,enable=${{ startsWith(github.ref, format('refs/tags/{0}-', matrix.variant)) }},priority=800,prefix=,suffix=-${{ matrix.variant }},pattern=${{ matrix.variant }}-v?(\d+\.\d+\.\d+),group=1
         env:
