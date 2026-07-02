@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.2.0](https://github.com/snowdreamtech/base/compare/rocky-v10.2.0...rocky-v10.2.0) (2026-07-02)
+
+
+### ♻️ Miscellaneous Chores
+
+* **speckit:** manual auto-commit trigger ([5f8a5a9](https://github.com/snowdreamtech/base/commit/5f8a5a9cba5d6bd42a65eaabfecd6e18b01aeeb0))
+
 ## [10.2.0](https://github.com/snowdreamtech/base/compare/rocky-v10.2.0...rocky-v10.2.0) (2026-06-29)
 
 
