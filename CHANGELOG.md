@@ -6,6 +6,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.4](https://github.com/snowdreamtech/template/compare/v0.15.3...v0.15.4) (2026-06-30)
+
+
+### 🚀 Features
+
+* add support for riscv64, ppc64le, loong64, and s390x architectures in install script ([26d48f0](https://github.com/snowdreamtech/template/commit/26d48f019620413782b0348cedc3c320412e29e4))
+
+
+### ♻️ Miscellaneous Chores
+
+* upgrade actions/checkout to v7.0.0 in goreleaser workflow ([1330789](https://github.com/snowdreamtech/template/commit/1330789b6d769879e5475a835006af8e6bb52251))
+
 ## [0.15.3](https://github.com/snowdreamtech/template/compare/v0.15.2...v0.15.3) (2026-06-28)
 
 

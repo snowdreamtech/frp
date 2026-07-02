@@ -129,6 +129,10 @@ detect_platform() {
   armv6*) ARCH_NAME="armv6" ;;
   armv5*) ARCH_NAME="armv5" ;;
   i386 | i686) ARCH_NAME="i386" ;;
+  riscv64) ARCH_NAME="riscv64" ;;
+  ppc64le) ARCH_NAME="ppc64le" ;;
+  loongarch64 | loong64) ARCH_NAME="loong64" ;;
+  s390x) ARCH_NAME="s390x" ;;
   *) die "Unsupported architecture: $ARCH" ;;
   esac
 
