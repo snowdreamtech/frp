@@ -101,7 +101,7 @@ jobs:
       packages: write
       id-token: write
       security-events: write
-    timeout-minutes: 60
+    timeout-minutes: 360
     env:
       TRIVY_CACHE_DIR: .trivycache
       BUILD_START_TIME: ${{ github.event.repository.updated_at }}
