@@ -7,13 +7,6 @@
 
 * add 0-git-keep.sh to prevent empty entrypoint.d directories ([ce77247](https://github.com/snowdreamtech/base/commit/ce77247762becc1edf85ec7b57747d3f3127044a))
 
-## [13.5.0](https://github.com/snowdreamtech/base/compare/debian-v13.5.0...debian-v13.5.0) (2026-07-02)
-
-
-### ♻️ Miscellaneous Chores
-
-* **speckit:** manual auto-commit trigger ([5f8a5a9](https://github.com/snowdreamtech/base/commit/5f8a5a9cba5d6bd42a65eaabfecd6e18b01aeeb0))
-
 ## [13.4.0](https://github.com/snowdreamtech/base/compare/debian-v13.4.0...debian-v13.4.0) (2026-04-29)
 
 
