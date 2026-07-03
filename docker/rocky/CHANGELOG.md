@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.2.0](https://github.com/snowdreamtech/base/compare/rocky-v10.2.0...rocky-v10.2.0) (2026-07-03)
+
+
+### ♻️ Miscellaneous Chores
+
+* add 0-git-keep.sh to prevent empty entrypoint.d directories ([ce77247](https://github.com/snowdreamtech/base/commit/ce77247762becc1edf85ec7b57747d3f3127044a))
+
 ## [10.2.0](https://github.com/snowdreamtech/base/compare/rocky-v10.2.0...rocky-v10.2.0) (2026-07-02)
 
 

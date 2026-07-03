@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.24.0](https://github.com/snowdreamtech/base/compare/alpine-v3.24.0...alpine-v3.24.0) (2026-07-03)
+
+
+### ♻️ Miscellaneous Chores
+
+* add 0-git-keep.sh to prevent empty entrypoint.d directories ([ce77247](https://github.com/snowdreamtech/base/commit/ce77247762becc1edf85ec7b57747d3f3127044a))
+
 ## [3.24.0](https://github.com/snowdreamtech/base/compare/alpine-v3.24.0...alpine-v3.24.0) (2026-06-29)
 
 
