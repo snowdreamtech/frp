@@ -346,13 +346,13 @@ jobs:
 
             if [ ! -f "$file" ]; then continue; fi
 
-            ver=$(awk '/^## \[/ { match($0, /\[([^]]+)\]/); print substr($0, RSTART+1, RLENGTH-2); exit }' "$file")
+            ver=$(grep -oE '^## \[?[0-9]+\.[0-9]+\.[0-9]+[a-zA-Z0-9.-]*' "$file" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+[a-zA-Z0-9.-]*' || true)
 
             if [ -n "$ver" ]; then
               tag="${tag_prefix}${ver}"
 
               awk '
-              /^## \[/ {
+              /^## \[?[0-9]+\.[0-9]+/ {
                 count++
                 if (count == 2) exit
               }
