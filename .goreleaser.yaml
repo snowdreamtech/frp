@@ -9,6 +9,64 @@ version: 2
 project_name: template
 
 report_sizes: true
+
+gomod:
+  proxy: true
+
+metadata:
+  mod_timestamp: "{{ .CommitTimestamp }}"
+
+git:
+  ignore_tags:
+    - nightly
+    - "*-nightly"
+
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    # Generate shell completion scripts dynamically before building packages
+    - go run ./main.go completion -d ./completions --all
+    # Generate manpages
+    - go run ./main.go generate manpage -d ./manpages
+
+builds:
+  - id: template
+    binary: template
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+      - -X 'github.com/snowdreamtech/template/internal/pkg/env.ProjectName=template'
+      - -X 'github.com/snowdreamtech/template/internal/pkg/env.Author=Snowdream Tech <snowdreamtech@qq.com>'
+      - -X github.com/snowdreamtech/template/internal/pkg/env.BuildTime={{.Date}}
+      - -X github.com/snowdreamtech/template/internal/pkg/env.CommitHash={{.ShortCommit}}
+      - -X github.com/snowdreamtech/template/internal/pkg/env.CommitHashFull={{.FullCommit}}
+      - -X github.com/snowdreamtech/template/internal/pkg/env.GitTag={{.Tag}}
+      - -X 'github.com/snowdreamtech/template/internal/pkg/env.COPYRIGHT=Copyright (c) 2026-present SnowdreamTech Inc.'
+      - -X 'github.com/snowdreamtech/template/internal/pkg/env.LICENSE=MIT <https://github.com/snowdreamtech/template/blob/main/LICENSE>'
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - "386"
+      - amd64
+      - arm
+      - arm64
+      - loong64
+      - ppc64le
+      - riscv64
+      - s390x
+    goarm:
+      - "7"
+    ignore:
+      - goos: windows
+        goarch: arm
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
 archives:
   - id: template
     formats: [tar.gz]
@@ -47,6 +105,18 @@ archives:
           owner: root
           group: root
           mtime: "{{ .CommitDate }}"
+      - src: "completions/*"
+        dst: "completions"
+        info:
+          owner: root
+          group: root
+          mtime: "{{ .CommitDate }}"
+      - src: "manpages/*"
+        dst: "manpages"
+        info:
+          owner: root
+          group: root
+          mtime: "{{ .CommitDate }}"
 
 snapshot:
   version_template: SNAPSHOT-{{ .Commit }}
@@ -64,6 +134,12 @@ release:
     **Snowdream Tech AI IDE Template** is an enterprise-grade, foundational template designed for multi-AI IDE collaboration.
 
     This repository serves as a **Single Source of Truth** for AI agent rules, workflows, and project configurations, supporting over 50 different AI-assisted IDEs with massive multi-language support.
+  footer: |
+    **Full Changelog**: https://github.com/snowdreamtech/template/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+    ## 🤝 Contributing
+
+    Contributions are welcome! Please read our [Contributing Guide](https://github.com/snowdreamtech/template/blob/main/CONTRIBUTING.md) first.
 
 source:
   enabled: true
@@ -110,6 +186,84 @@ changelog:
     - title: "♻️ Miscellaneous Chores"
       order: 9999
 
+nfpms:
+  - id: default
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    homepage: https://github.com/snowdreamtech/template
+    maintainer: "Snowdream Tech <snowdreamtech@qq.com>"
+    description: |-
+      Snowdream Tech AI IDE Template is an enterprise-grade, foundational template designed for multi-AI IDE collaboration.
+    license: MIT
+    vendor: SnowdreamTech
+    bindir: /usr/bin
+    section: utils
+    mtime: "{{ .CommitDate }}"
+    formats:
+      - apk
+      - deb
+      - rpm
+      - archlinux
+    dependencies:
+      - git
+    contents:
+      - src: ./completions/template.bash
+        dst: /usr/share/bash-completion/completions/template
+        file_info:
+          mode: 0644
+          mtime: "{{ .CommitDate }}"
+      - src: ./completions/template.zsh
+        dst: /usr/share/zsh/vendor-completions/_template
+        file_info:
+          mode: 0644
+          mtime: "{{ .CommitDate }}"
+      - src: ./completions/template.fish
+        dst: /usr/share/fish/vendor_completions.d/template.fish
+        file_info:
+          mode: 0644
+          mtime: "{{ .CommitDate }}"
+      - src: ./manpages/*
+        dst: /usr/share/man/man1/
+        file_info:
+          mode: 0644
+          mtime: "{{ .CommitDate }}"
+      - src: LICENSE
+        dst: /usr/share/doc/template/copyright
+        file_info:
+          mode: 0644
+          mtime: "{{ .CommitDate }}"
+    deb:
+      lintian_overrides:
+        - statically-linked-binary
+        - changelog-file-missing-in-native-package
+    suggests:
+      - golang
+      - rustup
+      - zig
+      - deno
+      - bun
+
+snapcrafts:
+  - name_template: "{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    summary: Snowdream Tech AI IDE Template
+    description: |
+      Snowdream Tech AI IDE Template is an enterprise-grade, foundational template designed for multi-AI IDE collaboration.
+    grade: stable
+    confinement: classic
+    publish: false
+    disable: "{{ if .IsNightly }}true{{ end }}"
+
+flatpak:
+  - app_id: io.github.snowdreamtech.template
+    runtime: org.freedesktop.Platform
+    runtime_version: "24.08"
+    sdk: org.freedesktop.Sdk
+    finish_args:
+      - --share=network
+      - --filesystem=host
+
+universal_binaries:
+  - replace: false
+
 sboms:
   # Generate SBOMs for all release artifacts: archives (tar.gz/zip) and Linux packages (deb/rpm/apk/archlinux)
   - id: archive
@@ -127,3 +281,92 @@ signs:
       - "--bundle=${signature}"
       - "${artifact}"
       - --yes # Enables keyless signing via OIDC token
+
+homebrew_casks:
+  - name: template
+    binaries:
+      - template
+    manpages:
+      - manpages/template.1
+    completions:
+      bash: completions/template.bash
+      zsh: completions/template.zsh
+      fish: completions/template.fish
+    repository:
+      owner: snowdreamtech
+      name: homebrew-tap
+    homepage: "https://github.com/snowdreamtech/template"
+    url:
+      template: "https://github.com/snowdreamtech/template/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+      verified: "github.com/snowdreamtech/"
+    description: "Snowdream Tech AI IDE Template is an enterprise-grade, foundational template designed for multi-AI IDE collaboration."
+    license: "MIT"
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/template"]
+          end
+
+winget:
+  - name: template
+    publisher: SnowdreamTech
+    license: MIT
+    homepage: https://github.com/snowdreamtech/template
+    short_description: Snowdream Tech AI IDE Template
+    repository:
+      owner: snowdreamtech
+      name: winget-pkgs
+      token: "{{ .Env.WORKFLOW_SECRET }}"
+      branch: "template-{{.Version}}"
+      pull_request:
+        enabled: true
+        base:
+          owner: microsoft
+          name: winget-pkgs
+          branch: master
+
+scoops:
+  - repository:
+      owner: snowdreamtech
+      name: scoop-bucket
+      token: "{{ .Env.WORKFLOW_SECRET }}"
+    homepage: https://github.com/snowdreamtech/template
+    description: Snowdream Tech AI IDE Template is an enterprise-grade, foundational template designed for multi-AI IDE collaboration.
+    license: MIT
+
+nix:
+  - repository:
+      owner: snowdreamtech
+      name: nur
+      token: "{{ .Env.WORKFLOW_SECRET }}"
+    homepage: https://github.com/snowdreamtech/template
+    description: Snowdream Tech AI IDE Template is an enterprise-grade, foundational template designed for multi-AI IDE collaboration.
+    license: mit
+    skip_upload: auto
+
+aurs:
+  - homepage: https://github.com/snowdreamtech/template
+    description: Snowdream Tech AI IDE Template is an enterprise-grade, foundational template designed for multi-AI IDE collaboration.
+    maintainers:
+      - "Snowdream Tech <snowdreamtech@qq.com>"
+    license: MIT
+    private_key: "{{ .Env.AUR_KEY }}"
+    git_url: "ssh://aur@aur.archlinux.org/template-bin.git"
+    package: |-
+      # bin
+      install -Dm755 "./template" "${pkgdir}/usr/bin/template"
+
+      # license
+      install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/template/LICENSE"
+
+      # completions
+      mkdir -p "${pkgdir}/usr/share/bash-completion/completions/"
+      mkdir -p "${pkgdir}/usr/share/zsh/site-functions/"
+      mkdir -p "${pkgdir}/usr/share/fish/vendor_completions.d/"
+      install -Dm644 "./completions/template.bash" "${pkgdir}/usr/share/bash-completion/completions/template"
+      install -Dm644 "./completions/template.zsh" "${pkgdir}/usr/share/zsh/site-functions/_template"
+      install -Dm644 "./completions/template.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/template.fish"
+
+      # man pages
+      install -Dm644 "./manpages/template.1.gz" "${pkgdir}/usr/share/man/man1/template.1.gz"
