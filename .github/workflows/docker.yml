@@ -67,11 +67,13 @@ permissions:
 
 jobs:
   buildx:
-    name: "🚀 Build & Deliver (${{ matrix.variant }})"
+    name: "🚀 Build & Deliver (${{ matrix.flavor }}-${{ matrix.variant }})"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
+        flavor: [frpc, frps]
+        variant: [alpine, debian, rocky]
         include:
           - variant: alpine
             version: "3.24.0"
@@ -94,7 +96,7 @@ jobs:
             is_latest: false
             package_manager: dnf
     concurrency:
-      group: docker-${{ github.workflow }}-${{ github.event_name == 'schedule' && 'nightly' || github.ref }}-${{ matrix.variant }}
+      group: docker-${{ github.workflow }}-${{ github.event_name == 'schedule' && 'nightly' || github.ref }}-${{ matrix.flavor }}-${{ matrix.variant }}
       cancel-in-progress: ${{ github.event_name != 'schedule' }}
     permissions:
       contents: read
@@ -321,9 +323,9 @@ jobs:
         uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9 # v6.1.0
         with:
           images: |
-            name=ghcr.io/snowdreamtech/base,enable=true
-            name=snowdreamtech/base,enable=true
-            name=quay.io/snowdreamtech/base,enable=true
+            name=ghcr.io/snowdreamtech/${{ matrix.flavor }},enable=true
+            name=snowdreamtech/${{ matrix.flavor }},enable=true
+            name=quay.io/snowdreamtech/${{ matrix.flavor }},enable=true
           flavor: |
             latest=false
             prefix=
@@ -354,6 +356,7 @@ jobs:
         uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         with:
           context: ${{ matrix.context }}
+          file: ${{ matrix.context }}/Dockerfile.${{ matrix.flavor }}
           build-args: |
             BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
             VERSION=${{ matrix.version }}
@@ -366,10 +369,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
           cache-from: |
-            type=gha,scope=${{ github.ref_name }}-${{ matrix.variant }}
-            type=gha,scope=main-${{ matrix.variant }}
-            type=gha,scope=dev-${{ matrix.variant }}
-          cache-to: type=gha,mode=max,scope=${{ github.ref_name }}-${{ matrix.variant }}
+            type=gha,scope=${{ github.ref_name }}-${{ matrix.flavor }}-${{ matrix.variant }}
+            type=gha,scope=main-${{ matrix.flavor }}-${{ matrix.variant }}
+            type=gha,scope=dev-${{ matrix.flavor }}-${{ matrix.variant }}
+          cache-to: type=gha,mode=max,scope=${{ github.ref_name }}-${{ matrix.flavor }}-${{ matrix.variant }}
 
       - name: "📈 Analyze Build Cache Performance"
         id: cache-stats
@@ -495,6 +498,7 @@ jobs:
               -e TZ=Asia/Shanghai \
               -e PUID=1000 \
               -e PGID=1000 \
+              -e KEEPALIVE=0 \
               "${tag}" \
               sh -c "
                 echo '  ✓ Entrypoint execution: OK' && \
@@ -502,6 +506,7 @@ jobs:
                 printf '  ✓ User context: ' && id -un && \
                 printf '  ✓ Package manager: ' && \
                 ${pkg_check} && echo 'functional' && \
+                ${{ matrix.flavor }} --version && \
                 echo '  ✓ All checks passed'
               "; then
               return 0
