@@ -9,7 +9,9 @@ USER root
 # Set the workdir
 WORKDIR /root
 
+# x-release-please-start-version
 ARG FRP_VERSION=0.69.1
+# x-release-please-end
 
 RUN apk add --no-cache make \
     nodejs \
@@ -40,8 +42,11 @@ ARG BUILDTIME \
     PGID=0 \
     PUID=0 \
     USER=root \
-    WORKDIR=/root \
-    FRP_VERSION=0.69.1
+    WORKDIR=/root
+
+# x-release-please-start-version
+ARG FRP_VERSION=0.69.1
+# x-release-please-end
 
 # Standard OCI Metadata (https://github.com/opencontainers/image-spec)
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
