@@ -139,7 +139,7 @@ jobs:
           fetch-depth: 0
 
       - name: "⚡ Setup UniRTM"
-        uses: snowdreamtech/setup-unirtm@cacfb4d739ee46d4a4b2528b02b508df2f560706 # v0.4.0
+        uses: snowdreamtech/setup-unirtm@3de054956dc845d374ab5a1a0fa5b4d242afa9de # v0.5.0
         with:
           unirtm-version: "0.25.3"
           install: true
@@ -346,13 +346,13 @@ jobs:
 
             if [ ! -f "$file" ]; then continue; fi
 
-            ver=$(awk '/^## \[/ { match($0, /\[([^]]+)\]/); print substr($0, RSTART+1, RLENGTH-2); exit }' "$file")
+            ver=$(grep -oE '^## \[?[0-9]+\.[0-9]+\.[0-9]+[a-zA-Z0-9.-]*' "$file" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+[a-zA-Z0-9.-]*' || true)
 
             if [ -n "$ver" ]; then
               tag="${tag_prefix}${ver}"
 
               awk '
-              /^## \[/ {
+              /^## \[?[0-9]+\.[0-9]+/ {
                 count++
                 if (count == 2) exit
               }
