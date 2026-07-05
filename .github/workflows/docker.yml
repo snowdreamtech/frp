@@ -506,7 +506,7 @@ jobs:
                 printf '  ✓ User context: ' && id -un && \
                 printf '  ✓ Package manager: ' && \
                 ${pkg_check} && echo 'functional' && \
-                ${{ matrix.flavor }} --version && \
+                ${{ matrix.flavor }} version && \
                 echo '  ✓ All checks passed'
               "; then
               return 0
