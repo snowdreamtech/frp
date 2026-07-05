@@ -76,21 +76,21 @@ jobs:
         variant: [alpine, debian, rocky]
         include:
           - variant: alpine
-            version: "3.24.0"
+            version: "0.69.1"
             context: docker/alpine
             platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x
             is_latest: false
             package_manager: apk
 
           - variant: debian
-            version: "13.5.0"
+            version: "0.69.1"
             context: docker/debian
             platforms: linux/386,linux/amd64,linux/arm/v5,linux/arm/v7,linux/arm64,linux/riscv64,linux/ppc64le,linux/s390x
             is_latest: true
             package_manager: apt-get
 
           - variant: rocky
-            version: "10.2.0"
+            version: "0.69.1"
             context: docker/rocky
             platforms: linux/amd64,linux/arm64,linux/ppc64le,linux/s390x
             is_latest: false
@@ -359,7 +359,7 @@ jobs:
           file: ${{ matrix.context }}/Dockerfile.${{ matrix.flavor }}
           build-args: |
             BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
-            VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+            VERSION=${{ matrix.version }}
             REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
           platforms: ${{ matrix.platforms }}
           provenance: true
