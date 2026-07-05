@@ -77,7 +77,7 @@ COPY --from=builder /root/frpc /usr/bin/
 COPY --from=builder /root/frpc.toml /etc/frp/
 
 # Container Orchestration Files
-COPY entrypoint.d /usr/local/bin/entrypoint.d
+COPY entrypoint.d/20-frpc-start.sh /usr/local/bin/entrypoint.d/
 
 RUN chmod +x /usr/local/bin/entrypoint.d/*
 
