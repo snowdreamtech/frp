@@ -10,13 +10,23 @@ USER root
 WORKDIR /root
 
 ARG VERSION
+ARG FRP_COMMIT=dev
+ENV FRP_COMMIT=$FRP_COMMIT
 
 RUN apk add --no-cache make \
     nodejs \
     npm \
-    && wget -c https://github.com/fatedier/frp/archive/refs/tags/v${VERSION}.tar.gz \
-    && tar zxvf v${VERSION}.tar.gz \
-    && cd frp-${VERSION} \
+    && if [ -n "${VERSION:-}" ] && echo "${VERSION}" | grep -Eq '^[0-9]'; then \
+           fetch_commit="v${VERSION}"; \
+           fetch_dir="frp-${VERSION}"; \
+           wget -c https://github.com/fatedier/frp/archive/refs/tags/${fetch_commit}.tar.gz -O ${fetch_commit}.tar.gz; \
+       else \
+           fetch_commit="${FRP_COMMIT}"; \
+           fetch_dir="frp-${FRP_COMMIT}"; \
+           wget -c https://github.com/fatedier/frp/archive/refs/heads/${fetch_commit}.tar.gz -O ${fetch_commit}.tar.gz; \
+       fi \
+    && tar zxvf ${fetch_commit}.tar.gz \
+    && cd ${fetch_dir} \
     && sed -i 's/$(MAKE) -C web\/frps build/$(MAKE) -C web\/frps install build/' Makefile \
     && sed -i 's/CGO_ENABLED=0/CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH}/' Makefile \
     && make frps \
