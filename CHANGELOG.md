@@ -6,6 +6,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.5](https://github.com/snowdreamtech/template/compare/v0.15.4...v0.15.5) (2026-07-05)
+
+
+### 🐛 Bug Fixes
+
+* make version regex robust against initial release in cd.yml ([f560288](https://github.com/snowdreamtech/template/commit/f5602885c3ef4ca42fe6e085a83c6077c51cc09c))
+
+
+### ♻️ Miscellaneous Chores
+
+* **release:** align .goreleaser.yaml with unirtm ([1af870e](https://github.com/snowdreamtech/template/commit/1af870e091f0dcb84ef3f59e30f735e912876d14))
+
 ## [0.15.4](https://github.com/snowdreamtech/template/compare/v0.15.3...v0.15.4) (2026-06-30)
 
 
