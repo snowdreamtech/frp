@@ -1,0 +1,96 @@
+FROM --platform=$BUILDPLATFORM snowdreamtech/golang:1.25.8-trixie AS builder
+
+ARG TARGETOS
+ARG TARGETARCH
+
+# Switch to the user
+USER root
+
+# Set the workdir
+WORKDIR /root
+
+ARG FRP_VERSION=0.69.1
+
+RUN set -eux \
+    && apt-get -qqy update  \
+    && apt-get -qqy install --no-install-recommends \ 
+    make \
+    nodejs \
+    npm \
+    wget \
+    && wget -c https://github.com/fatedier/frp/archive/refs/tags/v${FRP_VERSION}.tar.gz \
+    && tar zxvf v${FRP_VERSION}.tar.gz \
+    && cd frp-${FRP_VERSION} \
+    && sed -i 's/$(MAKE) -C web\/frps build/$(MAKE) -C web\/frps install build/' Makefile \
+    && sed -i 's/CGO_ENABLED=0/CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH}/' Makefile \
+    && make frps \
+    && cp -rfv bin/frps conf/frps.toml /root/
+
+# Base Image (Debian Variant)
+# Extends snowdreamtech/debian with additional tooling and configuration.
+
+FROM ghcr.io/snowdreamtech/debian:13.5.0
+
+# Build-time Configuration
+ARG BUILDTIME \
+    VERSION \
+    REVISION \
+    KEEPALIVE=1 \
+    CAP_NET_BIND_SERVICE=0 \
+    LANG=C.UTF-8 \
+    UMASK=022 \
+    DEBUG=false \
+    PASSWORDLESS_SUDO=false \
+    PGID=0 \
+    PUID=0 \
+    USER=root \
+    WORKDIR=/root \
+    FRP_VERSION=0.69.1
+
+# Standard OCI Metadata (https://github.com/opencontainers/image-spec)
+LABEL org.opencontainers.image.authors="Snowdream Tech" \
+    org.opencontainers.image.title="Frps Image Based On Debian" \
+    org.opencontainers.image.description="Docker Images for Frps on Debian. (386, amd64, arm/v5, arm/v7, arm64, ppc64le, riscv64, s390x)" \
+    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/frps" \
+    org.opencontainers.image.base.name="snowdreamtech/debian:13.5.0" \
+    org.opencontainers.image.licenses="MIT" \
+    org.opencontainers.image.source="https://github.com/snowdreamtech/frp" \
+    org.opencontainers.image.vendor="Snowdream Tech" \
+    org.opencontainers.image.created="${BUILDTIME}" \
+    org.opencontainers.image.revision="${REVISION}" \
+    org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
+
+# x-release-please-start-version
+LABEL org.opencontainers.image.version="${VERSION:-0.69.1}"
+# x-release-please-end
+
+# Runtime Environment Configuration
+ENV KEEPALIVE=${KEEPALIVE} \
+    CAP_NET_BIND_SERVICE=${CAP_NET_BIND_SERVICE} \
+    LANG=${LANG} \
+    UMASK=${UMASK} \
+    DEBUG=${DEBUG} \
+    PASSWORDLESS_SUDO=${PASSWORDLESS_SUDO} \
+    PGID=${PGID} \
+    PUID=${PUID} \
+    USER=${USER} \
+    WORKDIR=${WORKDIR} \
+    FRP_VERSION=${FRP_VERSION}
+
+COPY --from=builder /root/frps /usr/bin/
+COPY --from=builder /root/frps.toml /etc/frp/
+
+# Container Orchestration Files
+COPY entrypoint.d /usr/local/bin/entrypoint.d
+
+RUN chmod +x /usr/local/bin/entrypoint.d/*
+
+# Standard Healthcheck (Verification of core system responsiveness)
+HEALTHCHECK NONE
+
+# Process Execution
+EXPOSE 7000 7500
+USER root
+WORKDIR /root
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["/bin/bash"]
