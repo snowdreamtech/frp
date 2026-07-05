@@ -4,9 +4,9 @@ set -e
 if [ "$DEBUG" = "true" ]; then echo "→ Starting frpc..."; fi
 
 if [ "$(id -u)" = "0" ]; then
-    su-exec "${PUID:-0}:${PGID:-0}" /usr/bin/frpc -c /etc/frp/frpc.toml &
+  su-exec "${PUID:-0}:${PGID:-0}" /usr/bin/frpc -c /etc/frp/frpc.toml &
 else
-    /usr/bin/frpc -c /etc/frp/frpc.toml &
+  /usr/bin/frpc -c /etc/frp/frpc.toml &
 fi
 
 if [ "$DEBUG" = "true" ]; then echo "→ frpc started in background."; fi

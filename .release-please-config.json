@@ -7,9 +7,7 @@
       "include-component-in-tag": true,
       "release-as": "0.69.1",
       "changelog-path": "CHANGELOG.md",
-      "exclude-paths": [
-        "docker/alpine/CHANGELOG.md"
-      ]
+      "exclude-paths": ["docker/alpine/CHANGELOG.md"]
     },
     "docker/debian": {
       "release-type": "simple",
@@ -17,9 +15,7 @@
       "include-component-in-tag": true,
       "release-as": "0.69.1",
       "changelog-path": "CHANGELOG.md",
-      "exclude-paths": [
-        "docker/debian/CHANGELOG.md"
-      ]
+      "exclude-paths": ["docker/debian/CHANGELOG.md"]
     },
     "docker/rocky": {
       "release-type": "simple",
@@ -27,9 +23,7 @@
       "include-component-in-tag": true,
       "release-as": "0.69.1",
       "changelog-path": "CHANGELOG.md",
-      "exclude-paths": [
-        "docker/rocky/CHANGELOG.md"
-      ]
+      "exclude-paths": ["docker/rocky/CHANGELOG.md"]
     }
   },
   "include-v-in-tag": true,
