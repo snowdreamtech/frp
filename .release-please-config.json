@@ -7,18 +7,8 @@
       "include-component-in-tag": true,
       "release-as": "0.69.1",
       "changelog-path": "CHANGELOG.md",
-      "exclude-paths": ["docker/alpine/CHANGELOG.md"],
-      "extra-files": [
-        {
-          "type": "generic",
-          "path": "Dockerfile.frpc",
-          "glob": false
-        },
-        {
-          "type": "generic",
-          "path": "Dockerfile.frps",
-          "glob": false
-        }
+      "exclude-paths": [
+        "docker/alpine/CHANGELOG.md"
       ]
     },
     "docker/debian": {
@@ -27,18 +17,8 @@
       "include-component-in-tag": true,
       "release-as": "0.69.1",
       "changelog-path": "CHANGELOG.md",
-      "exclude-paths": ["docker/debian/CHANGELOG.md"],
-      "extra-files": [
-        {
-          "type": "generic",
-          "path": "Dockerfile.frpc",
-          "glob": false
-        },
-        {
-          "type": "generic",
-          "path": "Dockerfile.frps",
-          "glob": false
-        }
+      "exclude-paths": [
+        "docker/debian/CHANGELOG.md"
       ]
     },
     "docker/rocky": {
@@ -47,18 +27,8 @@
       "include-component-in-tag": true,
       "release-as": "0.69.1",
       "changelog-path": "CHANGELOG.md",
-      "exclude-paths": ["docker/rocky/CHANGELOG.md"],
-      "extra-files": [
-        {
-          "type": "generic",
-          "path": "Dockerfile.frpc",
-          "glob": false
-        },
-        {
-          "type": "generic",
-          "path": "Dockerfile.frps",
-          "glob": false
-        }
+      "exclude-paths": [
+        "docker/rocky/CHANGELOG.md"
       ]
     }
   },

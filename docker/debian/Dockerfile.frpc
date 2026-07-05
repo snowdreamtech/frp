@@ -9,9 +9,7 @@ USER root
 # Set the workdir
 WORKDIR /root
 
-# x-release-please-start-version
-ARG FRP_VERSION=0.69.1
-# x-release-please-end
+ARG VERSION
 
 RUN set -eux \
     && apt-get -qqy update  \
@@ -20,9 +18,9 @@ RUN set -eux \
     nodejs \
     npm \
     wget \
-    && wget -c https://github.com/fatedier/frp/archive/refs/tags/v${FRP_VERSION}.tar.gz \
-    && tar zxvf v${FRP_VERSION}.tar.gz \
-    && cd frp-${FRP_VERSION} \
+    && wget -c https://github.com/fatedier/frp/archive/refs/tags/v${VERSION}.tar.gz \
+    && tar zxvf v${VERSION}.tar.gz \
+    && cd frp-${VERSION} \
     && sed -i 's/$(MAKE) -C web\/frpc build/$(MAKE) -C web\/frpc install build/' Makefile \
     && sed -i 's/CGO_ENABLED=0/CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH}/' Makefile \
     && make frpc \
@@ -47,10 +45,6 @@ ARG BUILDTIME \
     PUID=0 \
     USER=root \
     WORKDIR=/root
-
-# x-release-please-start-version
-ARG FRP_VERSION=0.69.1
-# x-release-please-end
 
 # Standard OCI Metadata (https://github.com/opencontainers/image-spec)
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
@@ -80,7 +74,7 @@ ENV KEEPALIVE=${KEEPALIVE} \
     PUID=${PUID} \
     USER=${USER} \
     WORKDIR=${WORKDIR} \
-    FRP_VERSION=${FRP_VERSION}
+    FRP_VERSION=${VERSION}
 
 COPY --from=builder /root/frpc /usr/bin/
 COPY --from=builder /root/frpc.toml /etc/frp/
