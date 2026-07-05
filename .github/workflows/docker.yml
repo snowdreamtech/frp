@@ -359,7 +359,7 @@ jobs:
           file: ${{ matrix.context }}/Dockerfile.${{ matrix.flavor }}
           build-args: |
             BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
-            VERSION=${{ matrix.version }}
+            VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
             REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
           platforms: ${{ matrix.platforms }}
           provenance: true
