@@ -592,7 +592,7 @@ jobs:
           scan-type: "image"
           image-ref: ${{ steps.trivy-image.outputs.tag }}
           format: "sarif"
-          output: "trivy-image-${{ matrix.variant }}.sarif"
+          output: "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif"
           severity: "CRITICAL,HIGH,MEDIUM,LOW"
           ignore-unfixed: true
           exit-code: "0"
@@ -604,10 +604,10 @@ jobs:
         if: steps.variant-filter.outputs.skip != 'true' && steps.build.conclusion == 'success' && steps.trivy.outcome == 'success'
         continue-on-error: true
         run: |
-          if [ -f "trivy-image-${{ matrix.variant }}.sarif" ]; then
-            critical=$(jq '[.runs[].results[] | select(.level=="error")] | length' trivy-image-${{ matrix.variant }}.sarif)
-            high=$(jq '[.runs[].results[] | select(.level=="warning")] | length' trivy-image-${{ matrix.variant }}.sarif)
-            medium=$(jq '[.runs[].results[] | select(.level=="note")] | length' trivy-image-${{ matrix.variant }}.sarif)
+          if [ -f "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif" ]; then
+            critical=$(jq '[.runs[].results[] | select(.level=="error")] | length' trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif)
+            high=$(jq '[.runs[].results[] | select(.level=="warning")] | length' trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif)
+            medium=$(jq '[.runs[].results[] | select(.level=="note")] | length' trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif)
             {
               echo "critical=${critical}"
               echo "high=${high}"
@@ -628,8 +628,8 @@ jobs:
         continue-on-error: true
         uses: github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4.36.2
         with:
-          sarif_file: "trivy-image-${{ matrix.variant }}.sarif"
-          category: "trivy-image-base-${{ matrix.variant }}"
+          sarif_file: "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif"
+          category: "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}"
 
       - name: "🗑️ Clean Up Build Artifacts"
         if: steps.variant-filter.outputs.skip != 'true' && always()
