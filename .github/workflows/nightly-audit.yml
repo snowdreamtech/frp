@@ -115,7 +115,7 @@ jobs:
           persist-credentials: false
 
       - name: "⚡ Setup UniRTM"
-        uses: snowdreamtech/setup-unirtm@cacfb4d739ee46d4a4b2528b02b508df2f560706 # v0.4.0
+        uses: snowdreamtech/setup-unirtm@3de054956dc845d374ab5a1a0fa5b4d242afa9de # v0.5.0
         with:
           unirtm-version: "0.25.3"
           install: true
