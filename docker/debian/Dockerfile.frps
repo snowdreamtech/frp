@@ -67,9 +67,8 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.vendor="Snowdream Tech" \
     org.opencontainers.image.created="${BUILDTIME}" \
     org.opencontainers.image.revision="${REVISION}" \
-    org.opencontainers.image.url="https://github.com/snowdreamtech/frp"
-
-LABEL org.opencontainers.image.version="${VERSION:-0.69.1}"
+    org.opencontainers.image.url="https://github.com/snowdreamtech/frp" \
+    org.opencontainers.image.version="${VERSION:-0.69.1}"
 
 # Runtime Environment Configuration
 ENV KEEPALIVE=${KEEPALIVE} \
