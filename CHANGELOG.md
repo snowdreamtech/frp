@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.7](https://github.com/snowdreamtech/template/compare/v0.15.6...v0.15.7) (2026-07-06)
+
+
+### ♻️ Miscellaneous Chores
+
+* **deps:** bump vite in /docs in the all-dependencies group ([8ed895d](https://github.com/snowdreamtech/template/commit/8ed895da084eace6e4aa43ed23b11c31e00764f4))
+
 ## [0.15.6](https://github.com/snowdreamtech/template/compare/v0.15.5...v0.15.6) (2026-07-06)
 
 
