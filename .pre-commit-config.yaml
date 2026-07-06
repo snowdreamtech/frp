@@ -598,6 +598,13 @@ repos:
         files: ^\.github/workflows/.*\.yml$
         description: "Validate GitHub Actions workflow syntax."
 
+      - id: zizmor
+        name: zizmor security check
+        language: system
+        entry: unirtm hook-exec zizmor --config .zizmor.yml
+        files: ^\.github/workflows/.*\.yml$
+        description: "Audit GitHub Actions workflows for security best practices."
+
       # -- Infrastructure & Config -------------------------------------------
       - id: dockerfile-utils
         name: dockerfile quality check
