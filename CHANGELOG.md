@@ -6,6 +6,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.6](https://github.com/snowdreamtech/template/compare/v0.15.5...v0.15.6) (2026-07-06)
+
+
+### 🛠 Refactoring
+
+* apply black formatting style to all pre-commit hook scripts ([b9fe7ff](https://github.com/snowdreamtech/template/commit/b9fe7ffb8fa098e2f9e38410c70efada552edfd0))
+* **pre-commit:** clean up redundant exclude fields and optimize filtering ([d95b727](https://github.com/snowdreamtech/template/commit/d95b727b6ae1e88d7f48d301b3355b798e712348))
+* **pre-commit:** optimize configuration and extract python scripts ([f712d68](https://github.com/snowdreamtech/template/commit/f712d683b3e2bc9edbe4562c123190ceb75f8c5e))
+
+
+### ♻️ Miscellaneous Chores
+
+* **pre-commit:** remove duplicate online zizmor hook ([0124b68](https://github.com/snowdreamtech/template/commit/0124b6870b360f9fa7b55c8bfc47e29e4e3596f1))
+
 ## [0.15.5](https://github.com/snowdreamtech/template/compare/v0.15.4...v0.15.5) (2026-07-05)
 
 
