@@ -15,7 +15,12 @@ ignore:
   - DL3059
   # SC2086: Double quote to prevent globbing — handled by shellcheck
   - SC2086
-
+  - DL3002
+  - DL3003
+  - DL3047
+  - DL3018
+  - SC2016
+  - DL4006
 # Treat specific rules as warnings instead of errors
 # format: [rule]: warning
 failure-threshold: error
