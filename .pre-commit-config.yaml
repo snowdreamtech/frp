@@ -130,7 +130,7 @@ repos:
         name: check toml well-formedness
         entry: scripts/pre-commit/check-toml.py
         language: system
-        files: '\.toml$'
+        types: [toml]
         description: "Verify that TOML files are well-formed (requires Python 3.11+ or tomllib)."
 
       - id: check-ini
@@ -152,7 +152,7 @@ repos:
         name: check csv consistency
         entry: scripts/pre-commit/check-csv.py
         language: system
-        files: '\.(csv|tsv)$'
+        types_or: [csv, tsv]
         description: "Verify that CSV/TSV files have consistent column counts across all rows."
 
       - id: check-jsonc
@@ -181,7 +181,6 @@ repos:
         language: system
         entry: unirtm hook-exec buf lint
         files: \.proto$
-        exclude: |
         description: "Lint Protobuf files using Buf."
 
       - id: buf-format
@@ -189,7 +188,6 @@ repos:
         language: system
         entry: unirtm hook-exec buf format -d --exit-code
         files: \.proto$
-        exclude: |
         description: "Verify Protobuf file formatting using Buf."
 
       - id: check-jinja2
@@ -211,7 +209,6 @@ repos:
         language: system
         entry: unirtm hook-exec zig fmt --check
         files: '\.zig$'
-        exclude: |
         description: "Verify Zig code formatting using 'zig fmt'."
 
       - id: check-justfile
@@ -226,7 +223,6 @@ repos:
         language: system
         entry: unirtm hook-exec cue fmt
         files: '\.cue$'
-        exclude: |
         description: "Verify CUE configuration formatting."
 
       - id: jsonnet-fmt
@@ -234,7 +230,6 @@ repos:
         language: system
         entry: unirtm hook-exec jsonnetfmt -i
         files: '\.jsonnet$'
-        exclude: |
         description: "Verify Jsonnet configuration formatting."
 
       - id: check-webserver-config
@@ -306,7 +301,6 @@ repos:
           - markdown
           - astro
           - svelte
-        exclude: |
         description: "Format web-standard file types using Prettier (including Astro/Svelte)."
 
       - id: zizmor
@@ -342,7 +336,6 @@ repos:
         language: system
         entry: unirtm hook-exec shfmt -w -s -i 2
         types: [shell]
-        exclude: |
         description: "Format shell scripts according to POSIX standards."
 
       - id: taplo
@@ -350,7 +343,6 @@ repos:
         language: system
         entry: unirtm hook-exec taplo format
         types: [toml]
-        exclude: |
         description: "Format TOML files using Taplo."
 
       - id: ruff-format
@@ -358,7 +350,6 @@ repos:
         language: system
         entry: unirtm hook-exec ruff format
         types_or: [python, pyi]
-        exclude: |
         description: "Fast Python code formatter."
 
       - id: clang-format
@@ -374,7 +365,6 @@ repos:
         language: system
         entry: unirtm hook-exec gofmt -w
         types: [go]
-        exclude: |
         description: "Canonical Go code formatting."
 
       - id: goimports
@@ -382,7 +372,6 @@ repos:
         language: system
         entry: unirtm hook-exec goimports -w
         types: [go]
-        exclude: |
         description: "Manage Go imports and formatting."
 
       # Temporarily disabled (consider using unirtm hook-exec if needed or removed if govulncheck replaces it)
@@ -401,7 +390,6 @@ repos:
         language: system
         entry: unirtm hook-exec cargo fmt --all --
         types: [rust]
-        exclude: |
         pass_filenames: false
         description: "Format Rust code using the official Cargo toolchain."
 
@@ -606,7 +594,6 @@ repos:
           - tsx
           - jsx
           - vue
-        exclude: |
         description: "Find and fix problems in JavaScript/TypeScript/Vue code."
 
       - id: stylelint
@@ -617,7 +604,6 @@ repos:
           - css
           - scss
           - less
-        exclude: |
         description: "Lint style sheets for CSS/SCSS/Less quality."
 
       - id: ruff
@@ -625,7 +611,6 @@ repos:
         language: system
         entry: unirtm hook-exec ruff check --fix
         types_or: [python, pyi]
-        exclude: |
         description: "Highly performant Python linter with auto-fix capability."
 
       - id: yamllint
@@ -633,7 +618,6 @@ repos:
         language: system
         entry: unirtm hook-exec yamllint --config-file .yamllint.yml
         types: [yaml]
-        exclude: |
         description: "Lint YAML files based on strict project rules."
 
       - id: markdownlint-cli2
@@ -697,7 +681,6 @@ repos:
         entry: unirtm hook-exec kube-linter lint
         types: [yaml]
         files: '.*(kube|k8s|manifest).*\.ya?ml$'
-        exclude: |
         description: "Lint Kubernetes manifests for security and best practices."
 
       - id: actionlint
@@ -719,12 +702,6 @@ repos:
         name: editorconfig quality check
         language: system
         entry: unirtm hook-exec editorconfig-checker
-        exclude: |
-          (?x)^(
-            \.(venv|git|github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|specify|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml|idx|continue|history|vscode-test)/.*|
-            node_modules/|venv/|env/|dist/|build/|out/|target/|vendor/|__pycache__/|\.specify/|
-            \.aider\.conf\.yml
-          )
         description: "Ensure compliance with .editorconfig rules across the project."
 
       - id: goreleaser-check
@@ -742,7 +719,6 @@ repos:
         types_or: [json, yaml]
         files: '(?i)(openapi|swagger|asyncapi).*\.(json|yaml|yml)$'
         pass_filenames: true
-        exclude: |
         description: "Lint API contracts using Spectral (OpenAPI/Swagger/AsyncAPI)."
 
       - id: sort-package-json
@@ -759,7 +735,6 @@ repos:
         entry: unirtm hook-exec dotenv-linter
         files: '(\.env|\.env\.example|\.env\.sample)$'
         pass_filenames: true
-        exclude: |
         description: "Validate the structure of environment variable files."
 
       # -- Extensibility (Optional Runtime Hooks) ---------------------------
@@ -770,7 +745,6 @@ repos:
         entry: unirtm hook-exec sqlfluff lint
         args: [--dialect, postgres]
         types_or: [sql]
-        exclude: |
         description: "Lint SQL dialects for syntax and style."
 
       - id: ktlint
@@ -778,7 +752,6 @@ repos:
         language: system
         entry: unirtm hook-exec ktlint
         files: '\.kts?$'
-        exclude: |
         description: "Verify Kotlin code against community style guides."
 
       - id: google-java-format
@@ -786,7 +759,6 @@ repos:
         language: system
         entry: unirtm hook-exec google-java-format --set-exit-if-changed --dry-run
         files: '\.java$'
-        exclude: |
         description: "Verify Java code against Google Style Guide."
 
       - id: rubocop
@@ -794,7 +766,6 @@ repos:
         language: system
         entry: unirtm hook-exec rubocop
         files: '\.rb$'
-        exclude: |
         description: "Verify Ruby code against community style guides."
 
       - id: dart-format
@@ -802,7 +773,6 @@ repos:
         language: system
         entry: unirtm hook-exec dart format --output=none --set-exit-if-changed
         files: '\.dart$'
-        exclude: |
         description: "Verify Dart code with the official SDK formatter."
 
       - id: mix-format
@@ -810,7 +780,6 @@ repos:
         language: system
         entry: unirtm hook-exec mix format --check-formatted
         files: '\.(ex|exs)$'
-        exclude: |
         description: "Verify Elixir code compliance with official formatter."
 
       - id: scalafmt
@@ -818,7 +787,6 @@ repos:
         language: system
         entry: unirtm hook-exec scalafmt --check
         files: '\.scala$'
-        exclude: |
         description: "Verify Scala code compliance with scalafmt."
 
       - id: haskell-format
@@ -826,7 +794,6 @@ repos:
         language: system
         entry: unirtm hook-exec ormolu --mode check
         files: '\.lhs?$'
-        exclude: |
         description: "Verify Haskell code compliance with ormolu."
 
       - id: swiftformat
@@ -834,7 +801,6 @@ repos:
         language: system
         entry: unirtm hook-exec swiftformat --lint
         files: '\.swift$'
-        exclude: |
         description: "Verify Swift code formatting (macOS only)."
 
       - id: swiftlint
@@ -842,7 +808,6 @@ repos:
         language: system
         entry: unirtm hook-exec swiftlint lint --strict
         files: '\.swift$'
-        exclude: |
         pass_filenames: false
         description: "Audit Swift code quality and best practices (macOS only)."
 
@@ -851,7 +816,6 @@ repos:
         language: system
         entry: unirtm hook-exec dotnet format --verify-no-changes
         files: '\.(cs|vb|fs)$'
-        exclude: |
         pass_filenames: false
         description: "Verify .NET code compliance with SDK formatting rules."
 
