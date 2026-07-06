@@ -36,7 +36,8 @@ exclude: |
     \.specify/|
     \.tmp/|tmp/|
     \.(venv|idx|continue|history|vscode-test)/.*|
-    \.aider\.conf\.yml
+    \.aider\.conf\.yml|
+    (\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
   )
 
 repos:
@@ -45,68 +46,31 @@ repos:
       # -- Git Hygiene (Incremental) ------------------------------------------
       - id: trailing-whitespace
         name: trim trailing whitespace
-        entry: |
-          python3 -c "
-          import sys, re, os
-          modified = []
-          for f in sys.argv[1:]:
-              if os.path.isfile(f) and os.path.getsize(f) < 2*1024*1024:
-                  with open(f, 'rb') as fh: content = fh.read()
-                  new_content = re.sub(b'[ \t]+(?=\r?\n|$)', b'', content)
-                  if content != new_content:
-                      with open(f, 'wb') as fh: fh.write(new_content)
-                      modified.append(f)
-          for f in modified: print(f'Fixing trailing whitespace in: {f}')
-          sys.exit(1 if modified else 0)
-          "
+        entry: scripts/pre-commit/trailing-whitespace.py
         language: system
         types: [text]
         exclude: |
           (?x)^(
-            \.md$|.*\.lock$|go\.sum$|
-            (\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
+            \.md$|.*\.lock$|go\.sum$
           )
         stages: [pre-commit, pre-merge-commit]
         description: "Standardize text hygiene by removing trailing whitespace."
 
       - id: end-of-file-fixer
         name: fix end of files
-        entry: |
-          python3 -c "
-          import sys, os
-          modified = []
-          for f in sys.argv[1:]:
-              if os.path.isfile(f) and os.path.getsize(f) < 2*1024*1024:
-                  with open(f, 'rb') as fh: content = fh.read()
-                  if not content: continue
-                  stripped = content.rstrip(b'\r\n')
-                  newline = b'\r\n' if b'\r\n' in content else b'\n'
-                  new_content = stripped + newline
-                  if content != new_content:
-                      with open(f, 'wb') as fh: fh.write(new_content)
-                      modified.append(f)
-          for f in modified: print(f'Fixing end of file in: {f}')
-          sys.exit(1 if modified else 0)
-          "
+        entry: scripts/pre-commit/end-of-file-fixer.py
         language: system
         types: [text]
         exclude: |
           (?x)^(
-            .*\.lock$|go\.sum$|
-            (\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
+            .*\.lock$|go\.sum$
           )
         stages: [pre-commit, pre-merge-commit]
         description: "Ensure that files end with a single newline character."
 
       - id: check-added-large-files
         name: check for added large files
-        entry: |
-          python3 -c "
-          import sys, os
-          large_files = [f for f in sys.argv[1:] if os.path.isfile(f) and os.path.getsize(f) > 1024*1024]
-          for f in large_files: print(f'File too large (>1MB): {f}')
-          sys.exit(1 if large_files else 0)
-          "
+        entry: scripts/pre-commit/check-added-large-files.py
         language: system
         exclude: |
           (?x)^(
@@ -118,20 +82,7 @@ repos:
 
       - id: check-merge-conflict
         name: check for merge conflicts
-        entry: |
-          python3 -c "
-          import sys, os, re
-          conflicts = []
-          for f in sys.argv[1:]:
-              if os.path.isfile(f) and os.path.getsize(f) < 2*1024*1024:
-                  with open(f, 'r', errors='ignore') as fh:
-                      for line in fh:
-                          if re.match(r'^(<<<<<<<|=======|>>>>>>>|\|\|\|\|\|\|\|)', line):
-                              conflicts.append(f)
-                              break
-          for f in conflicts: print(f'Merge conflict markers found in: {f}')
-          sys.exit(1 if conflicts else 0)
-          "
+        entry: scripts/pre-commit/check-merge-conflict.py
         language: system
         types: [text]
         stages: [pre-commit, pre-merge-commit]
@@ -139,72 +90,37 @@ repos:
 
       - id: check-case-conflict
         name: check for case conflicts
-        entry: |
-          python3 -c "
-          import sys, os
-          dirs = set(os.path.dirname(f) or '.' for f in sys.argv[1:])
-          clashing = []
-          for d in dirs:
-              files = os.listdir(d)
-              freq = {}
-              for f in files:
-                  low = f.lower()
-                  freq[low] = freq.get(low, 0) + 1
-              for f in files:
-                  if freq[f.lower()] > 1: clashing.append(os.path.join(d, f))
-          for f in sorted(set(clashing)): print(f'Case collision: {f}')
-          sys.exit(1 if clashing else 0)
-          "
+        entry: scripts/pre-commit/check-case-conflict.py
         language: system
         stages: [pre-commit, pre-merge-commit]
         description: "Verify that filenames are unique across case-insensitive filesystems."
 
       - id: check-symlinks
         name: check for broken symlinks
-        entry: |
-          python3 -c "
-          import sys, os
-          broken = [f for f in sys.argv[1:] if os.path.islink(f) and not os.path.exists(f)]
-          for f in broken: print(f'Broken symlink: {f}')
-          sys.exit(1 if broken else 0)
-          "
+        entry: scripts/pre-commit/check-symlinks.py
         language: system
         stages: [pre-commit, pre-merge-commit]
         description: "Ensure symlinks point to existing locations."
 
       - id: check-utf8-bom
         name: check for utf8 bom
-        entry: |
-          python3 -c "
-          import sys, os
-          found = []
-          for f in sys.argv[1:]:
-              if os.path.isfile(f) and os.path.getsize(f) > 3:
-                  with open(f, 'rb') as fh:
-                      if fh.read(3) == b'\xef\xbb\xbf': found.append(f)
-          for f in found: print(f'Illegal UTF-8 BOM detected: {f}')
-          sys.exit(1 if found else 0)
-          "
+        entry: scripts/pre-commit/check-utf8-bom.py
         language: system
         types: [text]
         exclude: scripts/sync-labels\.ps1$
         description: "Prevent illegal Byte Order Mark (BOM) in UTF-8 files."
 
       # -- Data & Configuration Hygiene ---------------------------------------
+      - id: check-xml
+        name: check xml well-formedness
+        entry: scripts/pre-commit/check-xml.py
+        language: system
+        types: [xml]
+        description: "Verify that XML files are well-formed."
+
       - id: check-json
         name: check json well-formedness
-        entry: |
-          python3 -c "
-          import sys, os, json
-          errors = []
-          for f in sys.argv[1:]:
-              if os.path.isfile(f) and os.path.getsize(f) < 2*1024*1024:
-                  try:
-                      with open(f, 'r', encoding='utf-8') as fh: json.load(fh)
-                  except Exception as e: errors.append(f'{f} ({e})')
-          for e in errors: print(f'Malformed JSON: {e}')
-          sys.exit(1 if errors else 0)
-          "
+        entry: scripts/pre-commit/check-json.py
         language: system
         types: [json]
         exclude: '\.vscode/.*\.json$'
@@ -212,70 +128,160 @@ repos:
 
       - id: check-toml
         name: check toml well-formedness
-        entry: |
-          python3 -c "
-          import sys, os
-          try:
-              import tomllib as toml
-          except ImportError:
-              try: import tomli as toml
-              except ImportError: sys.exit(0)
-          errors = []
-          for f in sys.argv[1:]:
-              if os.path.isfile(f) and os.path.getsize(f) < 2*1024*1024:
-                  try:
-                      with open(f, 'rb') as fh: toml.load(fh)
-                  except Exception as e: errors.append(f'{f} ({e})')
-          for e in errors: print(f'Malformed TOML: {e}')
-          sys.exit(1 if errors else 0)
-          "
+        entry: scripts/pre-commit/check-toml.py
         language: system
-        files: '\.toml$'
+        types: [toml]
         description: "Verify that TOML files are well-formed (requires Python 3.11+ or tomllib)."
 
       - id: check-ini
         name: check ini well-formedness
-        entry: |
-          python3 -c "
-          import sys, os, configparser
-          errors = []
-          for f in sys.argv[1:]:
-              if os.path.isfile(f) and os.path.getsize(f) < 1024*1024:
-                  try:
-                      cp = configparser.ConfigParser()
-                      cp.read(f, encoding='utf-8')
-                  except Exception as e: errors.append(f'{f} ({e})')
-          for e in errors: print(f'Malformed INI: {e}')
-          sys.exit(1 if errors else 0)
-          "
+        entry: scripts/pre-commit/check-ini.py
         language: system
         files: '\.(ini|editorconfig|properties)$'
         exclude: '\.(editorconfig|\.vscode/.*\.json)$'
         description: "Verify that INI and property files are well-formed."
 
+      - id: check-plist
+        name: check plist well-formedness
+        entry: scripts/pre-commit/check-plist.py
+        language: system
+        files: '\.plist$'
+        description: "Verify that Apple Plist files (XML or Binary) are well-formed."
+
+      - id: check-csv
+        name: check csv consistency
+        entry: scripts/pre-commit/check-csv.py
+        language: system
+        types_or: [csv, tsv]
+        description: "Verify that CSV/TSV files have consistent column counts across all rows."
+
       - id: check-jsonc
         name: check jsonc well-formedness
-        entry: |
-          python3 -c "
-          import sys, os, json, re
-          errors = []
-          for f in sys.argv[1:]:
-              if os.path.isfile(f) and os.path.getsize(f) < 2*1024*1024:
-                  try:
-                      with open(f, 'r', encoding='utf-8') as fh:
-                          content = fh.read()
-                          content = re.sub(r'(?<![:])//.*', '', content)
-                          content = re.sub(r'/\*.*?\*/', '', content, flags=re.S)
-                          content = re.sub(r',([ \t\r\n]*[}\]])', r'\1', content)
-                          json.loads(content)
-                  except Exception as e: errors.append(f'{f} ({e})')
-          for e in errors: print(f'Malformed JSONC: {e}')
-          sys.exit(1 if errors else 0)
-          "
+        entry: scripts/pre-commit/check-jsonc.py
         language: system
         files: '\.(jsonc|json5)$|tsconfig.*\.json$|devcontainer\.json$|\.vscode/.*\.json$'
         description: "Verify that JSON with Comments (JSONC/JSON5) files are well-formed."
 
+      - id: check-svg-safety
+        name: check svg safety
+        entry: scripts/pre-commit/check-svg-safety.py
+        language: system
+        files: '\.svg$'
+        description: "Verify that SVG files are well-formed and free of malicious script injections."
+
+      - id: check-rego
+        name: check rego policy
+        language: system
+        entry: unirtm hook-exec opa parse
+        files: '\.rego$'
+        description: "Verify that Rego policy files are well-formed (uses 'opa parse')."
+
+      - id: buf-lint
+        name: buf lint
+        language: system
+        entry: unirtm hook-exec buf lint
+        files: \.proto$
+        description: "Lint Protobuf files using Buf."
+
+      - id: buf-format
+        name: buf format
+        language: system
+        entry: unirtm hook-exec buf format -d --exit-code
+        files: \.proto$
+        description: "Verify Protobuf file formatting using Buf."
+
+      - id: check-jinja2
+        name: check jinja2 syntax
+        entry: scripts/pre-commit/check-jinja2.py
+        language: system
+        files: '\.(j2|jinja2|gotmpl|tmpl)$'
+        description: "Verify that Jinja2/Template files have valid syntax (uses 'jinja2' if available)."
+
+      - id: check-nix
+        name: check nix well-formedness
+        entry: scripts/pre-commit/check-nix.py
+        language: system
+        files: '\.nix$'
+        description: "Verify that Nix files are well-formed (basic structural check)."
+
+      - id: zig-fmt
+        name: check zig style
+        language: system
+        entry: unirtm hook-exec zig fmt --check
+        files: '\.zig$'
+        description: "Verify Zig code formatting using 'zig fmt'."
+
+      - id: check-justfile
+        name: check justfile well-formedness
+        language: system
+        entry: unirtm hook-exec just --check --justfile
+        files: "justfile$"
+        description: "Verify that justfile (Task runner) files are well-formed."
+
+      - id: cue-fmt
+        name: check cue style
+        language: system
+        entry: unirtm hook-exec cue fmt
+        files: '\.cue$'
+        description: "Verify CUE configuration formatting."
+
+      - id: jsonnet-fmt
+        name: check jsonnet style
+        language: system
+        entry: unirtm hook-exec jsonnetfmt -i
+        files: '\.jsonnet$'
+        description: "Verify Jsonnet configuration formatting."
+
+      - id: check-webserver-config
+        name: check web server config
+        entry: scripts/pre-commit/check-webserver-config.py
+        language: system
+        files: '(Caddyfile$|\.conf$)'
+        description: "Verify that Caddyfile and Nginx/Web server configurations are well-formed."
+
+      - id: check-brewfile
+        name: check brewfile
+        entry: scripts/pre-commit/check-brewfile.py
+        language: system
+        files: "Brewfile$"
+        description: "Verify that Brewfile (Homebrew Bundle) files follow the correct DSL."
+
+      - id: check-prisma
+        name: check prisma schema
+        entry: scripts/pre-commit/check-prisma.py
+        language: system
+        files: '\.prisma$'
+        description: "Verify that Prisma schema files are well-formed (basic structural check)."
+
+      - id: check-jupyter
+        name: check jupyter notebooks
+        entry: scripts/pre-commit/check-jupyter.py
+        language: system
+        files: '\.ipynb$'
+        description: "Verify that Jupyter Notebooks are well-formed and don't contain excessive output data."
+
+      - id: check-pulumi
+        name: check pulumi config
+        entry: scripts/pre-commit/check-pulumi.py
+        language: system
+        files: 'Pulumi\.yaml$'
+        description: "Verify that Pulumi configuration files are well-formed."
+
+      - id: check-crossplane
+        name: check crossplane manifests
+        entry: scripts/pre-commit/check-crossplane.py
+        language: system
+        files: '.*crossplane.*\.ya?ml$'
+        description: "Verify that Crossplane manifests follow basic Kubernetes/Crossplane structure."
+
+      - id: check-env-safety
+        name: check environment safety
+        entry: scripts/pre-commit/check-env-safety.py
+        language: system
+        files: '\.env(\..+)?$'
+        description: "Verify that .env files and templates do not contain real secrets or high-entropy values."
+
+      # -- Formatting (Auto-fix) ----------------------------------------------
       - id: prettier
         name: prettier format
         language: system
@@ -295,8 +301,6 @@ repos:
           - markdown
           - astro
           - svelte
-        exclude: |
-          (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
         description: "Format web-standard file types using Prettier (including Astro/Svelte)."
 
       - id: zizmor
@@ -311,8 +315,6 @@ repos:
         language: system
         entry: unirtm hook-exec shfmt -w -s -i 2
         types: [shell]
-        exclude: |
-          (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
         description: "Format shell scripts according to POSIX standards."
 
       - id: taplo
@@ -320,10 +322,57 @@ repos:
         language: system
         entry: unirtm hook-exec taplo format
         types: [toml]
-        exclude: |
-          (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
         description: "Format TOML files using Taplo."
 
+      - id: ruff-format
+        name: ruff format
+        language: system
+        entry: unirtm hook-exec ruff format
+        types_or: [python, pyi]
+        description: "Fast Python code formatter."
+
+      - id: clang-format
+        name: clang-format
+        language: system
+        entry: unirtm hook-exec clang-format
+        args: [-i]
+        types_or: [objective-c, c, c++]
+        description: "Format C/C++ family source files."
+
+      - id: gofmt
+        name: gofmt
+        language: system
+        entry: unirtm hook-exec gofmt -w
+        types: [go]
+        description: "Canonical Go code formatting."
+
+      - id: goimports
+        name: goimports
+        language: system
+        entry: unirtm hook-exec goimports -w
+        types: [go]
+        description: "Manage Go imports and formatting."
+
+      # Temporarily disabled (consider using unirtm hook-exec if needed or removed if govulncheck replaces it)
+      #      - id: golangci-lint
+      #        name: golangci-lint
+      #        language: system
+      #        entry: unirtm hook-exec golangci-lint run --fix
+      #        types: [go]
+      #        pass_filenames: false
+      #        exclude: |
+      #          (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
+      #        description: "Comprehensive Go linter aggregator."
+
+      - id: cargo-fmt
+        name: cargo format
+        language: system
+        entry: unirtm hook-exec cargo fmt --all --
+        types: [rust]
+        pass_filenames: false
+        description: "Format Rust code using the official Cargo toolchain."
+
+      # -- Secret Scanning ----------------------------------------------------
       - id: gitleaks
         name: gitleaks quality check
         language: system
@@ -334,18 +383,7 @@ repos:
 
       - id: detect-private-key
         name: detect private keys
-        entry: |
-          python3 -c "
-          import sys, os, re
-          pattern = re.compile(b'-----BEGIN ' + b'.*PRIVATE KEY-----')
-          found = []
-          for f in sys.argv[1:]:
-              if os.path.isfile(f) and os.path.getsize(f) < 1024*1024:
-                  with open(f, 'rb') as fh:
-                      if pattern.search(fh.read()): found.append(f)
-          for f in found: print(f'Private key detected: {f}')
-          sys.exit(1 if found else 0)
-          "
+        entry: scripts/pre-commit/detect-private-key.py
         language: system
         types: [text]
         exclude: '\.pre-commit-config\.yaml$'
@@ -393,6 +431,39 @@ repos:
         pass_filenames: false
         description: "Multi-language static analysis for security, bugs, and best practices using Semgrep."
 
+      - id: bandit
+        name: bandit python security check
+        language: system
+        entry: unirtm hook-exec bandit -r -ll
+        types: [python]
+        exclude: ^tests/
+        description: "Find common security issues in Python code using Bandit."
+
+      #      - id: gosec
+      # Temporarily disabled (replaced by govulncheck)
+      #        name: gosec go security scan
+      #        language: system
+      #        entry: unirtm hook-exec gosec -exclude=G104 -quiet ./...
+      #        types: [go]
+      #        pass_filenames: false
+      #        description: "Audit Go source code for security vulnerabilities using Gosec."
+
+      - id: govulncheck
+        name: govulncheck go vulnerability audit
+        language: system
+        entry: unirtm hook-exec govulncheck ./...
+        types: [go]
+        pass_filenames: false
+        description: "Official Go vulnerability checker for source code and dependencies."
+
+      - id: cargo-audit
+        name: cargo audit rust dependencies
+        language: system
+        entry: unirtm hook-exec cargo-audit audit
+        files: 'Cargo\.lock$'
+        pass_filenames: false
+        description: "Audit Rust dependencies for known security vulnerabilities."
+
       - id: npm-pnpm-audit
         name: node ecosystem audit
         language: system
@@ -405,123 +476,88 @@ repos:
       # -- Hardening & Security ----------------------------------------------
       - id: check-executables-have-shebangs
         name: check shell scripts for shebangs
-        entry: |
-          python3 -c "
-          import sys, os, stat
-          if os.name == 'nt': sys.exit(0)
-          missing = []
-          for f in sys.argv[1:]:
-              if os.path.isfile(f):
-                  mode = os.stat(f).st_mode
-                  # Check if any execution bit is set (Owner, Group, or Others)
-                  if (mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)):
-                      with open(f, 'rb') as fh:
-                          head = fh.read(2)
-                          if head != b'#!': missing.append(f)
-          for f in missing: print(f'Executable lacks shebang: {f}')
-          sys.exit(1 if missing else 0)
-          "
+        entry: scripts/pre-commit/check-executables-have-shebangs.py
         language: system
         types: [text]
+        exclude_types: [json, yaml, toml, markdown, html, css, javascript, ts, tsx, vue, astro, svelte, image]
         exclude: |
           (?x)^(
-            .*\.bat|.*\.ps1|.*\.batch|.*\.cmd|.*\.exe|
-            .*\.md|.*\.markdown|.*\.txt|.*\.pdf|.*\.docx?|
-            .*\.css|.*\.scss|.*\.less|.*\.html|.*\.jsx?|.*\.tsx?|.*\.vue|.*\.astro|.*\.svelte|.*\.mjs|
-            .*\.json[c5]?|.*\.ya?ml|.*\.toml|.*\.xml|.*\.ini|.*\.editorconfig|.*\.properties|.*\.env.*|
-            .*\.png|.*\.jpg|.*\.jpeg|.*\.gif|.*\.ico|.*\.svg|.*\.lock|.*\.lockb|.*\.sum|.*\.resolved|
-            \.gitignore|\.gitattributes|Makefile|ruff\.toml|eslint\.config\.mjs|commitlint\.config\.js|LICENSE
+            .*\.bat|.*\.ps1|.*\.cmd|.*\.exe|
+            .*\.txt|.*\.pdf|.*\.docx?|.*\.ini|.*\.editorconfig|.*\.properties|.*\.env.*|
+            .*\.lock|.*\.lockb|.*\.sum|.*\.resolved|
+            \.gitignore|\.gitattributes|Makefile|LICENSE
           )$
         description: "Executable scripts MUST start with a shebang (!#)."
 
       - id: check-shebang-scripts-are-executable
         name: check shebang scripts are executable
-        entry: |
-          python3 -c "
-          import sys, os, stat
-          if os.name == 'nt': sys.exit(0)
-          not_exec = []
-          for f in sys.argv[1:]:
-              if os.path.isfile(f):
-                  mode = os.stat(f).st_mode
-                  # Check if any execution bit is set (Owner, Group, or Others)
-                  if not (mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)):
-                      with open(f, 'rb') as fh:
-                          if fh.read(2) == b'#!': not_exec.append(f)
-          for f in not_exec: print(f'Shebang script not executable: {f}')
-          sys.exit(1 if not_exec else 0)
-          "
+        entry: scripts/pre-commit/check-shebang-scripts-are-executable.py
         language: system
         types: [text]
+        exclude_types: [json, yaml, toml, markdown, html, css, javascript, ts, tsx, vue, astro, svelte, image]
         exclude: |
           (?x)^(
-            .*\.bat|.*\.ps1|.*\.batch|.*\.cmd|.*\.exe|
-            .*\.md|.*\.markdown|.*\.txt|.*\.pdf|.*\.docx?|
-            .*\.css|.*\.scss|.*\.less|.*\.html|.*\.jsx?|.*\.tsx?|.*\.vue|.*\.astro|.*\.svelte|.*\.mjs|
-            .*\.json[c5]?|.*\.ya?ml|.*\.toml|.*\.xml|.*\.ini|.*\.editorconfig|.*\.properties|.*\.env.*|
-            .*\.png|.*\.jpg|.*\.jpeg|.*\.gif|.*\.ico|.*\.svg|.*\.lock|.*\.lockb|.*\.sum|.*\.resolved|
-            \.gitignore|\.gitattributes|Makefile|ruff\.toml|eslint\.config\.mjs|commitlint\.config\.js|LICENSE
+            .*\.bat|.*\.ps1|.*\.cmd|.*\.exe|
+            .*\.txt|.*\.pdf|.*\.docx?|.*\.ini|.*\.editorconfig|.*\.properties|.*\.env.*|
+            .*\.lock|.*\.lockb|.*\.sum|.*\.resolved|
+            \.gitignore|\.gitattributes|Makefile|LICENSE
           )$
         description: "Scripts with shebangs MUST have the executable bit set."
 
+      - id: license-check
+        name: check license headers
+        language: system
+        entry: unirtm exec -- unirtm license check -f .github/license-header.txt
+        files: ^(src|pkg|internal|cmd|app|lib|include|tests)/
+        types_or:
+          [
+            go,
+            shell,
+            python,
+            javascript,
+            jsx,
+            ts,
+            tsx,
+            vue,
+            svelte,
+            astro,
+            java,
+            kotlin,
+            swift,
+            objective-c,
+            objective-c++,
+            c,
+            c++,
+            rust,
+            ruby,
+            php,
+            c#,
+            f#,
+            dart,
+          ]
+        exclude: |
+          (?x)^(
+            scripts/.*\.(sh|ps1|bat)$
+          )/.*
+        description: "High-performance incremental compliance: Verify staged files for a SnowdreamTech license header."
+
       - id: forbidden-files
         name: check forbidden files
-        entry: |
-          python3 -c "
-          import sys, os, re
-          pattern = re.compile(r'(test\.txt|tmp\.json|debug\.log|\.DS_Store|Thumbs\.db|\.swp|\.bak|\\.orig|\\.rej|\\.coverage|\\.map|npm-debug\.log|\\.env)$')
-          forbidden = [f for f in sys.argv[1:] if os.path.isfile(f) and pattern.search(f)]
-          for f in forbidden: print(f'Forbidden file detected: {f}')
-          sys.exit(1 if forbidden else 0)
-          "
+        entry: scripts/pre-commit/forbidden-files.py
         language: system
         stages: [pre-commit, pre-merge-commit]
         description: "Prevent accidental commit of temporary or merge-remnant files."
 
       - id: check-lockfile-conflicts
         name: check lockfile conflicts
-        entry: |
-          python3 -c "
-          import sys, os, re
-          conflicts = []
-          for f in sys.argv[1:]:
-              if os.path.isfile(f):
-                  with open(f, 'r', errors='ignore') as fh:
-                      for line in fh:
-                          if re.match(r'^(<<<<<<<|=======|>>>>>>>|\|\|\|\|\|\|\|)', line):
-                              conflicts.append(f)
-                              break
-          for f in conflicts: print(f'Unresolved merge conflict in lockfile: {f}')
-          sys.exit(1 if conflicts else 0)
-          "
+        entry: scripts/pre-commit/check-lockfile-conflicts.py
         language: system
         files: '(\-lock\.json|lock\.yaml|Cargo\.lock|go\.sum|composer\.lock|package-lock\.json|bun\.lockb|pubspec\.lock|Package\.resolved|flake\.lock|dvc\.lock)$'
         description: "Mandatory check for merge conflict markers in large lockfiles (no size limit)."
 
       - id: check-lockfile-coexistence
         name: check lockfile coexistence
-        entry: |
-          python3 -c "
-          import sys, os
-          dirs = set(os.path.dirname(f) or '.' for f in sys.argv[1:])
-          conflicts = []
-          for d in dirs:
-              files = os.listdir(d)
-              if 'package-lock.json' in files and 'pnpm-lock.yaml' in files:
-                  conflicts.append(f'{d} (both package-lock.json and pnpm-lock.yaml found)')
-              if 'package-lock.json' in files and 'yarn.lock' in files:
-                  conflicts.append(f'{d} (both package-lock.json and yarn.lock found)')
-              if 'package-lock.json' in files and 'bun.lockb' in files:
-                  conflicts.append(f'{d} (both package-lock.json and bun.lockb found)')
-              if 'pnpm-lock.yaml' in files and 'yarn.lock' in files:
-                  conflicts.append(f'{d} (both pnpm-lock.yaml and yarn.lock found)')
-              if 'pnpm-lock.yaml' in files and 'bun.lockb' in files:
-                  conflicts.append(f'{d} (both pnpm-lock.yaml and bun.lockb found)')
-              if 'yarn.lock' in files and 'bun.lockb' in files:
-                  conflicts.append(f'{d} (both yarn.lock and bun.lockb found)')
-          for c in conflicts: print(f'Conflicting lockfiles detected: {c}')
-          sys.exit(1 if conflicts else 0)
-          "
+        entry: scripts/pre-commit/check-lockfile-coexistence.py
         language: system
         files: '(package-lock\.json|pnpm-lock\.yaml|yarn\.lock|bun\.lockb)$'
         description: "Prevent accidental coexistence of multiple Node.js package manager lockfiles."
@@ -537,17 +573,30 @@ repos:
           - tsx
           - jsx
           - vue
-        exclude: |
-          (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
         description: "Find and fix problems in JavaScript/TypeScript/Vue code."
+
+      - id: stylelint
+        name: stylelint quality check
+        language: system
+        entry: unirtm hook-exec stylelint --fix
+        types_or:
+          - css
+          - scss
+          - less
+        description: "Lint style sheets for CSS/SCSS/Less quality."
+
+      - id: ruff
+        name: ruff check
+        language: system
+        entry: unirtm hook-exec ruff check --fix
+        types_or: [python, pyi]
+        description: "Highly performant Python linter with auto-fix capability."
 
       - id: yamllint
         name: yamllint
         language: system
         entry: unirtm hook-exec yamllint --config-file .yamllint.yml
         types: [yaml]
-        exclude: |
-          (?x)^(\.github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml)/.*
         description: "Lint YAML files based on strict project rules."
 
       - id: markdownlint-cli2
@@ -591,19 +640,34 @@ repos:
         types: [powershell]
         description: "PowerShell static analysis tool (macOS/Windows)."
 
+      - id: checkmake
+        name: check makefile
+        language: system
+        entry: unirtm hook-exec checkmake --config .checkmake.ini
+        files: ^Makefile$
+        description: "Linter for Makefile best practices."
+
+      - id: tflint
+        name: check terraform
+        language: system
+        entry: unirtm hook-exec tflint
+        types: [terraform]
+        description: "Linter for Terraform code."
+
+      - id: kube-linter
+        name: kube-linter quality check
+        language: system
+        entry: unirtm hook-exec kube-linter lint
+        types: [yaml]
+        files: '.*(kube|k8s|manifest).*\.ya?ml$'
+        description: "Lint Kubernetes manifests for security and best practices."
+
       - id: actionlint
         name: check github actions
         language: system
         entry: unirtm hook-exec actionlint --shellcheck=
         files: ^\.github/workflows/.*\.yml$
         description: "Validate GitHub Actions workflow syntax."
-
-      - id: zizmor
-        name: zizmor security check
-        language: system
-        entry: unirtm hook-exec zizmor --config .zizmor.yml
-        files: ^\.github/workflows/.*\.yml$
-        description: "Audit GitHub Actions workflows for security best practices."
 
       # -- Infrastructure & Config -------------------------------------------
       - id: dockerfile-utils
@@ -617,12 +681,6 @@ repos:
         name: editorconfig quality check
         language: system
         entry: unirtm hook-exec editorconfig-checker
-        exclude: |
-          (?x)^(
-            \.(venv|git|github/agents|agent|agents|roo|claude|qwen|amazonq|augment|bob|codebuddy|codex|kilocode|opencode|qoder|shai|cursor|windsurf|pearai|pi|pochi|specify|supermaven|tabnine|trae|vibe|void|zed|zencoder|openhands|cody|coderabbit|aide|cline|clinerules|cursorrules|pr_agent.toml|idx|continue|history|vscode-test)/.*|
-            node_modules/|venv/|env/|dist/|build/|out/|target/|vendor/|__pycache__/|\.specify/|
-            \.aider\.conf\.yml
-          )
         description: "Ensure compliance with .editorconfig rules across the project."
 
       - id: goreleaser-check
@@ -633,6 +691,114 @@ repos:
         pass_filenames: false
         description: "Check GoReleaser configuration."
 
+      - id: spectral
+        name: spectral quality check
+        language: system
+        entry: unirtm hook-exec spectral lint
+        types_or: [json, yaml]
+        files: '(?i)(openapi|swagger|asyncapi).*\.(json|yaml|yml)$'
+        pass_filenames: true
+        description: "Lint API contracts using Spectral (OpenAPI/Swagger/AsyncAPI)."
+
+      - id: sort-package-json
+        name: sort package-json
+        language: system
+        entry: unirtm hook-exec sort-package-json
+        files: ^package\.json$
+        pass_filenames: true
+        description: "Maintain a deterministic property order in package.json."
+
+      - id: dotenv-linter
+        name: dotenv quality check
+        language: system
+        entry: unirtm hook-exec dotenv-linter
+        files: '(\.env|\.env\.example|\.env\.sample)$'
+        pass_filenames: true
+        description: "Validate the structure of environment variable files."
+
+      # -- Extensibility (Optional Runtime Hooks) ---------------------------
+      # The following hooks skip gracefully if their runtime is missing.
+      - id: sqlfluff
+        name: sqlfluff lint
+        language: system
+        entry: unirtm hook-exec sqlfluff lint
+        args: [--dialect, postgres]
+        types_or: [sql]
+        description: "Lint SQL dialects for syntax and style."
+
+      - id: ktlint
+        name: check kotlin style
+        language: system
+        entry: unirtm hook-exec ktlint
+        files: '\.kts?$'
+        description: "Verify Kotlin code against community style guides."
+
+      - id: google-java-format
+        name: check java style
+        language: system
+        entry: unirtm hook-exec google-java-format --set-exit-if-changed --dry-run
+        files: '\.java$'
+        description: "Verify Java code against Google Style Guide."
+
+      - id: rubocop
+        name: check ruby style
+        language: system
+        entry: unirtm hook-exec rubocop
+        files: '\.rb$'
+        description: "Verify Ruby code against community style guides."
+
+      - id: dart-format
+        name: check dart style
+        language: system
+        entry: unirtm hook-exec dart format --output=none --set-exit-if-changed
+        files: '\.dart$'
+        description: "Verify Dart code with the official SDK formatter."
+
+      - id: mix-format
+        name: check elixir style
+        language: system
+        entry: unirtm hook-exec mix format --check-formatted
+        files: '\.(ex|exs)$'
+        description: "Verify Elixir code compliance with official formatter."
+
+      - id: scalafmt
+        name: check scala style
+        language: system
+        entry: unirtm hook-exec scalafmt --check
+        files: '\.scala$'
+        description: "Verify Scala code compliance with scalafmt."
+
+      - id: haskell-format
+        name: check haskell style
+        language: system
+        entry: unirtm hook-exec ormolu --mode check
+        files: '\.lhs?$'
+        description: "Verify Haskell code compliance with ormolu."
+
+      - id: swiftformat
+        name: check swift style
+        language: system
+        entry: unirtm hook-exec swiftformat --lint
+        files: '\.swift$'
+        description: "Verify Swift code formatting (macOS only)."
+
+      - id: swiftlint
+        name: swiftlint quality check
+        language: system
+        entry: unirtm hook-exec swiftlint lint --strict
+        files: '\.swift$'
+        pass_filenames: false
+        description: "Audit Swift code quality and best practices (macOS only)."
+
+      - id: dotnet-format
+        name: check .net style
+        language: system
+        entry: unirtm hook-exec dotnet format --verify-no-changes
+        files: '\.(cs|vb|fs)$'
+        pass_filenames: false
+        description: "Verify .NET code compliance with SDK formatting rules."
+
+      # -- Git Message Flow --------------------------------------------------
       - id: commitlint
         name: check commit message format
         language: system
