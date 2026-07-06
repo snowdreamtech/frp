@@ -4,7 +4,7 @@
 ---
 # Dependabot Smart Sync
 # Purpose: Automatically regenerates .github/dependabot.yml based on detected ecosystems.
-# Trigger: Push to dev (manifest file changes), monthly schedule, or manual dispatch.
+# Trigger: Push to dev (manifest file changes), or manual dispatch.
 # Design:
 #   - Uses .unirtm.toml to scan for manifest files via git ls-files.
 #   - Only commits if the generated config differs from the current one.
@@ -42,9 +42,6 @@ name: "🤖 Dependabot Smart Sync"
       # UniRTM toolchain configuration
       - ".unirtm.toml"
       - ".github/workflows/dependabot-sync.yml"
-  schedule:
-    # Weekly safety net: every Monday at 06:00 UTC
-    - cron: "0 6 * * 1"
   workflow_dispatch:
 
 permissions: {}
