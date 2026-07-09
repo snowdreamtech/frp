@@ -61,7 +61,7 @@ docker run -d \
 
 **Supported Architectures**: i386, amd64, arm32v6, arm32v7, arm64, ppc64le, riscv64, s390x
 
-**Base Image**: `snowdreamtech/alpine:3.24.0`
+**Base Image**: `snowdreamtech/alpine:3.24.1`
 
 ### Rocky
 
@@ -210,7 +210,7 @@ Images follow semantic versioning with the format: `{major}.{minor}.{patch}-{var
 Examples:
 
 - `snowdreamtech/base:13.5.0-debian`
-- `snowdreamtech/base:3.24.0-alpine`
+- `snowdreamtech/base:3.24.1-alpine`
 - `snowdreamtech/base:10.2.0-rocky`
 
 This format allows:
