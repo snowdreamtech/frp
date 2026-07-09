@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.24.1](https://github.com/snowdreamtech/base/compare/alpine-v3.24.1...alpine-v3.24.1) (2026-07-09)
+
+
+### ♻️ Miscellaneous Chores
+
+* update alpine base image to 3.24.1 ([3021ed3](https://github.com/snowdreamtech/base/commit/3021ed3b4ffa5f8916f5fa46aa4325e8ebf84ba6))
+
 ## [3.24.0](https://github.com/snowdreamtech/base/compare/alpine-v3.24.0...alpine-v3.24.0) (2026-07-03)
 
 
