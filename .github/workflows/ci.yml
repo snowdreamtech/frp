@@ -374,7 +374,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
           UNIRTM_VERIFY_PROVENANCE: "0"
       - name: "📦 Cache Language Dependencies (Advanced)"
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             ~/go/pkg/mod
@@ -568,7 +568,7 @@ jobs:
           UNIRTM_YES: 1
 
       - name: "⚡ Cache Documentation Links (Lychee)"
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .lycheecache
           key: ${{ runner.os }}-lychee-${{ hashFiles('**/*.md') }}
