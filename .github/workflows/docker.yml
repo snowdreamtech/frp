@@ -225,6 +225,9 @@ jobs:
             *.aquasecurity.github.io:443
             *.sigstore.dev:443
 
+            ocsp.sectigo.com:443
+            client.wns.windows.com:443
+            www.msftconnecttest.com:443
       - name: "🧹 Optimize Runner Disk Space"
         if: steps.variant-filter.outputs.skip != 'true'
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1

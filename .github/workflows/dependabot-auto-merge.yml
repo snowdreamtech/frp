@@ -105,6 +105,11 @@ jobs:
             rekor.sigstore.dev:443
             fulcio.sigstore.dev:443
             api.sigstore.dev:443
+            public.ecr.aws:443
+            check.trivy.dev:443
+            ocsp.sectigo.com:443
+            client.wns.windows.com:443
+            www.msftconnecttest.com:443
       - name: "📂 Checkout Repository Code"
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
