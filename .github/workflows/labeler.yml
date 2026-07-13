@@ -125,6 +125,11 @@ jobs:
             client.wns.windows.com:443
             www.msftconnecttest.com:443
             *.cloudfront.net:443
+            nodejs.org:443
+            nodejs.org:80
+            go.dev:443
+            tmaproduction.blob.core.windows.net:443
+            golang.google.cn:443
       - name: "🔍 Triage Pull Request (Labeler)"
         uses: actions/labeler@b8dd2d9be0f68b860e7dae5dae7d772984eacd6d # v6.2.0
         with:

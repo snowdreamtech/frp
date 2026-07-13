@@ -127,6 +127,11 @@ jobs:
             client.wns.windows.com:443
             www.msftconnecttest.com:443
             *.cloudfront.net:443
+            nodejs.org:443
+            nodejs.org:80
+            go.dev:443
+            tmaproduction.blob.core.windows.net:443
+            golang.google.cn:443
       - name: "🔍 Validate PR Title Integrity"
         uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
         env:

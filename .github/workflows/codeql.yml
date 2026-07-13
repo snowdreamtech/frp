@@ -154,6 +154,11 @@ jobs:
             client.wns.windows.com:443
             www.msftconnecttest.com:443
             *.cloudfront.net:443
+            nodejs.org:443
+            nodejs.org:80
+            go.dev:443
+            tmaproduction.blob.core.windows.net:443
+            golang.google.cn:443
       - name: "📂 Checkout Repository Code"
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:

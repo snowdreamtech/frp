@@ -227,6 +227,11 @@ jobs:
             client.wns.windows.com:443
             www.msftconnecttest.com:443
             *.cloudfront.net:443
+            nodejs.org:443
+            nodejs.org:80
+            go.dev:443
+            tmaproduction.blob.core.windows.net:443
+            golang.google.cn:443
       - name: "🧹 Optimize Runner Disk Space"
         if: steps.variant-filter.outputs.skip != 'true'
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
