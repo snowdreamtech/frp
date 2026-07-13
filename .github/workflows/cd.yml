@@ -52,7 +52,7 @@ jobs:
     steps:
       - name: "🔒 Harden Runner"
         if: matrix.os == 'ubuntu-latest'
-        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -189,7 +189,7 @@ jobs:
             ${{ runner.os }}-lychee-
 
       - name: "🔗 Verify Documentation Links (Lychee)"
-        uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411 # v2.8.0
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         if: ${{ always() && matrix.os == 'ubuntu-latest' }}
         continue-on-error: true # Don't block CD on link check failures (network issues, rate limits, etc.)
         with:
@@ -215,7 +215,7 @@ jobs:
           skip-dirs: "unirtm_data,cmd/unirtm_data"
 
       - name: "📤 Upload Security Audit (SARIF)"
-        uses: github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4.36.2
+        uses: github/codeql-action/upload-sarif@54f647b7e1bb85c95cddabcd46b0c578ec92bc1a # v4.36.3
         if: always() && matrix.os == 'ubuntu-latest'
         with:
           sarif_file: "trivy-results.sarif"
