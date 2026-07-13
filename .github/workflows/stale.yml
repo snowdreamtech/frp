@@ -126,7 +126,7 @@ jobs:
             ocsp.sectigo.com:443
             client.wns.windows.com:443
             www.msftconnecttest.com:443
-            d2glxqk2uabbnd.cloudfront.net:443
+            *.cloudfront.net:443
       - name: "🧹 Mark Inactive Issues & PRs (Stale)"
         uses: actions/stale@eb5cf3af3ac0a1aa4c9c45633dd1ae542a27a899 # v10.3.0
         with:
