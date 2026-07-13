@@ -127,6 +127,11 @@ jobs:
             client.wns.windows.com:443
             www.msftconnecttest.com:443
             *.cloudfront.net:443
+            nodejs.org:443
+            nodejs.org:80
+            go.dev:443
+            tmaproduction.blob.core.windows.net:443
+            golang.google.cn:443
       - name: "🧹 Mark Inactive Issues & PRs (Stale)"
         uses: actions/stale@eb5cf3af3ac0a1aa4c9c45633dd1ae542a27a899 # v10.3.0
         with:
