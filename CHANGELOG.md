@@ -6,6 +6,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.8](https://github.com/snowdreamtech/template/compare/v0.15.7...v0.15.8) (2026-07-13)
+
+
+### ♻️ Miscellaneous Chores
+
+* add egress network allowlist entries to all GitHub Actions workflows ([9616592](https://github.com/snowdreamtech/template/commit/961659274a02544704ba1a9e22327d70b11fb109))
+* **deps:** bump vite in /docs in the all-dependencies group ([f3e5f8f](https://github.com/snowdreamtech/template/commit/f3e5f8fbf6c7bc524b70caccf8aa20eea3bbd4e7))
+
 ## [0.15.7](https://github.com/snowdreamtech/template/compare/v0.15.6...v0.15.7) (2026-07-06)
 
 
