@@ -218,13 +218,13 @@ Images follow semantic versioning with the format: `{major}.{minor}.{patch}-{var
 
 Examples:
 
-- `snowdreamtech/frpc:0.69.1-debian`
-- `snowdreamtech/frpc:0.69.1-alpine`
-- `snowdreamtech/frpc:0.69.1-rocky`
+- `snowdreamtech/frpc:0.70.0-debian`
+- `snowdreamtech/frpc:0.70.0-alpine`
+- `snowdreamtech/frpc:0.70.0-rocky`
 
 This format allows:
 
-- **Full version pinning**: `0.69.1-debian` (exact version)
+- **Full version pinning**: `0.70.0-debian` (exact version)
 - **Variant latest tag**: `latest-debian` (tracks most recent release for Debian)
 - **Global latest tag**: `latest` (tracks most recent release, defaults to Debian)
 

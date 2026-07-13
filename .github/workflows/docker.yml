@@ -76,21 +76,21 @@ jobs:
         variant: [alpine, debian, rocky]
         include:
           - variant: alpine
-            version: "0.69.1"
+            version: "0.70.0"
             context: docker/alpine
             platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x
             is_latest: false
             package_manager: apk
 
           - variant: debian
-            version: "0.69.1"
+            version: "0.70.0"
             context: docker/debian
             platforms: linux/386,linux/amd64,linux/arm/v5,linux/arm/v7,linux/arm64,linux/riscv64,linux/ppc64le,linux/s390x
             is_latest: true
             package_manager: apt-get
 
           - variant: rocky
-            version: "0.69.1"
+            version: "0.70.0"
             context: docker/rocky
             platforms: linux/amd64,linux/arm64,linux/ppc64le,linux/s390x
             is_latest: false
