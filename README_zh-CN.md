@@ -218,15 +218,13 @@ services:
 
 示例：
 
-<!-- x-release-please-start-version -->
-- `snowdreamtech/frpc:0.69.1-debian`
-- `snowdreamtech/frpc:0.69.1-alpine`
-- `snowdreamtech/frpc:0.69.1-rocky`
+- `snowdreamtech/frpc:0.69.1-debian` <!-- x-release-please-version:debian -->
+- `snowdreamtech/frpc:0.69.1-alpine` <!-- x-release-please-version:alpine -->
+- `snowdreamtech/frpc:0.69.1-rocky` <!-- x-release-please-version:rocky -->
 
 此格式允许：
 
-- **完整版本固定**：`0.69.1-debian`（精确版本）
-<!-- x-release-please-end -->
+- **完整版本固定**：`0.69.1-debian`（精确版本） <!-- x-release-please-version:debian -->
 - **变体最新标签**：`latest-debian`（跟踪 Debian 最新版本）
 - **全局最新标签**：`latest`（跟踪最新版本，默认指向 Debian）
 
