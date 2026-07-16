@@ -7,7 +7,14 @@
       "include-component-in-tag": true,
       "release-as": "0.70.0",
       "changelog-path": "CHANGELOG.md",
-      "exclude-paths": ["docker/alpine/CHANGELOG.md"]
+      "exclude-paths": ["docker/alpine/CHANGELOG.md"],
+      "extra-files": [
+        ".github/workflows/docker.yml",
+        "README.md",
+        "README_zh-CN.md",
+        "docker/alpine/Dockerfile.frpc",
+        "docker/alpine/Dockerfile.frps"
+      ]
     },
     "docker/debian": {
       "release-type": "simple",
@@ -15,7 +22,14 @@
       "include-component-in-tag": true,
       "release-as": "0.70.0",
       "changelog-path": "CHANGELOG.md",
-      "exclude-paths": ["docker/debian/CHANGELOG.md"]
+      "exclude-paths": ["docker/debian/CHANGELOG.md"],
+      "extra-files": [
+        ".github/workflows/docker.yml",
+        "README.md",
+        "README_zh-CN.md",
+        "docker/debian/Dockerfile.frpc",
+        "docker/debian/Dockerfile.frps"
+      ]
     },
     "docker/rocky": {
       "release-type": "simple",
@@ -23,7 +37,14 @@
       "include-component-in-tag": true,
       "release-as": "0.70.0",
       "changelog-path": "CHANGELOG.md",
-      "exclude-paths": ["docker/rocky/CHANGELOG.md"]
+      "exclude-paths": ["docker/rocky/CHANGELOG.md"],
+      "extra-files": [
+        ".github/workflows/docker.yml",
+        "README.md",
+        "README_zh-CN.md",
+        "docker/rocky/Dockerfile.frpc",
+        "docker/rocky/Dockerfile.frps"
+      ]
     }
   },
   "include-v-in-tag": true,
