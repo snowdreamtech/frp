@@ -29,7 +29,7 @@ RUN apk add --no-cache make \
     && cd ${fetch_dir} \
     && sed -i 's/$(MAKE) -C web\/frps build/$(MAKE) -C web\/frps install build/' Makefile \
     && sed -i 's/CGO_ENABLED=0/CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH}/' Makefile \
-    && make frps-web frps \
+    && make frps-web frps NOWEB_TAG="" \
     && cp -rfv bin/frps conf/frps.toml /root/
 
 # Base Image (Rocky Variant)

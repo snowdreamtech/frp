@@ -33,7 +33,7 @@ RUN set -eux \
     && cd ${fetch_dir} \
     && sed -i 's/$(MAKE) -C web\/frpc build/$(MAKE) -C web\/frpc install build/' Makefile \
     && sed -i 's/CGO_ENABLED=0/CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH}/' Makefile \
-    && make frpc-web frpc \
+    && make frpc-web frpc NOWEB_TAG="" \
     && cp -rfv bin/frpc conf/frpc.toml /root/
 
 # Base Image (Debian Variant)
