@@ -446,6 +446,8 @@ jobs:
                 printf '  ✓ User context: ' && id -un && \
                 printf '  ✓ Package manager: ' && \
                 ${pkg_check} && echo 'functional' && \
+                printf '  ✓ Web Dashboard: ' && \
+                if grep -qa 'index.html' /usr/bin/${{ matrix.flavor }}; then echo 'integrated'; else echo 'missing (NOWEB_TAG issue)'; exit 1; fi && \
                 ${{ matrix.flavor }} version && \
                 echo '  ✓ All checks passed'
               "; then
