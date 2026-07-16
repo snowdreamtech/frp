@@ -51,7 +51,7 @@ ARG BUILDTIME \
     USER=root \
     WORKDIR=/root
 
-ARG VERSION="0.69.1" # x-release-please-version:alpine
+ARG VERSION="0.69.1" # x-release-please-version
 
 # Standard OCI Metadata (https://github.com/opencontainers/image-spec)
 LABEL org.opencontainers.image.authors="Snowdream Tech" \

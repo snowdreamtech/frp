@@ -12,6 +12,7 @@
         ".github/workflows/docker.yml",
         "README.md",
         "README_zh-CN.md",
+        "VERSION",
         "docker/alpine/Dockerfile.frpc",
         "docker/alpine/Dockerfile.frps"
       ]
@@ -27,6 +28,7 @@
         ".github/workflows/docker.yml",
         "README.md",
         "README_zh-CN.md",
+        "VERSION",
         "docker/debian/Dockerfile.frpc",
         "docker/debian/Dockerfile.frps"
       ]
@@ -42,6 +44,7 @@
         ".github/workflows/docker.yml",
         "README.md",
         "README_zh-CN.md",
+        "VERSION",
         "docker/rocky/Dockerfile.frpc",
         "docker/rocky/Dockerfile.frps"
       ]
