@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.70.1](https://github.com/snowdreamtech/frp/compare/debian-v0.70.0...debian-v0.70.1) (2026-07-23)
+
+
+### ♻️ Miscellaneous Chores
+
+* remove x-release-please-version marker from Dockerfiles ([1d6e025](https://github.com/snowdreamtech/frp/commit/1d6e02581af18976ab7bc765aefab2d0e9fadf1b))
+
 ## [0.70.0](https://github.com/snowdreamtech/frp/compare/debian-v0.69.1...debian-v0.70.0) (2026-07-16)
 
 
@@ -77,4 +84,3 @@
 * remove leftover release-please block annotations from Dockerfile labels ([d8bd485](https://github.com/snowdreamtech/frp/commit/d8bd4857a8c3acfcc14788360432b6c9ca3be996))
 * **speckit:** manual auto-commit trigger ([5f8a5a9](https://github.com/snowdreamtech/frp/commit/5f8a5a9cba5d6bd42a65eaabfecd6e18b01aeeb0))
 * sync release versions to 0.70.0 ([0dddcbe](https://github.com/snowdreamtech/frp/commit/0dddcbeb1fb091071c520faf84dba6f6f48a8550))
-
