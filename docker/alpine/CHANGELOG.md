@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.70.1](https://github.com/snowdreamtech/frp/compare/alpine-v0.70.0...alpine-v0.70.1) (2026-07-23)
+
+
+### ♻️ Miscellaneous Chores
+
+* manually upgrade frp version to 0.70.1 ([f92f655](https://github.com/snowdreamtech/frp/commit/f92f65543eed9c06611c131b9c9099d7d59cb917))
+* remove x-release-please-version marker from Dockerfiles ([1d6e025](https://github.com/snowdreamtech/frp/commit/1d6e02581af18976ab7bc765aefab2d0e9fadf1b))
+
 ## [0.70.0](https://github.com/snowdreamtech/frp/compare/alpine-v0.69.1...alpine-v0.70.0) (2026-07-16)
 
 
@@ -77,4 +85,3 @@
 * remove leftover release-please block annotations from Dockerfile labels ([d8bd485](https://github.com/snowdreamtech/frp/commit/d8bd4857a8c3acfcc14788360432b6c9ca3be996))
 * sync release versions to 0.70.0 ([0dddcbe](https://github.com/snowdreamtech/frp/commit/0dddcbeb1fb091071c520faf84dba6f6f48a8550))
 * update alpine base image to 3.24.1 ([3021ed3](https://github.com/snowdreamtech/frp/commit/3021ed3b4ffa5f8916f5fa46aa4325e8ebf84ba6))
-
