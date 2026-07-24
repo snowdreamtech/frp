@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.24.1](https://github.com/snowdreamtech/base/compare/alpine-v3.24.1...alpine-v3.24.1) (2026-07-24)
+
+
+### 🐛 Bug Fixes
+
+* remove static version defaults from OCI image labels to use variable injection exclusively ([da5645a](https://github.com/snowdreamtech/base/commit/da5645ad4d48467290235abbbd9f31ba70bf690f))
+
 ## [3.24.1](https://github.com/snowdreamtech/base/compare/alpine-v3.24.1...alpine-v3.24.1) (2026-07-09)
 
 
