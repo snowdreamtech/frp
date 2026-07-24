@@ -13,6 +13,11 @@
           "type": "generic",
           "path": "Dockerfile",
           "glob": false
+        },
+        {
+          "type": "yaml",
+          "path": ".github/workflows/docker.yml",
+          "jsonpath": "$.jobs.buildx.strategy.matrix.include[0].version"
         }
       ]
     },
@@ -28,6 +33,11 @@
           "type": "generic",
           "path": "Dockerfile",
           "glob": false
+        },
+        {
+          "type": "yaml",
+          "path": ".github/workflows/docker.yml",
+          "jsonpath": "$.jobs.buildx.strategy.matrix.include[1].version"
         }
       ]
     },
@@ -43,6 +53,11 @@
           "type": "generic",
           "path": "Dockerfile",
           "glob": false
+        },
+        {
+          "type": "yaml",
+          "path": ".github/workflows/docker.yml",
+          "jsonpath": "$.jobs.buildx.strategy.matrix.include[2].version"
         }
       ]
     }
