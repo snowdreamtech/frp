@@ -51,7 +51,7 @@ jobs:
       STEP_SECURITY_DISABLE: ${{ matrix.os != 'ubuntu-latest' }}
     steps:
       - name: "📂 Checkout Repository Code"
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -133,7 +133,7 @@ jobs:
           skip-dirs: "unirtm_data,cmd/unirtm_data"
 
       - name: "📤 Upload Security Audit (SARIF)"
-        uses: github/codeql-action/upload-sarif@99df26d4f13ea111d4ec1a7dddef6063f76b97e9 # v4.37.0
+        uses: github/codeql-action/upload-sarif@7188fc363630916deb702c7fdcf4e481b751f97a # v4.37.1
         if: always() && matrix.os == 'ubuntu-latest'
         with:
           sarif_file: "trivy-results.sarif"
@@ -156,7 +156,7 @@ jobs:
     timeout-minutes: 50
     steps:
       - name: "🏗️ Checkout Repository"
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -172,7 +172,7 @@ jobs:
 
       - name: "🏗️ Checkout Release PR Branch"
         if: ${{ steps.release.outputs.pr }}
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ fromJson(steps.release.outputs.pr).headBranchName }}
           persist-credentials: false
