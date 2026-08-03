@@ -74,7 +74,7 @@ jobs:
           persist-credentials: false
 
       - name: "⚡ Setup UniRTM"
-        uses: snowdreamtech/setup-unirtm@3de054956dc845d374ab5a1a0fa5b4d242afa9de # v0.5.0
+        uses: snowdreamtech/setup-unirtm@7711c9fc506ca29a54cba2d7d8181d2b146f00d9 # v0.6.0
         with:
           unirtm-version: "0.25.3"
           install: true
@@ -120,7 +120,7 @@ jobs:
           persist-credentials: false
 
       - name: "⚡ Setup UniRTM"
-        uses: snowdreamtech/setup-unirtm@3de054956dc845d374ab5a1a0fa5b4d242afa9de # v0.5.0
+        uses: snowdreamtech/setup-unirtm@7711c9fc506ca29a54cba2d7d8181d2b146f00d9 # v0.6.0
         with:
           unirtm-version: "0.25.3"
           install: true
@@ -209,7 +209,7 @@ jobs:
           fetch-depth: 0
 
       - name: "⚡ Setup UniRTM"
-        uses: snowdreamtech/setup-unirtm@3de054956dc845d374ab5a1a0fa5b4d242afa9de # v0.5.0
+        uses: snowdreamtech/setup-unirtm@7711c9fc506ca29a54cba2d7d8181d2b146f00d9 # v0.6.0
         with:
           unirtm-version: "0.25.3"
           install: true
@@ -276,7 +276,7 @@ jobs:
           skip-dirs: "unirtm_data,cmd/unirtm_data"
 
       - name: "📤 Upload Security Audit (SARIF)"
-        uses: github/codeql-action/upload-sarif@7188fc363630916deb702c7fdcf4e481b751f97a # v4.37.1
+        uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
         if: always()
         with:
           sarif_file: "."
