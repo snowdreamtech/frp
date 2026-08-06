@@ -57,19 +57,20 @@ jobs:
 
     steps:
       - name: "📂 Checkout Repository Code"
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         # Fetches source documentation and site assets for the build process.
         with:
           persist-credentials: false
 
       - name: "⚡ Setup UniRTM"
-        uses: snowdreamtech/setup-unirtm@7711c9fc506ca29a54cba2d7d8181d2b146f00d9 # v0.6.0
+        uses: snowdreamtech/setup-unirtm@663cc55933eafea30cd63f43e837cecd4a587f45 # v0.7.0
         with:
-          unirtm-version: "0.25.7"
+          unirtm-version: "0.25.8"
           install: true
           trust: true
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
       - name: "🚀 compile documentation artifacts"
         shell: sh
         run: |
