@@ -68,7 +68,7 @@ jobs:
           _EXISTS=$(gh issue list --search "$_TITLE" --state open --json number --jq ".[0].number")
 
           if [ -z "$_EXISTS" ]; then
-            gh issue create --title "$_TITLE" --body "$_BODY" --label "security,bug"
+            gh issue create --title "$_TITLE" --body "$_BODY" --label "bug"
           else
             echo "Issue already exists: #$_EXISTS. Skipping creation."
           fi
