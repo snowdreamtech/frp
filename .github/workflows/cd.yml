@@ -64,6 +64,7 @@ jobs:
           trust: true
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
       - name: "📝 Validate Commit Convention (Commitlint)"
         shell: sh
         run: |

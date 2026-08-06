@@ -70,6 +70,7 @@ jobs:
           trust: true
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
       - name: "🚀 compile documentation artifacts"
         shell: sh
         run: |

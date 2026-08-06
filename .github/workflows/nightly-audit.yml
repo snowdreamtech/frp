@@ -41,6 +41,7 @@ jobs:
           trust: true
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
       - name: "🛡️ Run Security Audit"
         shell: sh
         env:
