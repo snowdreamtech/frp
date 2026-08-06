@@ -6,6 +6,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.9](https://github.com/snowdreamtech/template/compare/v0.15.8...v0.15.9) (2026-08-06)
+
+
+### 🐛 Bug Fixes
+
+* **security:** resolve postcss vulnerability and fix gh issue creation label ([d1a10c0](https://github.com/snowdreamtech/template/commit/d1a10c0e4673c96c4bc05f34ec58527f4d1dead0))
+
+
+### ♻️ Miscellaneous Chores
+
+* **deps:** bump vite in /docs in the all-dependencies group ([6cccd02](https://github.com/snowdreamtech/template/commit/6cccd0239f14774c5dca746a861871855022e1cf))
+* **deps:** bump vite in /docs in the all-dependencies group ([bcad411](https://github.com/snowdreamtech/template/commit/bcad411a69b84ae6eb1db8cb71e8e8a3f54f48d6))
+* **deps:** sync dependabot config and unirtm toolchain ([5169535](https://github.com/snowdreamtech/template/commit/5169535295d32ab02b3705fac84c58f3295188cc))
+* upgrade setup-unirtm action to v0.6.0 and UniRTM to v0.25.7 in workflows ([1088902](https://github.com/snowdreamtech/template/commit/10889026cbc7ce16ab41407a099d74cf6a6eb89f))
+
 ## [0.15.8](https://github.com/snowdreamtech/template/compare/v0.15.7...v0.15.8) (2026-07-13)
 
 
