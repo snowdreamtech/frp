@@ -120,6 +120,8 @@
   // ------------------------------------------------------------
   // 4. Remote & Search
   // ------------------------------------------------------------
+  // Force local server download to avoid remote wget/curl connectivity issues
+  "remote.SSH.allowLocalServerDownload": "always",
   // Use hybrid port forwarding source for better remote development compatibility
   // Show login terminal for SSH connections to help debug connection issues
   "remote.SSH.showLoginTerminal": true,
