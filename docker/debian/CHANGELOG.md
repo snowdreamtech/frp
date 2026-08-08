@@ -1,5 +1,12 @@
 # Changelog
 
+## [13.6.0](https://github.com/snowdreamtech/base/compare/debian-v13.6.0...debian-v13.6.0) (2026-08-08)
+
+
+### ♻️ Miscellaneous Chores
+
+* sync debian build matrix and documentation with upstream ([0d6e613](https://github.com/snowdreamtech/base/commit/0d6e6132c84a368f5b64b9144d9c7d3b7292d746))
+
 ## [13.6.0](https://github.com/snowdreamtech/base/compare/debian-v13.5.0...debian-v13.6.0) (2026-07-24)
 
 
