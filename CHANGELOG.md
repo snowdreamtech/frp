@@ -6,6 +6,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.10](https://github.com/snowdreamtech/template/compare/v0.15.9...v0.15.10) (2026-08-08)
+
+
+### 🚀 Features
+
+* enable remote.SSH.allowLocalServerDownload to improve connection reliability ([8a6c80d](https://github.com/snowdreamtech/template/commit/8a6c80dd26e92e1a2d37be50a2ca5ca5113f08d8))
+* update vscode settings with enhanced editor, explorer, and terminal configurations ([44230bc](https://github.com/snowdreamtech/template/commit/44230bceaf3deebc247739e9f91c55a1d2721803))
+
+
+### 🐛 Bug Fixes
+
+* **docs:** resolve npm vulnerabilities by pinning exact dependency versions ([d628640](https://github.com/snowdreamtech/template/commit/d6286404ea025ee0cad3123b5b0b3bc6bd21a551))
+
+
+### ♻️ Miscellaneous Chores
+
+* **deps:** sync dependabot config and unirtm toolchain ([f561c65](https://github.com/snowdreamtech/template/commit/f561c65fd180508bba43e61ed445fba6e3898d23))
+* **deps:** update go version to 1.26.5 ([91349d4](https://github.com/snowdreamtech/template/commit/91349d45d07f4928818f869a38e06042912d0710))
+* **deps:** update unirtm toolchain versions ([23e763a](https://github.com/snowdreamtech/template/commit/23e763a3ea3618766e9f9103095f1aff52764652))
+
 ## [0.15.9](https://github.com/snowdreamtech/template/compare/v0.15.8...v0.15.9) (2026-08-06)
 
 
