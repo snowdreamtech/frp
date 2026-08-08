@@ -83,7 +83,7 @@ jobs:
           - variant: debian
             version: "13.5.0"
             context: docker/debian
-            platforms: linux/386,linux/amd64,linux/arm/v5,linux/arm/v7,linux/arm64,linux/riscv64,linux/ppc64le,linux/s390x
+            platforms: linux/amd64,linux/arm/v7,linux/arm64,linux/riscv64,linux/ppc64le,linux/s390x
             is_latest: true
             package_manager: apt-get
 
@@ -358,8 +358,11 @@ jobs:
 
             # Set expected count based on variant
             case "${{ matrix.variant }}" in
-              alpine|debian)
+              alpine)
                 expected_count=8
+                ;;
+              debian)
+                expected_count=6
                 ;;
               rocky)
                 expected_count=4
@@ -684,8 +687,11 @@ jobs:
                 echo ""
                 # Set expected count based on variant
                 case "${{ matrix.variant }}" in
-                  alpine|debian)
+                  alpine)
                     expected_count=8
+                    ;;
+                  debian)
+                    expected_count=6
                     ;;
                   rocky)
                     expected_count=4
@@ -711,8 +717,11 @@ jobs:
               echo "- **OS Version:** ${{ matrix.version }}"
               # Set platform count based on variant
               case "${{ matrix.variant }}" in
-                alpine|debian)
+                alpine)
                   echo "- **Platforms:** 8 architectures"
+                  ;;
+                debian)
+                  echo "- **Platforms:** 6 architectures"
                   ;;
                 rocky)
                   echo "- **Platforms:** 4 architectures"
