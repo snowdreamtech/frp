@@ -15,14 +15,6 @@
 * release main ([5a92edb](https://github.com/snowdreamtech/frp/commit/5a92edb4ba76b04ee6de7369e9471f785849a7ae))
 * **release:** deduplicate CHANGELOG headers ([c2bba24](https://github.com/snowdreamtech/frp/commit/c2bba247dca89a31accc6e70c5e48b16170b1ce5))
 
-## [0.70.1](https://github.com/snowdreamtech/frp/compare/rocky-v0.70.0...rocky-v0.70.1) (2026-07-23)
-
-
-### ♻️ Miscellaneous Chores
-
-* manually upgrade frp version to 0.70.1 ([f92f655](https://github.com/snowdreamtech/frp/commit/f92f65543eed9c06611c131b9c9099d7d59cb917))
-* remove x-release-please-version marker from Dockerfiles ([1d6e025](https://github.com/snowdreamtech/frp/commit/1d6e02581af18976ab7bc765aefab2d0e9fadf1b))
-
 ## [0.70.0](https://github.com/snowdreamtech/frp/compare/rocky-v0.69.1...rocky-v0.70.0) (2026-07-16)
 
 

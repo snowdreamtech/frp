@@ -17,14 +17,6 @@
 * sync debian build matrix and documentation with upstream ([0d6e613](https://github.com/snowdreamtech/frp/commit/0d6e6132c84a368f5b64b9144d9c7d3b7292d746))
 * update debian base image to 13.6.0 ([5f885d5](https://github.com/snowdreamtech/frp/commit/5f885d5a771f06d449533f2f3c619d27444822f5))
 
-## [0.70.1](https://github.com/snowdreamtech/frp/compare/debian-v0.70.0...debian-v0.70.1) (2026-07-23)
-
-
-### ♻️ Miscellaneous Chores
-
-* manually upgrade frp version to 0.70.1 ([f92f655](https://github.com/snowdreamtech/frp/commit/f92f65543eed9c06611c131b9c9099d7d59cb917))
-* remove x-release-please-version marker from Dockerfiles ([1d6e025](https://github.com/snowdreamtech/frp/commit/1d6e02581af18976ab7bc765aefab2d0e9fadf1b))
-
 ## [0.70.0](https://github.com/snowdreamtech/frp/compare/debian-v0.69.1...debian-v0.70.0) (2026-07-16)
 
 
