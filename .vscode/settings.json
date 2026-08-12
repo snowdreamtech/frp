@@ -43,6 +43,12 @@
   "editor.accessibilitySupport": "on",
   // Automatically format code on save for consistent style across the project
   "editor.formatOnSave": true,
+  // Automatically format code when pasting
+  "editor.formatOnPaste": true,
+  // Prevent accidentally overwriting the clipboard when copying an empty line
+  "editor.emptySelectionClipboard": false,
+  // Enable font ligatures for supported fonts (e.g., Fira Code, JetBrains Mono)
+  "editor.fontLigatures": true,
   // --- Premium Interaction Optimizations ---
   // Enable smooth caret animation for a more fluid typing experience
   "editor.cursorSmoothCaretAnimation": "on",
@@ -73,6 +79,8 @@
   // ------------------------------------------------------------
   // Disable compact folders in explorer for a clearer hierarchical view
   "explorer.compactFolders": false,
+  // Focus but do not scroll the explorer when switching files (reduces visual jumping)
+  "explorer.autoReveal": "focusNoScroll",
   // [File Nesting] Enable file nesting to keep the explorer clean
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": false,
@@ -120,6 +128,8 @@
   // ------------------------------------------------------------
   // 4. Remote & Search
   // ------------------------------------------------------------
+  // Force local server download to avoid remote wget/curl connectivity issues
+  "remote.SSH.allowLocalServerDownload": "always",
   // Use hybrid port forwarding source for better remote development compatibility
   // Show login terminal for SSH connections to help debug connection issues
   "remote.SSH.showLoginTerminal": true,
@@ -293,6 +303,8 @@
   "debug.inlineValues": "on",
   // [Terminal] Linux specific: Copy text on selection (X11 style)
   "terminal.integrated.copyOnSelection": true,
+  // [Terminal] Enable sticky scroll to keep executed commands visible at the top
+  "terminal.integrated.stickyScroll.enabled": true,
   // ------------------------------------------------------------
   // 14. File Integrity & Visual Guides
   // ------------------------------------------------------------
