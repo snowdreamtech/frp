@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.70.1](https://github.com/snowdreamtech/frp/compare/rocky-v0.70.1...rocky-v0.70.1) (2026-08-12)
+
+
+### 🐛 Bug Fixes
+
+* remove static version defaults from OCI image labels to use variable injection exclusively ([da5645a](https://github.com/snowdreamtech/frp/commit/da5645ad4d48467290235abbbd9f31ba70bf690f))
+
+
+### ♻️ Miscellaneous Chores
+
+* **docker:** ignore unavailable repos for rocky build ([a6b6b6e](https://github.com/snowdreamtech/frp/commit/a6b6b6e5b2288cfeb6b2777902b85e7e5f37f2c3))
+* **merge:** merge upstream/dev with base image updates ([c176fe7](https://github.com/snowdreamtech/frp/commit/c176fe708bdf90fa4413fbc1ed7799627da4221d))
+* release main ([5a92edb](https://github.com/snowdreamtech/frp/commit/5a92edb4ba76b04ee6de7369e9471f785849a7ae))
+* **release:** deduplicate CHANGELOG headers ([c2bba24](https://github.com/snowdreamtech/frp/commit/c2bba247dca89a31accc6e70c5e48b16170b1ce5))
+
 ## [0.70.1](https://github.com/snowdreamtech/frp/compare/rocky-v0.70.0...rocky-v0.70.1) (2026-07-23)
 
 
