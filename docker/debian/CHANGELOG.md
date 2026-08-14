@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.71.0](https://github.com/snowdreamtech/frp/compare/debian-v0.70.1...debian-v0.71.0) (2026-08-14)
+
+
+### 🚀 Features
+
+* upgrade frp to version 0.71.0 ([7f32fad](https://github.com/snowdreamtech/frp/commit/7f32fad1975bed870b13d470013239486a49cbe4))
+
 ## [0.70.1](https://github.com/snowdreamtech/frp/compare/debian-v0.70.1...debian-v0.70.1) (2026-08-12)
 
 
