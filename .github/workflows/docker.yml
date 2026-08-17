@@ -571,7 +571,7 @@ jobs:
       - name: "📤 Upload Image Security Scan (SARIF)"
         if: steps.variant-filter.outputs.skip != 'true' && steps.build.conclusion == 'success' && steps.trivy.outcome == 'success'
         continue-on-error: true
-        uses: github/codeql-action/upload-sarif@d1ba80a13dd99fba24a470575428917156a28b43 # v4.37.5
+        uses: github/codeql-action/upload-sarif@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
         with:
           sarif_file: "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif"
           category: "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}"
