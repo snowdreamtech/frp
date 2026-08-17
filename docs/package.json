@@ -10,19 +10,19 @@
     "docs:preview": "vitepress preview"
   },
   "devDependencies": {
-    "esbuild": "0.28.1",
+    "esbuild": "0.28.2",
     "mermaid": "11.16.1",
-    "vite": "8.2.0",
+    "vite": "8.2.1",
     "vitepress": "1.6.4",
     "vitepress-plugin-mermaid": "2.0.17"
   },
   "overrides": {
-    "esbuild": "0.28.1",
-    "vite": "8.2.0",
+    "esbuild": "0.28.2",
+    "vite": "8.2.1",
     "nanoid": "3.3.18"
   },
   "dependencies": {
     "dompurify": "3.4.13",
-    "postcss": "8.5.25"
+    "postcss": "8.5.26"
   }
 }
