@@ -167,7 +167,7 @@ jobs:
 
       - name: "🧹 Optimize Runner Disk Space"
         if: steps.variant-filter.outputs.skip != 'true'
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        uses: jlumbroso/free-disk-space@ceedf095f4ec1a097402bc6bd80831f2e1a6fde6 # v2.0.0
         with:
           tool-cache: false
           android: true
@@ -195,11 +195,11 @@ jobs:
 
       - name: "🏗️ Configure QEMU Emulation"
         if: steps.variant-filter.outputs.skip != 'true'
-        uses: docker/setup-qemu-action@1f40c72289eff860ee54a304f1438e3cff362e0a # v4.3.0
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
 
       - name: "🛠️ Configure Docker Buildx"
         if: steps.variant-filter.outputs.skip != 'true'
-        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
         with:
           buildkitd-config: .github/buildkitd.toml
 
@@ -293,7 +293,7 @@ jobs:
       - name: "🚀 Orchestrate Build & Delivery Suite"
         id: build
         if: steps.variant-filter.outputs.skip != 'true'
-        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.context }}/Dockerfile.${{ matrix.flavor }}
@@ -571,7 +571,7 @@ jobs:
       - name: "📤 Upload Image Security Scan (SARIF)"
         if: steps.variant-filter.outputs.skip != 'true' && steps.build.conclusion == 'success' && steps.trivy.outcome == 'success'
         continue-on-error: true
-        uses: github/codeql-action/upload-sarif@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4.38.0
+        uses: github/codeql-action/upload-sarif@1c5b675653bb5c22dbe9b12b556ec555138e09fd # v4.38.1
         with:
           sarif_file: "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif"
           category: "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}"
