@@ -12,17 +12,17 @@
   "devDependencies": {
     "esbuild": "0.28.2",
     "mermaid": "12.0.0",
-    "vite": "8.3.0",
+    "vite": "8.3.1",
     "vitepress": "1.6.4",
     "vitepress-plugin-mermaid": "2.0.17"
   },
   "overrides": {
     "esbuild": "0.28.2",
-    "vite": "8.3.0",
+    "vite": "8.3.1",
     "nanoid": "3.3.18"
   },
   "dependencies": {
-    "dompurify": "3.4.15",
+    "dompurify": "3.4.16",
     "postcss": "8.5.28"
   }
 }
