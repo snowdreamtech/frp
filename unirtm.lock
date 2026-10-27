@@ -1044,6 +1044,34 @@ backend = "pipx"
 
 [tools."pipx:yamllint"."platforms.windows-arm64"]
 
+[[tools."python"]]
+version = "3.14.5"
+backend = "native"
+
+[tools."python"."platforms.linux-amd64"]
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260602/cpython-3.14.5%2B20260602-x86_64-unknown-linux-gnu-debug-full.tar.zst"
+
+[tools."python"."platforms.linux-amd64-musl"]
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260602/cpython-3.14.5%2B20260602-x86_64-unknown-linux-gnu-debug-full.tar.zst"
+
+[tools."python"."platforms.linux-arm64"]
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260602/cpython-3.14.5%2B20260602-aarch64-unknown-linux-gnu-debug-full.tar.zst"
+
+[tools."python"."platforms.linux-arm64-musl"]
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260602/cpython-3.14.5%2B20260602-aarch64-unknown-linux-gnu-debug-full.tar.zst"
+
+[tools."python"."platforms.macos-amd64"]
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260602/cpython-3.14.5%2B20260602-x86_64-apple-darwin-debug-full.tar.zst"
+
+[tools."python"."platforms.macos-arm64"]
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260602/cpython-3.14.5%2B20260602-aarch64-apple-darwin-debug-full.tar.zst"
+
+[tools."python"."platforms.windows-amd64"]
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260602/cpython-3.14.5%2B20260602-x86_64-pc-windows-msvc-freethreaded%2Bpgo-full.tar.zst"
+
+[tools."python"."platforms.windows-arm64"]
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260602/cpython-3.14.5%2B20260602-aarch64-pc-windows-msvc-freethreaded%2Bpgo-full.tar.zst"
+
 [[tools."rhysd/actionlint"]]
 version = "1.7.12"
 backend = "github"
