@@ -179,18 +179,21 @@ output = 'interleaved'
 description = 'Generate and scan SBOM using Trivy'
 run = '''
 export TRIVY_SKIP_VERSION_CHECK="true"
-export TRIVY_DB_REPOSITORY="public.ecr.aws/aquasecurity/trivy-db"
-export TRIVY_JAVA_DB_REPOSITORY="public.ecr.aws/aquasecurity/trivy-java-db:1"
-export TRIVY_CHECKS_BUNDLE_REPOSITORY="public.ecr.aws/aquasecurity/trivy-checks"
+export TRIVY_DB_REPOSITORY="${TRIVY_DB_REPOSITORY:-ghcr.io/aquasecurity/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2}"
+export TRIVY_JAVA_DB_REPOSITORY="${TRIVY_JAVA_DB_REPOSITORY:-ghcr.io/aquasecurity/trivy-java-db:1,public.ecr.aws/aquasecurity/trivy-java-db:1}"
+export TRIVY_CHECKS_BUNDLE_REPOSITORY="${TRIVY_CHECKS_BUNDLE_REPOSITORY:-ghcr.io/aquasecurity/trivy-checks:2,public.ecr.aws/aquasecurity/trivy-checks:2}"
+
+unirtm exec -- trivy fs --format cyclonedx --output sbom.json .
 
 if [ "${CI:-}" = "true" ] || [ "${GITHUB_ACTIONS:-}" = "true" ]; then
-    unirtm exec -- trivy fs --format cyclonedx --output sbom.json .
-    unirtm exec -- trivy sbom sbom.json
+    if ! unirtm exec -- trivy sbom sbom.json; then
+        echo "⚠️  Trivy online scan failed. Trying offline scan with cached DB..."
+        unirtm exec -- trivy sbom --skip-db-update --skip-java-db-update --offline-scan sbom.json
+    fi
 else
-    unirtm exec -- trivy fs --format cyclonedx --output sbom.json .
-    # Try offline mode first. If missing DB, it will fail and we fallback to online.
+    # Try offline mode first. If missing DB, it will fail and we fallback to multi-source online.
     if ! unirtm exec -- trivy sbom --skip-db-update --skip-java-db-update --offline-scan sbom.json; then
-        echo "⚠️  Local Trivy DB missing. Downloading from AWS ECR fallback..."
+        echo "⚠️  Local Trivy DB missing or outdated. Downloading from multi-source registries..."
         unirtm exec -- trivy sbom sbom.json
     fi
 fi
@@ -260,9 +263,9 @@ output = 'interleaved'
 [tasks."audit:trivy-update"]
 description = 'Update Trivy vulnerability databases locally'
 run = '''
-export TRIVY_DB_REPOSITORY="public.ecr.aws/aquasecurity/trivy-db"
-export TRIVY_JAVA_DB_REPOSITORY="public.ecr.aws/aquasecurity/trivy-java-db:1"
-export TRIVY_CHECKS_BUNDLE_REPOSITORY="public.ecr.aws/aquasecurity/trivy-checks"
+export TRIVY_DB_REPOSITORY="ghcr.io/aquasecurity/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2"
+export TRIVY_JAVA_DB_REPOSITORY="ghcr.io/aquasecurity/trivy-java-db:1,public.ecr.aws/aquasecurity/trivy-java-db:1"
+export TRIVY_CHECKS_BUNDLE_REPOSITORY="ghcr.io/aquasecurity/trivy-checks:2,public.ecr.aws/aquasecurity/trivy-checks:2"
 
 echo "Downloading main vulnerability DB..."
 unirtm exec -- trivy image --download-db-only
