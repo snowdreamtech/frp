@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.71.1](https://github.com/snowdreamtech/frp/compare/alpine-v0.71.0...alpine-v0.71.1) (2026-10-27)
+
+
+### 🛠 Refactoring
+
+* update release-please configuration and version management in Dockerfiles and workflows ([8b3d143](https://github.com/snowdreamtech/frp/commit/8b3d143043efa50dcdd46c5f062031380cf1676c))
+
 ## [0.71.0](https://github.com/snowdreamtech/frp/compare/alpine-v0.70.1...alpine-v0.71.0) (2026-08-14)
 
 
