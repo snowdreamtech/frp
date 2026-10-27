@@ -143,7 +143,6 @@ updates:
       - "github-actions"
       - "devops"
 
-
   - package-ecosystem: "pre-commit"
     directory: "/"
     target-branch: "dev"
