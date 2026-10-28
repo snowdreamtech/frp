@@ -1,227 +1,329 @@
-# Snowdream Tech AI IDE Template
+# Base
 
-[![CI Pipeline](https://img.shields.io/github/actions/workflow/status/snowdreamtech/template/ci.yml?branch=main&label=CI%20Pipeline)](https://github.com/snowdreamtech/template/actions/workflows/ci.yml)
-[![CD Pipeline](https://img.shields.io/github/actions/workflow/status/snowdreamtech/template/cd.yml?branch=main&label=CD%20Pipeline)](https://github.com/snowdreamtech/template/actions/workflows/cd.yml)
-[![GitHub Pages](https://img.shields.io/github/actions/workflow/status/snowdreamtech/template/pages.yml?branch=main&label=Docs&logo=github)](https://github.com/snowdreamtech/template/actions/workflows/pages.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/snowdreamtech/template/codeql.yml?branch=main&label=CodeQL&logo=github)](https://github.com/snowdreamtech/template/actions/workflows/codeql.yml)
-[![Multi-OS Verified](https://img.shields.io/badge/Verified-Linux%20%7C%20macOS%20%7C%20Windows-blue)](https://github.com/snowdreamtech/template/actions/workflows/ci.yml)
-[![Security Audit](https://img.shields.io/badge/Security-Zizmor%20%7C%20Trivy%20%7C%20Gitleaks-brightgreen)](https://github.com/snowdreamtech/template/actions/workflows/ci.yml)
-[![SBOM Available](https://img.shields.io/badge/SBOM-Available-success)](https://github.com/snowdreamtech/template/releases/latest)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/MIT)
-[![Release](https://img.shields.io/github/v/release/snowdreamtech/template?logo=github&sort=semver)](https://github.com/snowdreamtech/template/releases/latest)
-[![Dependabot Enabled](https://img.shields.io/badge/Dependabot-Enabled-brightgreen?logo=dependabot)](https://github.com/snowdreamtech/template/blob/main/.github/dependabot.yml)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
-[![GitHub Stars](https://img.shields.io/github/stars/snowdreamtech/template?style=social)](https://github.com/snowdreamtech/template)
-[![GitHub Issues](https://img.shields.io/github/issues/snowdreamtech/template)](https://github.com/snowdreamtech/template/issues)
-[![Code Size](https://img.shields.io/github/languages/code-size/snowdreamtech/template)](https://github.com/snowdreamtech/template)
+![Docker Image Version](https://img.shields.io/docker/v/snowdreamtech/base)
+![Docker Image Size](https://img.shields.io/docker/image-size/snowdreamtech/base/latest)
+![Docker Pulls](https://img.shields.io/docker/pulls/snowdreamtech/base)
+![Docker Stars](https://img.shields.io/docker/stars/snowdreamtech/base)
 
-[English](README.md) | [简体中文](README_zh-CN.md)
+Docker base template providing standardized container foundations with flexible entrypoint systems, multi-architecture support, and consistent configuration patterns across Alpine, Debian, and Rocky Linux distributions.
 
-An enterprise-grade, foundational template designed for multi-AI IDE collaboration. This repository serves as a **Single Source of Truth** for AI agent rules, workflows, and project configurations, supporting over 50 different AI-assisted IDEs with massive multi-language support.
+## Overview
 
-## 🌟 Features
+The Docker base template serves as a foundational starting point for building containerized applications. It provides:
 
-- **Multi-IDE Compatibility**: Out-of-the-box support for Cursor, Windsurf, GitHub Copilot, Cline, Roo Code, Trae, Gemini, Claude Code, and 50+ other AI editors.
-- **Unified Rule System**: Centralized rule definitions in `.agent/rules/`. Changes propagate automatically to all supported IDEs via a secure symlink/redirect pattern.
-- **80+ Language & Framework Rules**: Pre-configured high-quality rules from Rust, Go, TypeScript, Python to Ansible, Kubernetes, and API design.
-- **Smart Workflows (SpecKit)**: Standardized `.agent/workflows/` commands (`speckit.plan`, `speckit.analyze`, `snowdreamtech.init`) that behave consistently across all supported environments.
-- **Triple Guarantee Quality**: 100% code purity enforced through Pre-commit and GitHub Actions integrated quality gates.
-- **Cross-Platform Ready**: Runs seamlessly on macOS (Homebrew/MacPorts), Linux, and Windows.
+- **Standardized Dockerfiles** with OCI annotations and best practices
+- **Flexible entrypoint system** supporting custom initialization scripts
+- **Consistent environment variable configuration** across all variants
+- **Multi-architecture support** for diverse hardware platforms
+- **User/group management** with PUID/PGID support for permission handling
+- **Three distribution variants**: Alpine (lightweight), Debian (default/widely-compatible), Rocky (enterprise)
 
-## 🏗️ Section 1 — Design & Architecture
+## Quick Start
 
-### Overview
+```bash
+# Pull and run the default Debian variant
+docker pull snowdreamtech/base:debian
+docker run -d --name=base -e TZ=Asia/Shanghai snowdreamtech/base:debian
 
-The Snowdream Tech Template is a foundational scaffold engineered to solve the "N-IDE Fragmentation" problem. It standardizes the development environment, AI agent rules, and automation pipelines across varied platforms and languages.
-
-**Key Capabilities:**
-
-- Provides a **Unified Rule Engine** that governs AI behavior consistently across 50+ IDEs.
-- Enforces **Cross-Platform Portability** through dynamically adapting POSIX shell automation.
-- Implements a **Triple Guarantee Quality Gate** (IDE, CLI, CI) to prevent regressions.
-- Supports **Massive Multi-Language Stacks** with modular onboarding logic.
-
-### Architecture
-
-```mermaid
-graph TD
-    A["Developers & Agents"] -->|Operates via| IDE["Cursor / Windsurf / Copilot / 50+ Others"]
-    IDE -->|Reads Rules via Redirects| R1[".vscode/"]
-    IDE -->|Reads Rules via Redirects| R2[".github/"]
-    IDE -->|Reads Rules via Redirects| R3[".cline/ .trae/ etc."]
-
-    R1 -.->|SSoT Pointer| CoreRules[".agent/rules/"]
-    R2 -.->|SSoT Pointer| CoreRules
-    R3 -.->|SSoT Pointer| CoreRules
-
-    CoreRules -->|Governs| Src["Source Code"]
-    CoreRules -->|Governs| Scripts["CI/CD & Shell Scripts"]
+# Or use docker-compose
+docker-compose up -d
 ```
 
-### Design Principles
+## Distribution Variants
 
-- **Single Source of Truth (SSoT)**: All AI rules, commands, and Git hooks live in one place. No duplicated IDE configurations.
-- **Cross-Platform Portability**: Heavy automation logic is written in POSIX Shell, with thin wrappers for Windows PowerShell/Batch.
-- **Triple Guarantee Quality**: Linting and formatting form an impenetrable wall, enforced at the IDE layer, pre-commit layer, and CI/CD GitHub Actions layer.
+### Debian (Default)
 
-### Responsibilities
+The recommended variant for most use cases, providing wide compatibility and extensive package availability.
 
-- **.agent/rules/**: Owns the definitive behavioral logic for AI agents across all supported languages.
-- **scripts/**: Owns the cross-platform automation and lifecycle logic.
-- **.agent/workflows/**: Owns the interactive AI commands (SpecKit).
+```bash
+docker run -d \
+  --name=base \
+  -e TZ=Asia/Shanghai \
+  --restart unless-stopped \
+  snowdreamtech/base:debian
+```
 
----
+**Supported Architectures**: amd64, arm32v7, arm64, ppc64le, riscv64, s390x
 
-## 📖 Section 2 — Usage Guide
+**Base Image**: `snowdreamtech/debian:latest`
+
+### Alpine
+
+Lightweight variant optimized for minimal image size and fast startup times.
+
+```bash
+docker run -d \
+  --name=base \
+  -e TZ=Asia/Shanghai \
+  --restart unless-stopped \
+  snowdreamtech/base:alpine
+```
+
+**Supported Architectures**: i386, amd64, arm32v6, arm32v7, arm64, ppc64le, riscv64, s390x
+
+**Base Image**: `snowdreamtech/alpine:latest`
+
+### Rocky
+
+Enterprise-focused variant based on Rocky Linux, ideal for production environments requiring RHEL compatibility.
+
+```bash
+docker run -d \
+  --name=base \
+  -e TZ=Asia/Shanghai \
+  --restart unless-stopped \
+  snowdreamtech/base:rocky
+```
+
+**Supported Architectures**: i386, amd64, arm32v5, arm32v7, arm64, ppc64le, riscv64, s390x
+
+**Base Image**: `snowdreamtech/rocky:latest`
+
+## Build Instructions
+
+### Single Architecture Build
+
+```bash
+# Build Debian variant
+docker build -t snowdreamtech/base:debian ./docker/debian/
+
+# Build Alpine variant
+docker build -t snowdreamtech/base:alpine ./docker/alpine/
+
+# Build Rocky variant
+docker build -t snowdreamtech/base:rocky ./docker/rocky/
+```
+
+### Multi-Architecture Build
+
+Build images for multiple architectures using `docker buildx`:
+
+```bash
+# Create and use a buildx builder
+docker buildx create --use --name build --node build --driver-opt network=host
+
+# Build Debian for multiple architectures
+docker buildx build \
+  --platform=linux/386,linux/amd64,linux/arm/v5,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x \
+  -t snowdreamtech/base:debian \
+  ./docker/debian/ \
+  --push
+
+# Build Alpine for multiple architectures
+docker buildx build \
+  --platform=linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x \
+  -t snowdreamtech/base:alpine \
+  ./docker/alpine/ \
+  --push
+
+# Build Rocky for multiple architectures
+docker buildx build \
+  --platform=linux/amd64,linux/arm64,linux/ppc64le,linux/s390x \
+  -t snowdreamtech/base:rocky \
+  ./docker/rocky/ \
+  --push
+```
+
+## Environment Variables
+
+All variants support the following environment variables for runtime configuration:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `KEEPALIVE` | `0` | Keep container running (1=enabled, 0=disabled) |
+| `CAP_NET_BIND_SERVICE` | `0` | Enable binding to privileged ports (<1024) |
+| `LANG` | `C.UTF-8` | Locale setting for UTF-8 character support |
+| `UMASK` | `022` | Default file creation mask |
+| `DEBUG` | `false` | Enable debug output in entrypoint scripts |
+| `PGID` | `0` | Primary group ID for custom user creation |
+| `PUID` | `0` | User ID for custom user creation |
+| `USER` | `root` | Username for custom user creation |
+| `WORKDIR` | `/root` | Working directory path |
+| `TZ` | - | Timezone (e.g., `Asia/Shanghai`, `America/New_York`) |
+
+**Debian-specific**:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DEBIAN_FRONTEND` | `noninteractive` | Debian package installation mode |
+
+### Custom User Creation
+
+Create a non-root user with specific UID/GID at build time:
+
+```bash
+docker build \
+  --build-arg PUID=1000 \
+  --build-arg PGID=1000 \
+  --build-arg USER=appuser \
+  -t snowdreamtech/base:debian-custom \
+  ./docker/debian/
+```
+
+Or at runtime (requires rebuilding the image):
+
+```bash
+docker run -d \
+  --name=base \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e USER=appuser \
+  snowdreamtech/base:debian
+```
+
+**Note**: User creation only occurs when `PUID≠0`, `PGID≠0`, and `USER≠root`.
+
+## Docker Compose Examples
+
+### Simple Configuration
+
+```yaml
+services:
+  base:
+    image: snowdreamtech/base:debian
+    container_name: base
+    environment:
+      - TZ=Asia/Shanghai
+    restart: unless-stopped
+```
+
+### Advanced Configuration
+
+```yaml
+services:
+  base:
+    image: snowdreamtech/base:debian
+    container_name: base
+    environment:
+      - TZ=Asia/Shanghai
+      - DEBUG=true
+      - KEEPALIVE=1
+    volumes:
+      - /path/to/data:/data
+    restart: unless-stopped
+```
+
+## Semantic Versioning Tags
+
+Images follow semantic versioning with the format: `{major}.{minor}.{patch}-{variant}`
+
+Examples:
+
+- `snowdreamtech/base:<version>-debian`
+- `snowdreamtech/base:<version>-alpine`
+- `snowdreamtech/base:<version>-rocky`
+
+This format allows:
+
+- **Full version pinning**: `<version>-debian` (exact version)
+- **Variant latest tag**: `latest-debian` (tracks most recent release for Debian)
+- **Global latest tag**: `latest` (tracks most recent release, defaults to Debian)
+
+## Architecture Support
+
+Each distribution variant supports multiple CPU architectures for deployment across diverse hardware platforms:
+
+| Variant | Architectures |
+|---------|---------------|
+| **Debian** | amd64, arm32v7, arm64, ppc64le, riscv64, s390x |
+| **Alpine** | i386, amd64, arm32v6, arm32v7, arm64, ppc64le, riscv64, s390x |
+| **Rocky** | amd64, arm64, ppc64le, s390x |
+
+Docker automatically selects the appropriate architecture for your platform when pulling images.
+
+## Entrypoint System
+
+The base template includes a flexible entrypoint system that executes custom initialization scripts before starting your application.
+
+### How It Works
+
+1. The `docker-entrypoint.sh` script runs at container startup
+2. It executes all executable scripts in `/usr/local/bin/entrypoint.d/` in lexical order
+3. Each script receives the container's command-line arguments
+4. If any script fails, the container stops (fail-fast behavior)
+
+### Adding Custom Initialization
+
+Create custom initialization scripts in your derived Dockerfile:
+
+```dockerfile
+FROM snowdreamtech/base:debian
+
+# Add your custom initialization script
+COPY my-init.sh /usr/local/bin/entrypoint.d/20-my-init.sh
+RUN chmod +x /usr/local/bin/entrypoint.d/20-my-init.sh
+
+# Your application setup
+COPY app /app
+CMD ["/app/start.sh"]
+```
+
+### Debug Mode
+
+Enable debug output to troubleshoot entrypoint execution:
+
+```bash
+docker run -e DEBUG=true snowdreamtech/base:debian
+```
+
+Output example:
+
+```
+→ [ENTRYPOINT] Executing all scripts in /usr/local/bin/entrypoint.d
+→ Running /usr/local/bin/entrypoint.d/10-base-init.sh
+→ [ENTRYPOINT] Done.
+```
+
+## Development
 
 ### Prerequisites
 
-- **Runtime**: Node.js (>= 20.x), Python (>= 3.10.x).
-- **Git**: Global git installation required.
+- Docker (>= 20.10)
+- Docker Buildx plugin
 
-### Quick Start
-
-1. **Prerequisites**: [UniRTM](https://github.com/snowdreamtech/UniRTM) is required for global tool and task management.
-2. **Initialize**: `unirtm run setup` (bootstraps core tools).
-3. **Install**: `unirtm run install` (installs project dependencies).
-4. **Verify**: `unirtm run verify` (ensures everything is green).
-
-### Configuration Reference
-
-| Parameter      | Purpose                                                           | Location                |
-| :------------- | :---------------------------------------------------------------- | :---------------------- |
-| `PROJECT_NAME` | Project identity                                                  | `init-project.sh`       |
-| `GITHUB_PROXY` | Network optimization (See [Proxy Usage](#-proxy-usage-scenarios)) | `scripts/lib/common.sh` |
-| `VERSION`      | Semantic versioning                                               | `package.json`          |
-
-### File Structure
-
-```text
-project-root/
-├── .agent/              # 🤖 Canonical AI configuration (The Brain)
-│   ├── rules/           # 📏 Unified AI behavioral rules (80+ sets, SSoT)
-│   └── workflows/       # 🛠️ Unified commands & AI workflows (SpecKit)
-├── .agents/             # 🧩 Shared command sources (Auto-managed symlinks)
-├── .github/             # 🐙 GitHub integration & Copilot settings
-├── .vscode/             # 💻 Optimized VS Code configurations
-└── src/                 # 📦 Your actual application source code
-```
-
----
-
-## 🛠️ Section 3 — Operations Guide
-
-### Pre-deployment Checklist
-
-1. Run `unirtm run verify` to ensure all quality gates are green.
-2. Run `unirtm run audit` to verify security compliance.
-3. Ensure `CHANGELOG.md` is updated.
-
-### Performance Considerations
-
-- **Linting Speed**: Pre-commit hooks target < 5s by scanning staged files only.
-- **CI Throughput**: GitHub Actions use matrix builds for parallel testing across OS types.
-
-### Troubleshooting
-
-- **Problem**: `unirtm run install` fails on Windows.
-  - **Diagnosis**: Check if `ExecutionPolicy` allows script execution.
-  - **Solution**: Run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`.
-- **Problem**: Gitleaks detects false positives.
-  - **Diagnosis**: Check `.gitleaks.toml` allowlist.
-  - **Solution**: Add fingerprint to `.gitleaksignore`.
-- **Problem**: Pre-commit hooks fail on macOS after `unirtm run install` with Python errors.
-  - **Diagnosis**: Check if the venv exists: `ls .venv/bin/python`.
-  - **Solution**: Rebuild the venv: `rm -rf .venv && unirtm run install`.
-
----
-
-## 🔒 Section 4 — Security Considerations
-
-### Security Model
-
-- **Secret Management**: All secrets must be injected via environment variables or handled by HashiCorp Vault. Never commit `.env` files.
-- **Audit Logging**: All critical operations (commits, releases, state changes) are traced via Git and CI logs.
-- **Supply Chain**: All CI actions are pinned to exact versions/SHAs.
-
-### Best Practices
-
-| Aspect      | Requirement                  | Implementation                    |
-| :---------- | :--------------------------- | :-------------------------------- |
-| Secrets     | No plaintext secrets in repo | `gitleaks` enforced at commit     |
-| Integrity   | Verify downloads             | SHA-256 validation in `common.sh` |
-| Permissions | Non-root execution           | Dockerfile best practices         |
-
----
-
-## 🧑‍💻 Section 5 — Development Guide
-
-### Code Organization
-
-```text
-project-root/
-├── .agent/               # AI configuration (Single Source of Truth)
-│   ├── rules/            # 88 behavioral rule files for AI agents
-│   └── workflows/        # SpecKit slash-command definitions
-├── .github/              # GitHub ecosystem (Actions, templates, Dependabot)
-│   └── workflows/        # CI/CD pipelines (lint, verify, release, security)
-├── .devcontainer/        # DevContainer configuration for reproducible environments
-├── docs/                 # Project documentation
-│   ├── adr/              # Architecture Decision Records
-│   ├── runbooks/         # Operations and recovery runbooks
-│   └── glossary.md       # Bilingual term glossary
-├── scripts/              # POSIX shell automation (setup, install, verify)
-│   └── lib/              # Shared shell library functions
-└── .unirtm.toml          # Task orchestration (setup, install, lint, verify, audit)
-```
-
-**Naming Conventions**: Rule files use `NN-kebab-case.md` (core rules) or `technology.md`
-(language stacks). Workflow files use `namespace.verb.md`. Shell scripts use `kebab-case.sh`.
-
-### Extension Points
-
-1. **Adding Rules**: Create a new `.md` file in `.agent/rules/` and link it in `00-index.md`.
-2. **Adding Commands**: Add `.md` files to `.agent/workflows/`.
-3. **Adding IDE Support**: Create a redirect folder (e.g., `.myide/`) following the symlink pattern in Rule 03.
-
-### Local Development Setup
+### Building Locally
 
 ```bash
-git clone <repo>
-cd <repo>
-git config core.ignorecase false  # MANDATORY for Mac/Windows
-git config core.filemode false    # Recommended for Windows (prevents false permission changes)
-unirtm run setup
-unirtm run install
+# Build all variants
+make build
+
+# Build specific variant
+docker build -t base:debian ./docker/debian/
+docker build -t base:alpine ./docker/alpine/
+docker build -t base:rocky ./docker/rocky/
 ```
 
-### References
+### Testing
 
-- [Full Documentation](docs/index.md)
-- [Project Glossary](docs/glossary.md)
-- [Conventional Commits](https://www.conventionalcommits.org/)
+```bash
+# Test default configuration
+docker run --rm base:debian id
 
-### 🚀 Proxy Usage Scenarios
+# Test custom user creation
+docker build --build-arg PUID=1000 --build-arg PGID=1000 --build-arg USER=testuser -t base:debian-test ./docker/debian/
+docker run --rm base:debian-test id
+# Expected: uid=1000(testuser) gid=1000(testuser)
 
-The `GITHUB_PROXY` (default: `https://gh-proxy.sn0wdr1am.com/`) is optimized for specific network acceleration scenarios. Misusing it for unsupported protocols (like Git) will result in errors.
+# Test DEBUG mode
+docker run --rm -e DEBUG=true base:debian
+```
 
-| Scenario              | Supported? | Example / Note                                         |
-| :-------------------- | :--------- | :----------------------------------------------------- |
-| **Release Files**     | ✅ Yes     | `.../releases/download/v1.0/tool.zip`                  |
-| **Source Archives**   | ✅ Yes     | `.../archive/master.zip` or `.tar.gz`                  |
-| **Direct File Links** | ✅ Yes     | `.../blob/master/filename`                             |
-| **Git Clone**         | ❌ **No**  | Do **not** use for `git clone` or `insteadOf` configs. |
-| **Project Folders**   | ❌ **No**  | Browsing/cloning via proxy is not supported.           |
+## Reference
 
-> [!IMPORTANT]
-> To prevent breaking toolchains (like `unirtm` or `asdf`), this template explicitly disables Git redirection via this proxy. Use it only for direct HTTP downloads in scripts.
+1. [使用 buildx 构建多平台 Docker 镜像](https://icloudnative.io/posts/multiarch-docker-with-buildx/)
+2. [如何使用 docker buildx 构建跨平台 Go 镜像](https://waynerv.com/posts/building-multi-architecture-images-with-docker-buildx/#buildx-%E7%9A%84%E8%B7%A8%E5%B9%B3%E5%8F%B0%E6%9E%84%E5%BB%BA%E7%AD%96%E7%95%A5)
+3. [Building Multi-Arch Images for Arm and x86 with Docker Desktop](https://www.docker.com/blog/multi-arch-images/)
+4. [How to Rapidly Build Multi-Architecture Images with Buildx](https://www.docker.com/blog/how-to-rapidly-build-multi-architecture-images-with-buildx/)
+5. [Faster Multi-Platform Builds: Dockerfile Cross-Compilation Guide](https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/)
+6. [docker/buildx](https://github.com/docker/buildx)
 
-## 📄 License
+## Contact (备注：base)
 
-This project is licensed under the **MIT License**.
-Copyright (c) 2026-present [SnowdreamTech Inc.](https://github.com/snowdreamtech)
-See the [LICENSE](./LICENSE) file for the full license text.
+* Email: <sn0wdr1am@qq.com>
+* QQ: 3217680847
+* QQ群: 949022145
+* WeChat/微信群: sn0wdr1am
 
-## Star History
+## License
 
-[![Star History Chart](https://api.star-history.com/image?repos=snowdreamtech/template&type=date&legend=top-left)](https://www.star-history.com/?repos=snowdreamtech%2Ftemplate&type=date&legend=top-left)
+MIT

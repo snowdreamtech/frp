@@ -19,6 +19,15 @@
           - ".github/dependabot.yml"
           - ".goreleaser.yaml"
 
+"Docker 🐳":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docker/**"
+          - "Dockerfile*"
+          - ".github/workflows/docker.yml"
+          - ".dockerignore"
+
+
 "Documentation 📝":
   - changed-files:
       - any-glob-to-any-file:

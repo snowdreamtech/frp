@@ -1,229 +1,329 @@
-# Snowdream Tech AI IDE 模板
+# Base
 
-[![CI 流水线](https://img.shields.io/github/actions/workflow/status/snowdreamtech/template/ci.yml?branch=main&label=CI%20Pipeline)](https://github.com/snowdreamtech/template/actions/workflows/ci.yml)
-[![CD 自动化发布](https://img.shields.io/github/actions/workflow/status/snowdreamtech/template/cd.yml?branch=main&label=CD%20Pipeline)](https://github.com/snowdreamtech/template/actions/workflows/cd.yml)
-[![文档站点](https://img.shields.io/github/actions/workflow/status/snowdreamtech/template/pages.yml?branch=main&label=%E6%96%87%E6%A1%A3&logo=github)](https://github.com/snowdreamtech/template/actions/workflows/pages.yml)
-[![CodeQL 审计](https://img.shields.io/github/actions/workflow/status/snowdreamtech/template/codeql.yml?branch=main&label=CodeQL&logo=github)](https://github.com/snowdreamtech/template/actions/workflows/codeql.yml)
-[![跨平台验证](https://img.shields.io/badge/Verified-Linux%20%7C%20macOS%20%7C%20Windows-blue)](https://github.com/snowdreamtech/template/actions/workflows/ci.yml)
-[![安全审计](https://img.shields.io/badge/Security-Zizmor%20%7C%20Trivy%20%7C%20Gitleaks-brightgreen)](https://github.com/snowdreamtech/template/actions/workflows/ci.yml)
-[![SBOM 背书](https://img.shields.io/badge/SBOM-Available-success)](https://github.com/snowdreamtech/template/releases/latest)
-[![许可证: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/MIT)
-[![最新发布](https://img.shields.io/github/v/release/snowdreamtech/template?logo=github&sort=semver)](https://github.com/snowdreamtech/template/releases/latest)
-[![Dependabot 已启用](https://img.shields.io/badge/Dependabot-Enabled-brightgreen?logo=dependabot)](https://github.com/snowdreamtech/template/blob/main/.github/dependabot.yml)
-[![pre-commit 已启用](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
-[![GitHub Stars](https://img.shields.io/github/stars/snowdreamtech/template?style=social)](https://github.com/snowdreamtech/template)
-[![GitHub Issues](https://img.shields.io/github/issues/snowdreamtech/template)](https://github.com/snowdreamtech/template/issues)
-[![代码规模](https://img.shields.io/github/languages/code-size/snowdreamtech/template)](https://github.com/snowdreamtech/template)
+![Docker Image Version](https://img.shields.io/docker/v/snowdreamtech/base)
+![Docker Image Size](https://img.shields.io/docker/image-size/snowdreamtech/base/latest)
+![Docker Pulls](https://img.shields.io/docker/pulls/snowdreamtech/base)
+![Docker Stars](https://img.shields.io/docker/stars/snowdreamtech/base)
 
-[English](README.md) | [简体中文](README_zh-CN.md)
+Docker 基础模板，提供标准化的容器基础，具有灵活的入口点系统、多架构支持以及跨 Alpine、Debian 和 Rocky Linux 发行版的一致配置模式。
 
-一个企业级、为多 AI IDE 协作而设计的基石模板。本项目作为 AI Agent 规则、工作流和项目配置的**单一事实来源 (Single Source of Truth)**，支持超过 50 种不同的 AI 辅助 IDE，并提供海量的多语言支持。
+## 概述
 
-## 🌟 特性
+Docker 基础模板作为构建容器化应用程序的基础起点。它提供：
 
-- **多 IDE 兼容性**：开箱即用支持 Cursor、Windsurf、GitHub Copilot、Cline、Roo Code、Trae、Gemini、Claude Code 等 50 多种 AI 编辑器。
-- **统一规则系统**：在 `.agent/rules/` 中维护中心化规则定义。在此修改规则通过安全的软链接/重定向模式自动传播到所有支持的 IDE。
-- **80+ 语言与框架规则**：预配置的高质量规则，涵盖从 Rust、Go、TypeScript、Python 到 Ansible、Kubernetes 和 API 设计等各个领域。
-- **智能工作流 (SpecKit)**：标准化的 `.agent/workflows/`（命令），如 `speckit.plan`、`speckit.analyze` 和 `snowdreamtech.init`，在所有支持的环境中保持一致。
-- **三重保证质量**：通过 Pre-commit 和 GitHub Actions 集成门禁检查，确保 100% 的代码纯净。
-- **跨平台就绪**：在 macOS (Homebrew/MacPorts)、Linux 和 Windows 上无缝运行。
+- **标准化的 Dockerfile**，包含 OCI 注释和最佳实践
+- **灵活的入口点系统**，支持自定义初始化脚本
+- **一致的环境变量配置**，适用于所有变体
+- **多架构支持**，适用于多样化的硬件平台
+- **用户/组管理**，支持 PUID/PGID 进行权限处理
+- **三种发行版变体**：Alpine（轻量级）、Debian（默认/广泛兼容）、Rocky（企业级）
 
-## 🏗️ 第 1 节 — 设计与架构
-
-### 概览 (Overview)
-
-Snowdream Tech 模板是一个基础脚手架，专为解决“多重 AI IDE 协作产生的配置碎片化”问题而设计。它在各种平台和语言中标准化了开发环境、AI Agent 规则以及自动化流水线。
-
-**核心能力 (Key Capabilities):**
-
-- 提供**统一的规则引擎**，跨 50+ 种 IDE 一致地约束 AI 行为。
-- 通过动态适配的 POSIX Shell 自动化脚本，强制保证**跨平台便携性**。
-- 实施**三重保证质量门禁**（IDE、CLI、CI），严防代码劣化。
-- 支持**大规模多语言技术栈**，并配备模块化的加载逻辑。
-
-### 架构 (Architecture)
-
-```mermaid
-graph TD
-    A["开发者与智能体 (Agents)"] -->|操作| IDE["Cursor / Windsurf / Copilot / 50+ 其它"]
-    IDE -->|通过重定向读取规则| R1[".vscode/"]
-    IDE -->|通过重定向读取规则| R2[".github/"]
-    IDE -->|通过重定向读取规则| R3[".cline/ .trae/ 等等"]
-
-    R1 -.->|SSoT 指针| CoreRules[".agent/rules/"]
-    R2 -.->|SSoT 指针| CoreRules
-    R3 -.->|SSoT 指针| CoreRules
-
-    CoreRules -->|管理与约束| Src["项目应用源码"]
-    CoreRules -->|管理与约束| Scripts["CI/CD 与统一自动化脚本"]
-```
-
-### 设计原则
-
-- **唯一事实来源 (SSoT)**: 所有 AI 行为准则、开发脚手架命令和 Git 生态钩子均集中在一处维护，彻底消灭各 IDE 之间的配置孤岛与冗余。
-- **跨平台多态性 (Cross-Platform)**: 核心自动化流水线基于原生 POSIX Shell 编写，且强制为 Windows (PowerShell / Batch) 提供对等兼容的轻量级包装层。
-- **三重质量护城河 (Triple Guarantee)**: 由 IDE 实时自动修复、Pre-commit 本地强制阻断、以及 CI/CD (GitHub Actions) 远端全量审计，三层联防共同构建 100% 代码纯净度防线。
-
-### 职责分工
-
-- **.agent/rules/**: 拥有跨所有支持语言的 AI Agent 权威行为逻辑。
-- **scripts/**: 拥有跨平台自动化和生命周期逻辑。
-- **.agent/workflows/**: 拥有交互式 AI 命令 (SpecKit)。
-
----
-
-## 📖 第 2 节 — 使用指南
-
-### 前置条件
-
-- **运行时**: Node.js (>= 20.x), Python (>= 3.10.x)。
-- **Git**: 需要全局安装 git。
-
-### 快速开始
-
-1. **前提条件**：必须安装 [UniRTM](https://github.com/snowdreamtech/UniRTM) 以实现全局工具和任务管理。
-2. **初始化**：`unirtm run setup`（引导安装核心工具）。
-3. **安装**：`unirtm run install`（同步项目依赖）。
-4. **验证**：`unirtm run verify`（确保环境健康）。
-
-### 配置参考
-
-| 参数           | 用途                                       | 位置                    |
-| :------------- | :----------------------------------------- | :---------------------- |
-| `PROJECT_NAME` | 项目身份                                   | `init-project.sh`       |
-| `GITHUB_PROXY` | 网络优化 (见 [代理使用场](#-代理使用场景)) | `scripts/lib/common.sh` |
-| `VERSION`      | 语义化版本                                 | `package.json`          |
-
-### 目录结构
-
-```text
-project-root/
-├── .agent/              # 🤖 权威 AI 配置 (大脑)
-│   ├── rules/           # 📏 统一 AI 行为规则 (80+ 套件, SSoT)
-│   └── workflows/       # 🛠️ 统一命令与 AI 工作流 (SpecKit)
-├── .agents/             # 🧩 共享命令源 (自动管理的软链接)
-├── .github/             # 🐙 GitHub 集成与 Copilot 设置
-├── .vscode/             # 💻 优化的 VS Code 配置
-└── src/                 # 📦 您的实际应用源代码
-```
-
----
-
-## 🛠️ 第 3 节 — 运维指南
-
-### 部署前检查清单
-
-1. 运行 `unirtm run verify` 确保所有质量门禁均为绿色。
-2. 运行 `unirtm run audit` 验证安全合规性。
-3. 确保 `CHANGELOG.md` 已更新。
-
-### 性能考虑
-
-- **Lint 速度**: Pre-commit 钩子通过仅扫描暂存文件，目标耗时 < 5s。
-- **CI 吞吐量**: GitHub Actions 使用矩阵构建在不同操作系统上并行测试。
-
-### 故障排除
-
-- **问题**: `unirtm run install` 在 Windows 上失败。
-  - **诊断**: 检查 `ExecutionPolicy` 是否允许脚本执行。
-  - **解决方案**: 运行 `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`。
-- **问题**: Gitleaks 检测到误报。
-  - **诊断**: 检查 `.gitleaks.toml` 白名单。
-  - **解决方案**: 将特征码添加到 `.gitleaksignore`。
-- **问题**: `unirtm run install` 后，macOS 上的 Pre-commit 钩子出现 Python 报错。
-  - **诊断**: 检查 venv 是否存在：`ls .venv/bin/python`。
-  - **解决方案**: 重建 venv：`rm -rf .venv && unirtm run install`。
-
----
-
-## 🔒 第 4 节 — 安全注意事项
-
-### 安全模型
-
-- **机密管理**: 所有机密必须通过环境变量注入或由 HashiCorp Vault 处理。严禁提交 `.env` 文件。
-- **审计日志**: 所有关键操作（提交、发布、状态变更）均通过 Git 和 CI 日志记录。
-- **供应链**: 所有 CI Action 均锁定到精确的版本/SHA。
-
-### 最佳实践
-
-| 维度   | 要求             | 实现                          |
-| :----- | :--------------- | :---------------------------- |
-| 机密   | 仓库中无明文机密 | 提交时强制执行 `gitleaks`     |
-| 完整性 | 验证下载内容     | `common.sh` 中的 SHA-256 校验 |
-| 权限   | 非 root 执行     | Dockerfile 最佳实践           |
-
----
-
-## 🧑‍💻 第 5 节 — 开发者指南
-
-### 代码组织 (Code Organization)
-
-```text
-project-root/
-├── .agent/               # AI 配置（单一事实来源）
-│   ├── rules/            # 88 个 AI Agent 行为规则文件
-│   └── workflows/        # SpecKit 斜杠命令定义
-├── .github/              # GitHub 生态（Actions、模板、Dependabot）
-│   └── workflows/        # CI/CD 流水线（lint、verify、release、security）
-├── .devcontainer/        # DevContainer 配置，保障可复现的开发环境
-├── docs/                 # 项目文档
-│   ├── adr/              # 架构决策记录
-│   ├── runbooks/         # 运维与恢复手册
-│   └── glossary.md       # 中英文对照术语表
-├── scripts/              # POSIX Shell 自动化脚本（setup、install、verify）
-│   └── lib/              # 共享 Shell 库函数
-└── .unirtm.toml          # 任务编排（setup、install、lint、verify、audit）
-```
-
-**命名规范**：核心规则文件使用 `NN-短横线命名.md`，语言栈规则使用 `technology.md`，
-工作流文件使用 `namespace.verb.md`，Shell 脚本使用 `kebab-case.sh`。
-
-### 扩展点
-
-1. **添加规则**: 在 `.agent/rules/` 中创建新的 `.md` 文件，并在 `00-index.md` 中关联。
-2. **添加命令**: 将 `.md` 文件添加到 `.agent/workflows/`。
-3. **添加 IDE 支持**: 按照 Rule 03 中的软链接模式创建重定向文件夹（例如 `.myide/`）。
-
-### 本地开发设置
+## 快速开始
 
 ```bash
-git clone <repo>
-cd <repo>
-git config core.ignorecase false  # Mac/Windows 用户必须执行此设置
-git config core.filemode false    # Windows 用户推荐设置（避免文件权限误报变更）
-unirtm run setup
-unirtm run install
+# 拉取并运行默认的 Debian 变体
+docker pull snowdreamtech/base:debian
+docker run -d --name=base -e TZ=Asia/Shanghai snowdreamtech/base:debian
+
+# 或使用 docker-compose
+docker-compose up -d
 ```
 
-### 参考资料
+## 发行版变体
 
-- [完整文档](docs/index.md)
-- [项目术语表](docs/glossary.md)
-- [约定式提交](https://www.conventionalcommits.org/)
+### Debian（默认）
 
-### 🚀 代理使用场景
+推荐用于大多数用例的变体，提供广泛的兼容性和丰富的软件包可用性。
 
-`GITHUB_PROXY` (默认: `https://gh-proxy.sn0wdr1am.com/`) 针对特定的网络加速场景进行了优化。在不支持的协议（如 Git）上误用它会导致错误。
+```bash
+docker run -d \
+  --name=base \
+  -e TZ=Asia/Shanghai \
+  --restart unless-stopped \
+  snowdreamtech/base:debian
+```
 
-| 场景                   | 是否支持      | 示例 / 说明                                    |
-| :--------------------- | :------------ | :--------------------------------------------- |
-| **Release 文件**       | ✅ 支持       | `.../releases/download/v1.0/tool.zip`          |
-| **源码归档 (Archive)** | ✅ 支持       | `.../archive/master.zip` 或 `.tar.gz`          |
-| **文件直接链接**       | ✅ 支持       | `.../blob/master/filename`                     |
-| **Git Clone**          | ❌ **不支持** | **请勿**用于 `git clone` 或 `insteadOf` 配置。 |
-| **项目文件夹**         | ❌ **不支持** | 不支持通过代理进行项目文件夹的浏览或克隆。     |
+**支持的架构**：amd64、arm32v7、arm64、ppc64le、riscv64、s390x
 
-> [!IMPORTANT]
-> 为了防止破坏工具链（如 `unirtm` 或 `asdf`），本模板显式禁用了通过此代理进行的 Git 重定向。请仅在脚本中进行直接 HTTP 下载时使用它。
+**基础镜像**：`snowdreamtech/debian:latest`
 
----
+### Alpine
 
-## 📄 许可证
+轻量级变体，针对最小镜像大小和快速启动时间进行了优化。
 
-本项目采用 **MIT 许可证** 授权。
-版权所有 (c) 2026-现在 [SnowdreamTech Inc.](https://github.com/snowdreamtech)
-详见 [LICENSE](./LICENSE) 文件。
+```bash
+docker run -d \
+  --name=base \
+  -e TZ=Asia/Shanghai \
+  --restart unless-stopped \
+  snowdreamtech/base:alpine
+```
 
-## Star History
+**支持的架构**：i386、amd64、arm32v6、arm32v7、arm64、ppc64le、riscv64、s390x
 
-[![Star History Chart](https://api.star-history.com/image?repos=snowdreamtech/template&type=date&legend=top-left)](https://www.star-history.com/?repos=snowdreamtech%2Ftemplate&type=date&legend=top-left)
+**基础镜像**：`snowdreamtech/alpine:latest`
+
+### Rocky
+
+基于 Rocky Linux 的企业级变体，适用于需要 RHEL 兼容性的生产环境。
+
+```bash
+docker run -d \
+  --name=base \
+  -e TZ=Asia/Shanghai \
+  --restart unless-stopped \
+  snowdreamtech/base:rocky
+```
+
+**支持的架构**：amd64、arm64、ppc64le、s390x
+
+**基础镜像**：`snowdreamtech/rocky:latest`
+
+## 构建说明
+
+### 单架构构建
+
+```bash
+# 构建 Debian 变体
+docker build -t snowdreamtech/base:debian ./docker/debian/
+
+# 构建 Alpine 变体
+docker build -t snowdreamtech/base:alpine ./docker/alpine/
+
+# 构建 Rocky 变体
+docker build -t snowdreamtech/base:rocky ./docker/rocky/
+```
+
+### 多架构构建
+
+使用 `docker buildx` 为多个架构构建镜像：
+
+```bash
+# 创建并使用 buildx 构建器
+docker buildx create --use --name build --node build --driver-opt network=host
+
+# 为多个架构构建 Debian
+docker buildx build \
+  --platform=linux/386,linux/amd64,linux/arm/v5,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x \
+  -t snowdreamtech/base:debian \
+  ./docker/debian/ \
+  --push
+
+# 为多个架构构建 Alpine
+docker buildx build \
+  --platform=linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x \
+  -t snowdreamtech/base:alpine \
+  ./docker/alpine/ \
+  --push
+
+# 为多个架构构建 Rocky
+docker buildx build \
+  --platform=linux/amd64,linux/arm64,linux/ppc64le,linux/s390x \
+  -t snowdreamtech/base:rocky \
+  ./docker/rocky/ \
+  --push
+```
+
+## 环境变量
+
+所有变体都支持以下环境变量进行运行时配置：
+
+| 变量 | 默认值 | 描述 |
+|----------|---------|-------------|
+| `KEEPALIVE` | `0` | 保持容器运行（1=启用，0=禁用）|
+| `CAP_NET_BIND_SERVICE` | `0` | 启用绑定到特权端口（<1024）|
+| `LANG` | `C.UTF-8` | UTF-8 字符支持的区域设置 |
+| `UMASK` | `022` | 默认文件创建掩码 |
+| `DEBUG` | `false` | 在入口点脚本中启用调试输出 |
+| `PGID` | `0` | 自定义用户创建的主组 ID |
+| `PUID` | `0` | 自定义用户创建的用户 ID |
+| `USER` | `root` | 自定义用户创建的用户名 |
+| `WORKDIR` | `/root` | 工作目录路径 |
+| `TZ` | - | 时区（例如 `Asia/Shanghai`、`America/New_York`）|
+
+**Debian 特定**：
+
+| 变量 | 默认值 | 描述 |
+|----------|---------|-------------|
+| `DEBIAN_FRONTEND` | `noninteractive` | Debian 软件包安装模式 |
+
+### 自定义用户创建
+
+在构建时创建具有特定 UID/GID 的非 root 用户：
+
+```bash
+docker build \
+  --build-arg PUID=1000 \
+  --build-arg PGID=1000 \
+  --build-arg USER=appuser \
+  -t snowdreamtech/base:debian-custom \
+  ./docker/debian/
+```
+
+或在运行时（需要重新构建镜像）：
+
+```bash
+docker run -d \
+  --name=base \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e USER=appuser \
+  snowdreamtech/base:debian
+```
+
+**注意**：仅当 `PUID≠0`、`PGID≠0` 且 `USER≠root` 时才会创建用户。
+
+## Docker Compose 示例
+
+### 简单配置
+
+```yaml
+services:
+  base:
+    image: snowdreamtech/base:debian
+    container_name: base
+    environment:
+      - TZ=Asia/Shanghai
+    restart: unless-stopped
+```
+
+### 高级配置
+
+```yaml
+services:
+  base:
+    image: snowdreamtech/base:debian
+    container_name: base
+    environment:
+      - TZ=Asia/Shanghai
+      - DEBUG=true
+      - KEEPALIVE=1
+    volumes:
+      - /path/to/data:/data
+    restart: unless-stopped
+```
+
+## 语义化版本标签
+
+镜像遵循语义化版本控制，格式为：`{major}.{minor}.{patch}-{variant}`
+
+示例：
+
+- `snowdreamtech/base:<version>-debian`
+- `snowdreamtech/base:<version>-alpine`
+- `snowdreamtech/base:<version>-rocky`
+
+此格式允许：
+
+- **完整版本固定**：`<version>-debian`（精确版本）
+- **变体最新标签**：`latest-debian`（跟踪 Debian 最新版本）
+- **全局最新标签**：`latest`（跟踪最新版本，默认指向 Debian）
+
+## 架构支持
+
+每个发行版变体都支持多个 CPU 架构，可在多样化的硬件平台上部署：
+
+| 变体 | 架构 |
+|---------|---------------|
+| **Debian** | amd64、arm32v7、arm64、ppc64le、riscv64、s390x |
+| **Alpine** | i386、amd64、arm32v6、arm32v7、arm64、ppc64le、riscv64、s390x |
+| **Rocky** | amd64、arm64、ppc64le、s390x |
+
+Docker 在拉取镜像时会自动为您的平台选择适当的架构。
+
+## 入口点系统
+
+基础模板包含一个灵活的入口点系统，在启动应用程序之前执行自定义初始化脚本。
+
+### 工作原理
+
+1. `docker-entrypoint.sh` 脚本在容器启动时运行
+2. 它按字典顺序执行 `/usr/local/bin/entrypoint.d/` 中的所有可执行脚本
+3. 每个脚本都接收容器的命令行参数
+4. 如果任何脚本失败，容器将停止（快速失败行为）
+
+### 添加自定义初始化
+
+在派生的 Dockerfile 中创建自定义初始化脚本：
+
+```dockerfile
+FROM snowdreamtech/base:debian
+
+# 添加您的自定义初始化脚本
+COPY my-init.sh /usr/local/bin/entrypoint.d/20-my-init.sh
+RUN chmod +x /usr/local/bin/entrypoint.d/20-my-init.sh
+
+# 您的应用程序设置
+COPY app /app
+CMD ["/app/start.sh"]
+```
+
+### 调试模式
+
+启用调试输出以排查入口点执行问题：
+
+```bash
+docker run -e DEBUG=true snowdreamtech/base:debian
+```
+
+输出示例：
+
+```
+→ [ENTRYPOINT] Executing all scripts in /usr/local/bin/entrypoint.d
+→ Running /usr/local/bin/entrypoint.d/10-base-init.sh
+→ [ENTRYPOINT] Done.
+```
+
+## 开发
+
+### 前置要求
+
+- Docker（>= 20.10）
+- Docker Buildx 插件
+
+### 本地构建
+
+```bash
+# 构建所有变体
+make build
+
+# 构建特定变体
+docker build -t base:debian ./docker/debian/
+docker build -t base:alpine ./docker/alpine/
+docker build -t base:rocky ./docker/rocky/
+```
+
+### 测试
+
+```bash
+# 测试默认配置
+docker run --rm base:debian id
+
+# 测试自定义用户创建
+docker build --build-arg PUID=1000 --build-arg PGID=1000 --build-arg USER=testuser -t base:debian-test ./docker/debian/
+docker run --rm base:debian-test id
+# 预期输出：uid=1000(testuser) gid=1000(testuser)
+
+# 测试 DEBUG 模式
+docker run --rm -e DEBUG=true base:debian
+```
+
+## 参考资料
+
+1. [使用 buildx 构建多平台 Docker 镜像](https://icloudnative.io/posts/multiarch-docker-with-buildx/)
+2. [如何使用 docker buildx 构建跨平台 Go 镜像](https://waynerv.com/posts/building-multi-architecture-images-with-docker-buildx/#buildx-%E7%9A%84%E8%B7%A8%E5%B9%B3%E5%8F%B0%E6%9E%84%E5%BB%BA%E7%AD%96%E7%95%A5)
+3. [Building Multi-Arch Images for Arm and x86 with Docker Desktop](https://www.docker.com/blog/multi-arch-images/)
+4. [How to Rapidly Build Multi-Architecture Images with Buildx](https://www.docker.com/blog/how-to-rapidly-build-multi-architecture-images-with-buildx/)
+5. [Faster Multi-Platform Builds: Dockerfile Cross-Compilation Guide](https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/)
+6. [docker/buildx](https://github.com/docker/buildx)
+
+## 联系方式（备注：base）
+
+* Email: <sn0wdr1am@qq.com>
+* QQ: 3217680847
+* QQ群: 949022145
+* WeChat/微信群: sn0wdr1am
+
+## 许可证
+
+MIT

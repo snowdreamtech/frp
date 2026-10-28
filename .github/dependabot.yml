@@ -56,8 +56,8 @@ updates:
       - "github-actions"
       - "devops"
 
-  - package-ecosystem: "npm"
-    directory: "/docs"
+  - package-ecosystem: "docker"
+    directory: "/docker/alpine"
     target-branch: "dev"
     open-pull-requests-limit: 5
     rebase-strategy: "auto"
@@ -74,7 +74,71 @@ updates:
     cooldown:
       default-days: 7
     commit-message:
-      prefix: "chore(deps):"
+      prefix: "build(deps):"
     labels:
       - "dependencies"
-      - "javascript"
+      - "docker"
+      - "infrastructure"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-major"
+
+  - package-ecosystem: "docker"
+    directory: "/docker/debian"
+    target-branch: "dev"
+    open-pull-requests-limit: 5
+    rebase-strategy: "auto"
+    groups:
+      all-dependencies:
+        patterns: ["*"]
+        update-types:
+          - "patch"
+          - "minor"
+          - "major"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "build(deps):"
+    labels:
+      - "dependencies"
+      - "docker"
+      - "infrastructure"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-major"
+
+  - package-ecosystem: "docker"
+    directory: "/docker/rocky"
+    target-branch: "dev"
+    open-pull-requests-limit: 5
+    rebase-strategy: "auto"
+    groups:
+      all-dependencies:
+        patterns: ["*"]
+        update-types:
+          - "patch"
+          - "minor"
+          - "major"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "build(deps):"
+    labels:
+      - "dependencies"
+      - "docker"
+      - "infrastructure"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-major"
