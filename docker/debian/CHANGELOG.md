@@ -1,5 +1,12 @@
 # Changelog
 
+## [13.6.0](https://github.com/snowdreamtech/base/compare/debian-v13.6.0...debian-v13.6.0) (2026-10-28)
+
+
+### 🚀 Features
+
+* initial release of snowdreamtech base docker images powered by unirtm ([25f55c8](https://github.com/snowdreamtech/base/commit/25f55c84e8fba977d226739e9871d61e1428fdeb))
+
 ## [13.6.0](https://github.com/snowdreamtech/base/compare/debian-v13.6.0...debian-v13.6.0) (2026-09-08)
 
 

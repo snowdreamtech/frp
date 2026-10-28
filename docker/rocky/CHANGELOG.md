@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.2.0](https://github.com/snowdreamtech/base/compare/rocky-v10.2.0...rocky-v10.2.0) (2026-10-28)
+
+
+### 🚀 Features
+
+* initial release of snowdreamtech base docker images powered by unirtm ([25f55c8](https://github.com/snowdreamtech/base/commit/25f55c84e8fba977d226739e9871d61e1428fdeb))
+
 ## [10.2.0](https://github.com/snowdreamtech/base/compare/rocky-v10.2.0...rocky-v10.2.0) (2026-09-08)
 
 
