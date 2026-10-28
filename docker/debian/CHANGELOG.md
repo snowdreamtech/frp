@@ -7,13 +7,6 @@
 
 * initial release of snowdreamtech base docker images powered by unirtm ([25f55c8](https://github.com/snowdreamtech/base/commit/25f55c84e8fba977d226739e9871d61e1428fdeb))
 
-## [13.6.0](https://github.com/snowdreamtech/base/compare/debian-v13.6.0...debian-v13.6.0) (2026-09-08)
-
-
-### 🚀 Features
-
-* **release:** initialize VERSION ARG in Dockerfiles for Release-Please change tracking ([a501047](https://github.com/snowdreamtech/base/commit/a5010478e3be6f785dcc53ec6de12831b28a2e5b))
-
 ## [13.5.0](https://github.com/snowdreamtech/base/compare/debian-v13.5.0...debian-v13.5.0) (2026-07-03)
 
 
