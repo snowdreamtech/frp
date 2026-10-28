@@ -218,33 +218,6 @@ jobs:
           ref: ${{ fromJson(steps.release.outputs.pr).headBranchName }}
           persist-credentials: false
 
-      - name: "📦 Setup Node Environment (Syncing)"
-        if: ${{ steps.release.outputs.pr && hashFiles('package.json') != '' }}
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: "24"
-          cache: ""
-
-      - name: "🔗 Synchronize Manifests & Lockfiles"
-        if: ${{ steps.release.outputs.pr && hashFiles('package.json') != '' }}
-        shell: sh
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config commit.gpgsign false
-          if [ -f "pnpm-lock.yaml" ]; then
-            pnpm install --no-frozen-lockfile
-          elif [ -f "yarn.lock" ]; then
-            yarn install --no-immutable
-          elif [ -f "package-lock.json" ]; then
-            npm install --package-lock-only
-          fi
-          git add .
-          git commit --no-gpg-sign --signoff -m "chore(release): synchronize lockfiles for version bump" || echo "No changes to sync"
-          git push "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
-        env:
-          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
-
       - name: "🧹 Deduplicate CHANGELOGs"
         if: ${{ steps.release.outputs.pr }}
         shell: sh

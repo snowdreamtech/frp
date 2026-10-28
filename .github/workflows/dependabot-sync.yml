@@ -86,11 +86,6 @@ jobs:
       - name: "🔧 Update UniRTM Toolchain & Lockfile"
         shell: sh
         run: |
-          # Prepend real Node.js bin dir to PATH to prevent npm shebang from triggering unirtm shim recursion
-          NODE_BIN=$(dirname "$(unirtm which node 2>/dev/null || echo "")")
-          if [ -d "$NODE_BIN" ]; then
-            export PATH="$NODE_BIN:$PATH"
-          fi
           # 1. Check & update all tools in .unirtm.toml to latest versions (non-interactive)
           unirtm update --all --force --yes
           # 2. Format .unirtm.toml with canonical section and key ordering
