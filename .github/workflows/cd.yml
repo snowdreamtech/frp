@@ -1,0 +1,352 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+# CD (Continuous Deployment)
+# Purpose: Unified release pipeline covering Project Verification and Automated Release Orchestration.
+# Trigger: Every push to the default branch (main).
+# Design:
+#   - Sequential execution: Verify -> Release Please.
+#   - Atomic: Release only happens if verification passes.
+#   - Secure: Eliminates workflow_run risks by using internal job dependencies.
+
+name: "🚀 Continuous Delivery"
+
+"on":
+  push:
+    branches:
+      - "main"
+      - "dev"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  UNIRTM_LOCKED: 1
+  # Opt into Node.js 24 now ahead of GitHub's June 16, 2026 forced migration.
+  # See: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "1"
+
+jobs:
+  # 1. Project Verification Stage (Verify)
+  verify:
+    name: "🏁 Pre-flight Integrity Check (${{ matrix.os }})"
+    runs-on: ${{ matrix.os }}
+    environment: development
+    concurrency:
+      group: verify-${{ github.workflow }}-${{ matrix.os }}-${{ github.ref }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    permissions:
+      contents: read
+      statuses: write
+      security-events: write
+    timeout-minutes: 50
+    env:
+      GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+      PYTHONUTF8: 1
+    steps:
+      - name: "📂 Checkout Repository Code"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: "⚡ Cache UniRTM Installs and Downloads"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.local/share/unirtm
+            ~/.cache/unirtm
+          key: ${{ runner.os }}-unirtm-${{ hashFiles('.unirtm.toml', 'unirtm.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-unirtm-
+
+      - name: "⚡ Setup UniRTM"
+        uses: snowdreamtech/setup-unirtm@663cc55933eafea30cd63f43e837cecd4a587f45 # v0.7.0
+        with:
+          unirtm-version: "0.39.0"
+          install: true
+          trust: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          UNIRTM_VERIFY_PROVENANCE: "0"
+
+      - name: "📝 Validate Commit Convention (Commitlint)"
+        shell: sh
+        run: |
+          unirtm exec -- commitlint --last --verbose
+
+      - name: "⚡ Cache Trivy Database"
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .trivycache
+          key: ${{ runner.os }}-trivy-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-trivy-
+
+      - name: "🧪 Execute Full Quality & Safety Verification"
+        shell: sh
+        run: |
+          unirtm run verify
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYTHONUTF8: 1
+          TRIVY_CACHE_DIR: .trivycache
+          TRIVY_DB_REPOSITORY: "ghcr.io/aquasecurity/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2"
+          TRIVY_JAVA_DB_REPOSITORY: "ghcr.io/aquasecurity/trivy-java-db:1,public.ecr.aws/aquasecurity/trivy-java-db:1"
+          TRIVY_CHECKS_BUNDLE_REPOSITORY: "ghcr.io/aquasecurity/trivy-checks:2,public.ecr.aws/aquasecurity/trivy-checks:2"
+          UNIRTM_YES: 1
+
+      #       - name: "🧪 Execute Shell Tests (Bats)"
+      #         if: matrix.os != 'windows-latest'
+      #         shell: sh
+      #         run: |
+      #           unirtm run test:shell
+      #         env:
+      #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #           UNIRTM_YES: 1
+      #
+      #       - name: "🧪 Execute PowerShell Tests (Pester)"
+      #         if: matrix.os == 'windows-latest'
+      #         shell: pwsh
+      #         run: |
+      #           unirtm run test:powershell
+      #         env:
+      #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #           UNIRTM_YES: 1
+
+      - name: "⚡ Cache Documentation Links (Lychee)"
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .lycheecache
+          key: ${{ runner.os }}-lychee-${{ hashFiles('**/*.md') }}
+          restore-keys: |
+            ${{ runner.os }}-lychee-
+
+      - name: "🔗 Verify Documentation Links (Lychee)"
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        if: ${{ always() && matrix.os == 'ubuntu-latest' }}
+        continue-on-error: true # Don't block CD on link check failures (network issues, rate limits, etc.)
+        with:
+          args: --config lychee.toml '**/*.md'
+          fail: true
+        env:
+          # Pass GitHub token to avoid rate limiting and access private repos
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
+      - name: "🕵️ Detect Vulnerabilities (Trivy FS)"
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        if: ${{ always() && matrix.os == 'ubuntu-latest' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TRIVY_CACHE_DIR: .trivycache
+          TRIVY_DB_REPOSITORY: "ghcr.io/aquasecurity/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2"
+          TRIVY_JAVA_DB_REPOSITORY: "ghcr.io/aquasecurity/trivy-java-db:1,public.ecr.aws/aquasecurity/trivy-java-db:1"
+          TRIVY_CHECKS_BUNDLE_REPOSITORY: "ghcr.io/aquasecurity/trivy-checks:2,public.ecr.aws/aquasecurity/trivy-checks:2"
+        with:
+          scan-type: "fs"
+          ignore-unfixed: true
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: "CRITICAL,HIGH,MEDIUM,LOW"
+          exit-code: "0"
+          skip-dirs: "unirtm_data,cmd/unirtm_data"
+
+      - name: "📤 Upload Security Audit (SARIF)"
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        if: always() && matrix.os == 'ubuntu-latest'
+        with:
+          sarif_file: "trivy-results.sarif"
+
+  # 2. Release Orchestration Stage (Release Please)
+  release-please:
+    name: "🚀 Release Orchestration"
+    needs: [verify]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: internal
+    concurrency:
+      group: release-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    permissions:
+      contents: write
+      pull-requests: write
+      statuses: write
+      security-events: write
+    timeout-minutes: 50
+    steps:
+      - name: "🏗️ Checkout Repository"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: "🏷️ Backfill Missing Release Titles"
+        run: |
+          gh release list -L 100 --json tagName,title | jq -r '.[] | select(.title == "" or .title == null) | .tagName' | while read -r t; do
+            if [ -n "$t" ]; then
+              echo "Backfilling title for release $t..."
+              gh release edit "$t" --title "$t" 2>/dev/null || true
+            fi
+          done
+        env:
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
+      - name: "📝 Orchestrate Release Lifecycle (Release Please)"
+        id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          token: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          config-file: .release-please-config.json
+          manifest-file: .release-please-manifest.json
+          target-branch: ${{ github.ref_name }}
+          skip-github-release: true
+
+      - name: "🏗️ Checkout Release PR Branch"
+        if: ${{ steps.release.outputs.pr }}
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ fromJson(steps.release.outputs.pr).headBranchName }}
+          persist-credentials: false
+
+      - name: "📦 Setup Node Environment (Syncing)"
+        if: ${{ steps.release.outputs.pr && hashFiles('package.json') != '' }}
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          cache: ""
+
+      - name: "🔗 Synchronize Manifests & Lockfiles"
+        if: ${{ steps.release.outputs.pr && hashFiles('package.json') != '' }}
+        shell: sh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config commit.gpgsign false
+          if [ -f "pnpm-lock.yaml" ]; then
+            pnpm install --no-frozen-lockfile
+          elif [ -f "yarn.lock" ]; then
+            yarn install --no-immutable
+          elif [ -f "package-lock.json" ]; then
+            npm install --package-lock-only
+          fi
+          git add .
+          git commit --no-gpg-sign --signoff -m "chore(release): synchronize lockfiles for version bump" || echo "No changes to sync"
+          git push "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
+      - name: "🧹 Deduplicate CHANGELOGs"
+        if: ${{ steps.release.outputs.pr }}
+        shell: sh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config commit.gpgsign false
+
+          find . -name "CHANGELOG.md" -type f | while read -r file; do
+            awk '
+            /^## \[/ {
+              match($0, /\[([^]]+)\]/)
+              ver = substr($0, RSTART+1, RLENGTH-2)
+              if (seen[ver] == 1) {
+                skip = 1
+              } else {
+                seen[ver] = 1
+                skip = 0
+              }
+            }
+            {
+              if (!skip) {
+                print $0
+              }
+            }
+            ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+          done
+
+          git add .
+          git commit --no-gpg-sign --signoff -m "chore(release): deduplicate CHANGELOG headers" || echo "No changes to sync"
+          git push "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
+      - name: "🚀 Synchronize GitHub Releases"
+        if: "${{ startsWith(github.event.head_commit.message, 'chore(release):') || startsWith(github.event.head_commit.message, 'chore: release') }}"
+        shell: sh
+        run: |
+          for path in $(awk -F'"' '/":/ {print $2}' .release-please-manifest.json); do
+            if [ "$path" = "." ]; then
+              file="CHANGELOG.md"
+              tag_prefix="v"
+            else
+              file="${path}/CHANGELOG.md"
+              comp=$(awk -F'"' -v p="$path" '
+                $0 ~ "\"" p "\": \\{" { in_block = 1 }
+                in_block && $0 ~ /"component":/ {
+                  for(i=1; i<=NF; i++) {
+                    if($i=="component") { print $(i+2); exit }
+                  }
+                }
+                in_block && /^ *\}/ { in_block = 0 }
+              ' .release-please-config.json)
+
+              if [ -z "$comp" ] || [ "$comp" = "null" ]; then
+                comp=$(basename "$path")
+              fi
+              tag_prefix="${comp}-v"
+            fi
+
+            if [ ! -f "$file" ]; then continue; fi
+
+            ver=$(grep -oE '^## \[?[0-9]+\.[0-9]+\.[0-9]+[a-zA-Z0-9.-]*' "$file" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+[a-zA-Z0-9.-]*' || true)
+
+            if [ -n "$ver" ]; then
+              tag="${tag_prefix}${ver}"
+
+              awk '
+              /^## \[?[0-9]+\.[0-9]+/ {
+                count++
+                if (count == 2) exit
+              }
+              { if (count == 1) print $0 }
+              ' "$file" > "log.tmp.md"
+
+              echo "Recreating Git tag $tag to trigger downstream workflows..."
+              git tag -f "$tag"
+              git push "https://${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" --delete "refs/tags/$tag" 2>/dev/null || true
+              git push "https://${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "refs/tags/$tag"
+
+              echo "Synchronizing GitHub Release for $tag..."
+              gh release create "$tag" --title "$tag" --notes-file "log.tmp.md" 2>/dev/null || \
+              gh release edit "$tag" --title "$tag" --notes-file "log.tmp.md" 2>/dev/null || \
+              echo "Release sync skipped or failed for $tag"
+
+              rm -f "log.tmp.md"
+            fi
+          done
+
+          # Cleanup: skip-github-release prevents release-please from updating PR labels.
+          # We must manually clear "autorelease: pending" on merged PRs to avoid blocking future releases.
+          echo "Cleaning up pending release labels..."
+          merged_prs=$(gh api -X GET search/issues -f q="repo:$GITHUB_REPOSITORY is:pr is:merged label:\"autorelease: pending\"" --jq '.items[].number' 2>/dev/null) || merged_prs=""
+          for pr in $merged_prs; do
+            # Validate that $pr is a number to avoid invalid CLI queries
+            case "$pr" in
+              ''|*[!0-9]*) continue ;;
+            esac
+            echo "Marking PR #$pr as tagged..."
+            # Use REST API to avoid GraphQL scope errors (read:org) from 'gh pr edit'
+            gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$pr/labels" -f "labels[]=autorelease: tagged" >/dev/null 2>&1 || true
+            gh api -X DELETE "repos/$GITHUB_REPOSITORY/issues/$pr/labels/autorelease:%20pending" >/dev/null 2>&1 || true
+          done
+        env:
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}

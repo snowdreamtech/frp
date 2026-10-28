@@ -1,0 +1,46 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+name: 💡 AI Rule Suggestion
+description: Suggest an idea or new AI rule for a specific framework or IDE
+labels: ["enhancement", "rule"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a new rule!
+        Be sure to search [existing issues](https://github.com/snowdreamtech/template/issues) before opening a new one.
+  - type: input
+    id: target
+    attributes:
+      label: Target IDE / Language / Framework
+      description: Which environment or language is this rule for?
+      placeholder: e.g., Cursor, Python, React, general-coding
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Rule Description
+      description: A clear and concise description of the new rule.
+      placeholder: I would like to add a rule that ensures...
+    validations:
+      required: true
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples or Inspiration
+      description: Provide any examples or resources that inspire this rule.
+      placeholder: For example, in the Next.js documentation it says...
+    validations:
+      required: false
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Verification
+      options:
+        - label: I have searched the existing issues to make sure this rule suggestion has not been submitted yet.
+          required: true
+        - label: I have read the project rules and constitution.
+          required: true

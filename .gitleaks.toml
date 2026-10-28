@@ -1,0 +1,227 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+# .gitleaks.toml
+# Gitleaks scan exclusion configuration.
+#
+# Design goals:
+#   1. SCAN:  All project source, configuration, and script files.
+#   2. SKIP:  Pure build artifacts, package manager caches, and binary-heavy
+#             directories that never contain credentials.
+#   3. SAFE:  For virtual environments (env/, venv/, .venv/), only skip their
+#             standard subdirectories. The root is still scanned so a
+#             misplaced .env file is caught.
+#
+# Patterns are Go regex matched against the full file path.
+# Coverage: JS/TS, Python, Go, Java, Kotlin, Scala, Rust, Ruby, PHP,
+#           C/C++, .NET, Dart/Flutter, Elixir, Haskell, OCaml, R, Julia, Zig,
+#           iOS/Android, Terraform, Ansible, K8s, Serverless, and CI tooling.
+
+[allowlist]
+description = "Skip build artifacts and package caches; scan all project source."
+paths = [
+  # ══════════════════════════════════════════════════════════════════════════
+  # Git Internal Objects
+  # Content-addressed hashes — never user-authored secrets.
+  # ══════════════════════════════════════════════════════════════════════════
+  '''\.git/(objects|logs|refs|packed-refs|ORIG_HEAD|FETCH_HEAD)/''',
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # JavaScript / TypeScript
+  # Node.js · React · Next.js · Vue · Nuxt · Angular · Svelte · SvelteKit
+  # Astro · Remix · Solid · Qwik · Vite · Webpack · Parcel · Rollup
+  # ══════════════════════════════════════════════════════════════════════════
+
+  # Package manager cache (third-party code; lock files ARE scanned)
+  '''(^|/)node_modules/''',
+
+  # Framework and bundler caches / output
+  '''(^|/)\.next/''',           # Next.js
+  '''(^|/)\.nuxt/''',           # Nuxt.js
+  '''(^|/)\.output/''',         # Nuxt 3 / Nitro server output
+  '''(^|/)\.svelte-kit/''',     # SvelteKit
+  '''(^|/)\.astro/''',          # Astro build cache
+  '''(^|/)\.solid/''',          # SolidStart cache
+  '''(^|/)\.remix/''',          # Remix cache
+  '''(^|/)\.vite/''',           # Vite dep-optimization cache
+  '''(^|/)\.cache/''',          # Yarn · Parcel · Gatsby · ESLint cache
+  '''(^|/)\.parcel-cache/''',   # Parcel 2
+  '''(^|/)\.webpack/''',        # Webpack persistent cache
+  '''(^|/)\.rollup\.cache/''',  # Rollup cache
+  '''(^|/)\.turbo/''',          # Turborepo cache
+  '''(^|/)\.docusaurus/''',     # Docusaurus build artifacts
+  '''(^|/)storybook-static/''', # Storybook build output
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # Python
+  # ══════════════════════════════════════════════════════════════════════════
+
+  # Virtual environment internals (root is scanned — misplaced .env is caught)
+  '''(^|/)(\.venv|venv|env)/(bin|lib|lib64|include|share|scripts|Lib|Scripts)/''',
+
+  # Byte-code and linter/tool caches
+  '''(^|/)__pycache__/''',
+  '''.*\.pyc$''',
+  '''(^|/)\.pytest_cache/''',
+  '''(^|/)\.mypy_cache/''',
+  '''(^|/)\.ruff_cache/''',
+  '''(^|/)\.hypothesis/''',
+  '''(^|/)\.tox/''',          # Tox testing environments
+  '''(^|/)\.nox/''',          # Nox testing sessions
+  '''(^|/)\.pytype/''',       # Pytype static analysis cache
+  '''(^|/)eggs/''',           # Legacy setuptools eggs
+  '''(^|/)\.eggs/''',
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # Go
+  # ══════════════════════════════════════════════════════════════════════════
+
+  # go.sum and go.mod ARE scanned — proxy URLs can contain embedded tokens.
+  # vendor/ is third-party source only.
+  '''(^|/)vendor/''',
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # Java / Kotlin / Scala / Groovy
+  # Maven · Gradle · SBT
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)\.gradle/''', # Gradle daemon, wrapper, cache
+  '''(^|/)\.m2/''',     # Maven local repository
+  '''(^|/)\.sbt/''',    # SBT boot cache
+  '''(^|/)\.ivy2/''',   # Ivy2 cache (SBT legacy)
+  '''(^|/)\.metals/''', # Metals LSP cache (Scala)
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # Rust
+  # ══════════════════════════════════════════════════════════════════════════
+  # Cargo.lock IS scanned — registry index can embed tokens.
+  # target/ is binary build output only.
+  '''(^|/)\.cargo/registry/''', # Cargo registry cache (source tarballs)
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # Ruby
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)\.bundle/''',      # Bundler configuration & gem cache
+  '''(^|/)vendor/bundle/''', # Default gem install path
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # PHP (Composer)
+  # ══════════════════════════════════════════════════════════════════════════
+  # vendor/ already excluded above.
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # C / C++ (CMake, Make, Conan, vcpkg)
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)CMakeFiles/''',                  # CMake intermediate files
+  '''(^|/)CMakeCache\.txt$''',             # CMake configuration cache
+  '''(^|/)conan_imports_manifest\.txt$''',
+  '''(^|/)\.conan/''',                     # Conan package cache
+  '''(^|/)vcpkg_installed/''',             # vcpkg installed packages
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # .NET (C# / F# / VB)
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)\.nuget/''',     # NuGet package cache
+  '''(^|/)packages/''',    # Legacy NuGet packages folder
+  '''(^|/)TestResults/''', # VSTest output
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # Dart / Flutter
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)\.dart_tool/''',                   # Dart tool cache
+  '''(^|/)\.pub-cache/''',                   # Pub package cache
+  '''(^|/)\.flutter-plugins''',
+  '''(^|/)\.flutter-plugins-dependencies''',
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # Elixir / Erlang (Mix)
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)_build/''', # Mix build output
+  '''(^|/)deps/''',   # Mix dependencies
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # Haskell (Stack / Cabal / GHCup)
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)\.stack-work/''',  # Stack build artifacts
+  '''(^|/)dist-newstyle/''', # Cabal nix-style build
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # OCaml (opam / Dune)
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)_opam/''',    # opam switch prefix
+  '''(^|/)\._build/''', # Dune build tree alias
+  # NOTE: `_build` is already caught by the general build section below.
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # R (renv / packrat)
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)renv/library/''', # renv package library
+  '''(^|/)packrat/lib/''',  # packrat package library
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # Julia (Pkg)
+  # ══════════════════════════════════════════════════════════════════════════
+  # Julia's ~/.julia depot is outside the repo — no project-level exclusion needed.
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # Zig (build system)
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)zig-cache/''', # Zig build cache
+  '''(^|/)zig-out/''',   # Zig build output
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # iOS / macOS (Swift / Objective-C / Xcode)
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)Pods/''',        # CocoaPods resolved dependencies
+  '''(^|/)\.build/''',     # Swift Package Manager intermediate build
+  '''(^|/)DerivedData/''', # Xcode intermediate build products
+  '''(^|/)\.xcode/''',     # Xcode local settings cache
+  '''(^|/)xcuserdata/''',  # Per-user Xcode state (non-secret)
+  '''(^|/)\.swiftpm/''',   # SwiftPM local resolved packages
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # Android (Gradle is already excluded above)
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)\.android/''', # Android SDK emulator AVDs
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # Infrastructure as Code
+  # Terraform · OpenTofu · Pulumi · Ansible
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)\.terraform/''', # TF provider plugins & module cache
+  '''(^|/)\.pulumi/''',    # Pulumi state and plugin cache
+  # NOTE: *.tfvars and *.tfstate are NOT excluded — they frequently contain secrets.
+  # NOTE: Ansible vault files ARE scanned by default.
+  '''(^|/)\.ansible/tmp/''', # Ansible temporary fetch/become droppings
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # General Build Output (language-agnostic)
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)dist/''',
+  '''(^|/)build/''',
+  '''(^|/)out/''',
+  '''(^|/)target/''',
+  '''(^|/)release/''',
+  '''(^|/)_build/''',       # Also covers Elixir, Bazel, SCons
+  '''(^|/)public/build/''', # Laravel Mix, Symfony Webpack Encore
+  '''(^|/)www/''',          # Ionic / Capacitor web output
+  '''(^|/)\.bin/''',        # Compiled binary output dirs
+  '''(^|/)bazel-''',        # Bazel output symlinks (bazel-bin, bazel-out…)
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # Test Coverage & Reports
+  # ══════════════════════════════════════════════════════════════════════════
+  '''(^|/)coverage/''',
+  '''(^|/)\.nyc_output/''', # NYC (Istanbul) coverage
+  '''(^|/)TestResults/''',  # xUnit / dotnet test output
+  '''(^|/)\.tmp/''',
+  '''(^|/)tmp/''',
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # IDE, Editor & OS Artifacts
+  # ══════════════════════════════════════════════════════════════════════════
+  '''\.(DS_Store|Thumbs\.db)$''',
+  '''(^|/)\.idea/''',             # JetBrains IDE workspace
+  '''(^|/)\.vscode/''',           # VS Code workspace settings
+  '''(^|/)\.vs/''',               # Visual Studio IDE state
+  '''(^|/)__MACOSX/''',           # macOS zip artifact folder
+]

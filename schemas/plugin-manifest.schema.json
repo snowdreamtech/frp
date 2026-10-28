@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://unirtm.snowdream.tech/schemas/v1/plugin-manifest.schema.json",
+  "title": "UniRTM Plugin Manifest Schema",
+  "description": "JSON Schema specification for UniRTM plugin manifests (<plugin-id>.manifest.json)",
+  "type": "object",
+  "required": ["name", "version"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_.-]+(/[a-zA-Z0-9_.-]+)*$",
+      "description": "Unique plugin identifier following vendor/name syntax (e.g. 'snowdreamtech/docker' or 'rust')"
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version of the plugin (e.g. '1.0.0')"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the plugin's features"
+    },
+    "author": {
+      "type": "string",
+      "description": "Author or maintainer organization"
+    },
+    "homepage": {
+      "type": "string",
+      "format": "uri",
+      "description": "Project homepage or documentation URL"
+    },
+    "contributes": {
+      "type": "object",
+      "description": "Declarations of capabilities and configuration extended by this plugin",
+      "properties": {
+        "configuration": {
+          "type": "object",
+          "description": "Schema definition of configuration properties contributed by this plugin under [plugins.\"<id>\".config]",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["string", "integer", "number", "boolean", "array", "object"],
+                "description": "Data type expected for this configuration setting"
+              },
+              "description": {
+                "type": "string",
+                "description": "Human-readable explanation of what this configuration setting controls"
+              },
+              "default": {
+                "description": "Default value applied if not explicitly overridden by user"
+              },
+              "enum": {
+                "type": "array",
+                "description": "List of strictly permitted values for this property"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,50 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+# These labels are configured to match the conventional commits and codebase structure.
+
+"AI Rules 🤖":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".agent/rules/**"
+          - ".github/instructions/**"
+          - "prompts/**"
+          - ".*rules"
+
+"CI/CD ⚙️":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**"
+          - ".github/dependabot.yml"
+          - ".goreleaser.yaml"
+
+"Documentation 📝":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "LICENSE"
+          - ".github/ISSUE_TEMPLATE/**"
+          - ".github/PULL_REQUEST_TEMPLATE/**"
+
+"Dependencies 📦":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "package.json"
+          - "requirements.txt"
+          - "go.mod"
+          - "Cargo.toml"
+          - "pnpm-lock.yaml"
+
+"Scripts 🛠️":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "scripts/**"
+          - "Makefile"
+
+"Tests 🧪":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "tests/**"
+          - "**/*_test.go"
+          - "**/*.spec.ts"

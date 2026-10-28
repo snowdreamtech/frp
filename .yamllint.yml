@@ -1,0 +1,57 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+extends: default
+
+ignore: |
+  .ansible/
+  .venv/
+  venv/
+  env/
+  node_modules/
+  vendor/
+  dist/
+  build/
+  out/
+  target/
+  .next/
+  .nuxt/
+  .output/
+  .git/
+  **/*.md
+  .specify/
+  pnpm-lock.yaml
+
+rules:
+  # Line-length is intentionally disabled. Modern wide screens and YAML's
+  # common use of long strings (Jinja2 templates, URLs, SSH arguments, etc.)
+  # make a hard line limit counterproductive. Use block scalars (| or >) for
+  # readability where it makes sense, but not as a strict enforcement.
+  line-length: disable
+  document-start:
+    present: true
+    level: error
+  truthy:
+    allowed-values: ["true", "false"]
+    level: error
+  indentation:
+    spaces: 2
+    indent-sequences: true
+    level: error
+  trailing-spaces:
+    level: error
+  empty-lines:
+    max: 2
+    level: error
+  new-line-at-end-of-file:
+    level: error
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: disable
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+  octal-values: disable
+  colons:
+    max-spaces-after: -1

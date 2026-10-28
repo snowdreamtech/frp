@@ -1,0 +1,30 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+# CodeQL query and scan configuration.
+#
+# NOTE: Language selection is NOT done here. It is controlled in:
+#   .github/workflows/codeql.yml (via the 'language' matrix)
+#
+# This file is for advanced options: custom queries, path exclusions, etc.
+# See: https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning
+
+name: "CodeQL Config"
+
+# Exclude dependency and build directories from scanning
+paths-ignore:
+  - "node_modules"
+  - ".venv"
+  - "venv"
+  - "env"
+  - "vendor"
+  - "dist"
+  - "build"
+  - "out"
+  - "target"
+  - ".next"
+  - ".nuxt"
+  - ".output"
+  - "__pycache__"
+  - ".specify"

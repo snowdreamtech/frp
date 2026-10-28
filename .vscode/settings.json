@@ -1,0 +1,490 @@
+{
+  // ------------------------------------------------------------
+  // 1. Workbench Settings
+  // ------------------------------------------------------------
+  // Disable the "new version" message from vscode-icons to keep the UI clean
+  "vsicons.dontShowNewVersionMessage": true,
+  // Disable layout control buttons in the title bar to save space
+  "workbench.layoutControl.enabled": false,
+  // Do not show any editor or welcome page on startup
+  "workbench.startupEditor": "none",
+  // Set the color theme to Solarized Dark
+  "workbench.colorTheme": "Solarized Dark",
+  // Set the icon theme to vscode-icons for better file type recognition
+  "workbench.iconTheme": "vscode-icons",
+  // ------------------------------------------------------------
+  // 2. Editor Behavior & Formatting
+  // ------------------------------------------------------------
+  // Disable the minimap to maximize horizontal editing space
+  "editor.minimap.enabled": false,
+  // Enable auto-save with a delay to prevent data loss
+  "files.autoSave": "afterDelay",
+  // Set auto-save delay to 1000ms (1 second)
+  "files.autoSaveDelay": 1000,
+  // Show whitespace differences in the diff editor
+  "diffEditor.ignoreTrimWhitespace": false,
+  // Enable accessibility support for screen readers
+  "editor.accessibilitySupport": "on",
+  // Automatically format code on save for consistent style across the project
+  "editor.formatOnSave": true,
+  // Automatically format code when pasting
+  "editor.formatOnPaste": true,
+  // Prevent accidentally overwriting the clipboard when copying an empty line
+  "editor.emptySelectionClipboard": false,
+  // Enable font ligatures for supported fonts (e.g., Fira Code, JetBrains Mono)
+  "editor.fontLigatures": true,
+  // --- Premium Interaction Optimizations ---
+  // Enable smooth caret animation for a more fluid typing experience
+  "editor.cursorSmoothCaretAnimation": "on",
+  // Use smooth cursor blinking to reduce visual fatigue
+  "editor.cursorBlinking": "smooth",
+  // Enable linked editing (auto-rename tags) for HTML/XML
+  "editor.linkedEditing": true,
+  // Enable tab completion for snappier coding
+  "editor.tabCompletion": "on",
+  // Disable suggestions from word based providers (keeps suggestions clean)
+  "editor.suggest.showWords": false,
+  // Enable colorized bracket pairs to easily match nested scopes
+  "editor.bracketPairColorization.enabled": true,
+  // Highlight the active bracket pair guides
+  "editor.guides.bracketPairs": "active",
+  // Enable horizontal bracket pair guides for better scope visualization
+  "editor.guides.bracketPairsHorizontal": "active",
+  // Enable Sticky Scroll to keep scope headers (classes/methods) visible at the top
+  "editor.stickyScroll.enabled": true,
+  // Automatically close brackets when typing
+  "editor.autoClosingBrackets": "always",
+  // Automatically close quotes when typing
+  "editor.autoClosingQuotes": "always",
+  // Customize the window title to show file status, name, and project root
+  "window.title": "${dirty}${activeEditorShort}${separator}${rootName}",
+  // ------------------------------------------------------------
+  // 3. UI & Performance Tweaks
+  // ------------------------------------------------------------
+  // Disable compact folders in explorer for a clearer hierarchical view
+  "explorer.compactFolders": false,
+  // Focus but do not scroll the explorer when switching files (reduces visual jumping)
+  "explorer.autoReveal": "focusNoScroll",
+  // [File Nesting] Enable file nesting to keep the explorer clean
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "tsconfig.json": "tsconfig.*.json, env.d.ts",
+    "vite.config.*": "jsconfig*, tsconfig*, vitest.config.*, index.html",
+    "vue.config.*": "jsconfig*, tsconfig*, .eslintrc*, .prettierrc*, .babelrc*, package.json, package-lock.json",
+    "package.json": "package-lock.json, pnpm*, .yarnrc*, yarn*, .npmrc",
+    "go.mod": "go.sum",
+    "gemfile": "gemfile.lock",
+    "composer.json": "composer.lock",
+    "cargo.toml": "cargo.lock",
+    "mix.exs": "mix.lock",
+    "pubspec.yaml": "pubspec.lock",
+    "*.ts": "${capture}.js, ${capture}.d.ts, ${capture}.js.map",
+    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+    "*.jsx": "${capture}.js",
+    "*.tsx": "${capture}.ts",
+    "*.vue": "${capture}.js, ${capture}.ts, ${capture}.css, ${capture}.scss, ${capture}.less"
+  },
+  // Increase tree indentation for better readability
+  "workbench.tree.indent": 16,
+  // Open files in new tab by default (disable preview mode)
+  "workbench.editor.enablePreview": false,
+  // Enable smooth scrolling for lists and trees
+  "workbench.list.smoothScrolling": true,
+  // Prioritize recently used items in suggestion lists
+  "editor.suggestSelection": "recentlyUsed",
+  // Enable GPU hardware acceleration in the integrated terminal for better performance
+  "terminal.integrated.gpuAcceleration": "on",
+  // Set terminal scrollback buffer to 10,000 lines
+  "terminal.integrated.scrollback": 10000,
+  // Set default terminal profile for Linux to Bash
+  "terminal.integrated.defaultProfile.linux": "bash",
+  // Disable warning when pasting multiple lines into terminal
+  "terminal.integrated.enableMultiLinePasteWarning": "never",
+  // Ensure files end with a newline character (POSIX standard)
+  "files.insertFinalNewline": true,
+  // Automatically trim trailing whitespace on save
+  "files.trimTrailingWhitespace": true,
+  // Disable confirmation dialog when dragging and dropping files in the explorer
+  "explorer.confirmDragAndDrop": false,
+  // Disable confirmation dialog when deleting files (faster workflow with Git)
+  "explorer.confirmDelete": false,
+  // ------------------------------------------------------------
+  // 4. Remote & Search
+  // ------------------------------------------------------------
+  // Force local server download to avoid remote wget/curl connectivity issues
+  "remote.SSH.allowLocalServerDownload": "always",
+  // Use hybrid port forwarding source for better remote development compatibility
+  // Show login terminal for SSH connections to help debug connection issues
+  "remote.SSH.showLoginTerminal": true,
+  // Increase connection timeout to avoid dropped connections on slow networks
+  "remote.SSH.connectTimeout": 60,
+  // Exclude build artifacts and dependencies from search to improve performance
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true,
+    "**/.pytest_cache": true,
+    "**/__pycache__": true
+  },
+  // Exclude certain files from the file explorer (optional, keeping minimal for now)
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true
+  },
+  // ------------------------------------------------------------
+  // 5. Language Specific Settings
+  // ------------------------------------------------------------
+  // [Markdown] Enable word wrap and disable quick suggestions for distraction-free writing
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    },
+    "editor.unicodeHighlight.ambiguousCharacters": false
+  },
+  // [JSON/JSONC] Use built-in formatter
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  // [Dockerfile] Use docker extension for formatting
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  // [YAML] Standardize tab size to 2 spaces
+  "[yaml]": {
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced"
+  },
+  // [Ansible] Enable linting
+  "ansible.validation.lint.enabled": true,
+  // [Todo Highlight] Enable
+  "todohighlight.isEnable": true,
+  // [Better Comments] Configuration placeholder (uses default tags)
+  "better-comments.multilineComments": true,
+  // ------------------------------------------------------------
+  // 6. Git & Automation
+  // ------------------------------------------------------------
+  // Automatically fetch commits from remote (keep local graph up-to-date)
+  "git.autofetch": true,
+  // Disable confirmation dialog when syncing code (push/pull)
+  "git.confirmSync": false,
+  // Commit all changes when there are no staged changes
+  "git.enableSmartCommit": true,
+  // Auto-detect tasks from scripts (npm, gulp, etc.)
+  "task.autoDetect": "on",
+  // ------------------------------------------------------------
+  // 7. Security, Privacy & Advanced Performance
+  // ------------------------------------------------------------
+  // [Privacy] Disable telemetry to respect user privacy and save network bandwidth
+  "telemetry.telemetryLevel": "off",
+  // [Privacy] Disable RedHat telemetry (affects YAML, Ansible, XML extensions)
+  "redhat.telemetry.enabled": false,
+  // [Security] Enable Workspace Trust to restrict execution in untrusted folders
+  "security.workspace.trust.enabled": true,
+  // [Performance] Exclude high-volume folders from file watching to reduce CPU usage
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/*/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    "**/.hg/store/**": true,
+    "**/.pytest_cache/**": true,
+    "**/__pycache__/**": true
+  },
+  // [Debug] Increase debug console font size for better readability
+  "debug.console.fontSize": 14,
+  // [Terminal] Customize cursor blinking in terminal
+  "terminal.integrated.cursorBlinking": true,
+  // ------------------------------------------------------------
+  // 8. Expert Tweaks (Terminal, Scrolling, Indentation)
+  // ------------------------------------------------------------
+  // [Terminal] Increase font size for better readability
+  "terminal.integrated.fontSize": 14,
+  // [Terminal] Set line height to 1.2 for comfortable spacing
+  "terminal.integrated.lineHeight": 1.2,
+  // [Editor] Enable smooth scrolling for code editor (matches list scrolling)
+  "editor.smoothScrolling": true,
+  // [Editor] Render whitespace only on selected text to reduce visual noise
+  "editor.renderWhitespace": "selection",
+  // [Editor] Highlight the entire active line
+  "editor.renderLineHighlight": "all",
+  // [Editor] Enable breadcrumbs for better navigation context
+  "breadcrumbs.enabled": true,
+  // [Editor] Show indentation guides for active block
+  "editor.guides.indentation": true,
+  // ------------------------------------------------------------
+  // 9. Unassigned Section (Placeholder)
+  // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // 10. Code Intelligence & Refactoring
+  // ------------------------------------------------------------
+  // [Refactoring] Automatically organize imports on save (crucial for clean code)
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  // [Inlay Hints] Show type hints for parameters and variables (like IntelliJ)
+  "editor.inlayHints.enabled": "on",
+  "editor.inlayHints.parameterNames.enabled": "all",
+  // [Suggestions] Show ghost text for inline completions
+  "editor.suggest.preview": true,
+  // [Snippets] Place snippets at the bottom of the suggestion list
+  "editor.snippetSuggestions": "bottom",
+  // ------------------------------------------------------------
+  // 11. Diff & Merge Enhancements
+  // ------------------------------------------------------------
+  // [Diff] Render side-by-side diffs by default
+  "diffEditor.renderSideBySide": true,
+  // [Diff] Hide unchanged regions to focus on what matters
+  "diffEditor.hideUnchangedRegions.enabled": true,
+  // [Merge] Use the smart experimental merge algorithm
+  "mergeEditor.diffAlgorithm": "advanced",
+  // ------------------------------------------------------------
+  // 12. Zen Mode & Editor Management
+  // ------------------------------------------------------------
+  // [Zen Mode] Hide everything for pure code focus (but keep line numbers)
+  "zenMode.hideLineNumbers": false,
+  "zenMode.hideStatusBar": true,
+  "zenMode.fullScreen": true,
+  // [Editor Limit] Limit open tabs to 10 to save memory and mental load
+  "workbench.editor.limit.enabled": true,
+  "workbench.editor.limit.value": 10,
+  "workbench.editor.limit.perEditorGroup": true,
+  // [Search] Smart case matching (case-insensitive unless capital letters used)
+  "search.smartCase": true,
+  // [Timeline] Filter out noisy Git history for build files
+  "timeline.excludeSources": [],
+  // [Source Control] View changes as a tree instead of a list
+  "scm.defaultViewMode": "tree",
+  // [Git Graph] Show signature status in the graph
+  "git.graph.repository.commits.showSignatureStatus": true,
+  // [Copyright] Set default copyright holder
+  "copyright.holder": "Snowdream Tech",
+  // ------------------------------------------------------------
+  // 13. Debug & Terminal Enhancements
+  // ------------------------------------------------------------
+  // [Debug] Show variable values inline during debugging
+  "debug.inlineValues": "on",
+  // [Terminal] Linux specific: Copy text on selection (X11 style)
+  "terminal.integrated.copyOnSelection": true,
+  // [Terminal] Disable sticky scroll to prevent duplicate pinned prompt header
+  "terminal.integrated.stickyScroll.enabled": false,
+  // [Terminal] Disable shell integration to prevent duplicate prompt injection on startup
+  "terminal.integrated.shellIntegration.enabled": false,
+  // ------------------------------------------------------------
+  // 14. File Integrity & Visual Guides
+  // ------------------------------------------------------------
+  // [Encoding] Enforce UTF-8 for cross-platform consistency
+  "files.encoding": "utf8",
+  // [EOL] Enforce LF (Linux/Mac style) line endings
+  "files.eol": "\n",
+  // [Rulers] Show vertical rulers at 80 and 120 characters to guide line length
+  "editor.rulers": [80, 120],
+  // [History] Limit local history to keep the .history folder manageable
+  "workbench.localHistory.maxFileEntries": 50,
+  "workbench.localHistory.mergeWindow": 10,
+  // ------------------------------------------------------------
+  // 15. Extension Specific & Testing
+  // ------------------------------------------------------------
+  // [Testing] Automatically open the peek view on test failure
+  "testing.automaticallyOpenPeekView": "failureInVisibleDocument",
+  // [Markdown] Sync scroll between editor and preview
+  "markdown.preview.scrollEditorWithPreview": true,
+  "markdown.preview.scrollPreviewWithEditor": true,
+  // [Shell] Use 'foxundermoon.shell-format' as the default formatter for shell scripts
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+    // Check shell scripts on save with shellcheck
+    "shellcheck.run": "onSave"
+  },
+  // [ESLint] Validate JS/TS files
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  // [Markdown] specific linting rules
+  "markdownlint.config": {
+    "default": true,
+    "MD013": false, // Disable line length rule
+    "MD033": false // Allow inline HTML
+  },
+  // [Python] formatting and linting
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  // [Go] formatting
+  "[go]": {
+    "editor.defaultFormatter": "golang.go",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  // [Web] formatting
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[less]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  // [Vue] formatting
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  // [React] formatting
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  // ------------------------------------------------------------
+  // 16. File Associations
+  // ------------------------------------------------------------
+  // Map specific file patterns to language identifiers for syntax highlighting and features
+  "files.associations": {
+    // --- Web / JavaScript / TypeScript ---
+    "*.js": "javascript",
+    "*.jsx": "javascriptreact",
+    "*.ts": "typescript",
+    "*.tsx": "typescriptreact",
+    "*.vue": "vue",
+    "*.svelte": "svelte",
+    "*.html": "html",
+    "*.css": "css",
+    "*.scss": "scss",
+    "*.less": "less",
+    "*.wasm": "wasm",
+    // --- Python Ecosystem ---
+    "*.py": "python",
+    "*.pyi": "python",
+    "*.pyw": "python",
+    "*.pyd": "python",
+    "requirements*.txt": "pip-requirements",
+    "Pipfile": "toml",
+    "Pipfile.lock": "json",
+    // --- Static Languages (Go / Rust / Java / Kotlin) ---
+    "*.go": "go",
+    "go.mod": "go.mod",
+    "go.sum": "go.sum",
+    "*.rs": "rust",
+    "*.java": "java",
+    "*.kt": "kotlin",
+    "*.kts": "kotlin",
+    // --- Low-level & Mobile (C / C++ / Objective-C / Swift) ---
+    "*.c": "c",
+    "*.h": "cpp",
+    "*.cpp": "cpp",
+    "*.hpp": "cpp",
+    "*.m": "objective-c",
+    "*.mm": "objective-cpp",
+    "*.swift": "swift",
+    // --- Dynamic Scripting (PHP / Ruby / Perl) ---
+    "*.php": "php",
+    "*.phtml": "php",
+    "*.rb": "ruby",
+    "Gemfile": "ruby",
+    "Rakefile": "ruby",
+    "*.pl": "perl",
+    "*.pm": "perl",
+    // --- Shell & Automation (Shell / PowerShell / Makefile) ---
+    "*.sh": "shellscript",
+    ".bash*": "shellscript",
+    ".zsh*": "shellscript",
+    ".profile": "shellscript",
+    "*.ps1": "powershell",
+    "*.psm1": "powershell",
+    "Makefile": "makefile",
+    "GNUmakefile": "makefile",
+    // --- Infrastructure & Cloud Native (Docker, K8s, Terraform, Nginx) ---
+    "Dockerfile*": "dockerfile",
+    "docker-compose*.yml": "yaml",
+    "*.tf": "terraform",
+    "*.tfvars": "terraform",
+    "*.hcl": "hcl",
+    "nginx.conf": "nginx",
+    "*.kubeconfig": "yaml",
+    // --- Configs & Data (YAML, JSON, TOML, SQL, XML) ---
+    "*.yaml": "yaml",
+    "*.yml": "yaml",
+    "*.json": "json",
+    "*.jsonc": "jsonc",
+    ".eslintrc": "jsonc",
+    ".prettierrc": "json",
+    "*.toml": "toml",
+    "*.sql": "sql",
+    "*.xml": "xml",
+    "*.plist": "xml",
+    ".env*": "properties",
+    "*.ini": "ini",
+    ".editorconfig": "properties",
+    // --- Version Control & System (Git / SSH) ---
+    ".gitignore": "ignore",
+    ".gitconfig": "properties",
+    ".gitattributes": "ignore",
+    ".gitmodules": "ignore",
+    "ssh_config": "ssh_config",
+    "known_hosts": "ssh_config",
+    // --- Documentation ---
+    "*.md": "markdown",
+    "*.markdown": "markdown",
+    "*.txt": "plaintext",
+    // --- Template Engines ---
+    "*.twig": "twig",
+    "*.blade.php": "blade",
+    "*.liquid": "liquid",
+    "*.njk": "nunjucks",
+    "*.hbs": "handlebars",
+    ".github/workflows/*.yml": "yaml", // GitHub Actions workflows
+    ".vscode/*.json": "jsonc" // VS Code local configs (support comments)
+  },
+  // ------------------------------------------------------------
+  // UniRTM Schema Associations for IDE IntelliSense & Validation
+  // ------------------------------------------------------------
+  "evenBetterToml.schema.associations": {
+    "*(.|)unirtm*.toml": "./schemas/unirtm.schema.json"
+  },
+  "json.schemas": [
+    {
+      "fileMatch": ["*.manifest.json"],
+      "url": "./schemas/plugin-manifest.schema.json"
+    }
+  ]
+}

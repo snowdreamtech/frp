@@ -1,0 +1,27 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+version: "3.8"
+name: devcontainer
+
+services:
+  devcontainer:
+    image: ghcr.io/snowdreamtech/devcontainers:latest
+    container_name: devcontainer
+    hostname: devcontainer
+    user: root
+    cap_add:
+      - SYS_ADMIN
+    command: sleep infinity
+    environment:
+      ENABLE_GITHUB_PROXY: "0"
+      UNIRTM_QUIET: "0"
+      UNIRTM_IGNORE_MISE_TOML: "1"
+      UNIRTM_WARN_UNTRUSTED: "0"
+      HOST_HOME: /host-home
+    volumes:
+      - ${HOME}:/host-home:ro,cached
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - ../:/workspaces/template:cached
+    working_dir: /workspaces/template

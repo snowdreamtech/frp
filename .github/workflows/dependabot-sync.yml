@@ -1,0 +1,123 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+# Dependabot Smart Sync
+# Purpose: Automatically regenerates .github/dependabot.yml based on detected ecosystems.
+# Trigger: Push to dev/main (manifest file changes), or manual dispatch.
+# Design:
+#   - Uses .unirtm.toml to scan for manifest files via git ls-files.
+#   - Only commits if the generated config differs from the current one.
+#   - Uses native git commands — no third-party commit Actions.
+
+name: "🤖 Dependabot Smart Sync"
+
+"on":
+  push:
+    branches: ["dev"]
+    paths:
+      # Trigger when manifest files or the generator script change
+      - "package.json"
+      - "**/package.json"
+      - "go.mod"
+      - "**/go.mod"
+      - "Cargo.toml"
+      - "**/Cargo.toml"
+      - "requirements.txt"
+      - "**/requirements.txt"
+      - "Dockerfile"
+      - "**/Dockerfile"
+      - "composer.json"
+      - "**/composer.json"
+      - "Gemfile"
+      - "**/Gemfile"
+      - "mix.exs"
+      - "pubspec.yaml"
+      - "Package.swift"
+      - "**/*.tf"
+      - "**/devcontainer.json"
+      - "Chart.yaml"
+      - ".unirtm.toml"
+      - ".github/workflows/dependabot-sync.yml"
+  workflow_dispatch:
+
+permissions: {}
+
+env:
+  UNIRTM_LOCKED: 0
+  # Opt into Node.js 24 now ahead of GitHub's June 16, 2026 forced migration.
+  # See: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "1"
+
+jobs:
+  sync:
+    name: "🔄 Sync Dependabot Config"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    environment: maintenance
+    timeout-minutes: 30
+    steps:
+      - name: "📂 Checkout Repository Code"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: true
+          ref: ${{ github.ref }}
+
+      - name: "⚡ Setup UniRTM"
+        uses: snowdreamtech/setup-unirtm@663cc55933eafea30cd63f43e837cecd4a587f45 # v0.7.0
+        with:
+          unirtm-version: "0.39.0"
+          install: true
+          trust: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
+      - name: "🤖 Generate Dependabot Config"
+        shell: sh
+        run: |
+          unirtm generate dependabot --output .github/dependabot.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          UNIRTM_YES: 1
+
+      - name: "🔧 Update UniRTM Toolchain & Lockfile"
+        shell: sh
+        run: |
+          # Prepend real Node.js bin dir to PATH to prevent npm shebang from triggering unirtm shim recursion
+          NODE_BIN=$(dirname "$(unirtm which node 2>/dev/null || echo "")")
+          if [ -d "$NODE_BIN" ]; then
+            export PATH="$NODE_BIN:$PATH"
+          fi
+          # 1. Check & update all tools in .unirtm.toml to latest versions (non-interactive)
+          unirtm update --all --force --yes
+          # 2. Format .unirtm.toml with canonical section and key ordering
+          unirtm fmt
+          # 3. Update lockfile for all platforms (allow incomplete because some tools like shellcheck lack windows-arm64)
+          unirtm lock --all-platforms --allow-incomplete
+          # 4. Double-check lockfile integrity (fails if tools are omitted due to API errors)
+          unirtm lock --check
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          UNIRTM_YES: 1
+
+      - name: "📝 Commit Changes (if any)"
+        shell: sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GITHUB_REF: ${{ github.ref }}
+        run: |
+          if [ -z "$(git status --porcelain .github/dependabot.yml unirtm.lock .unirtm.toml)" ]; then
+            echo "✅ No changes detected. Dependabot config and UniRTM toolchain are up-to-date."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git config commit.gpgsign false
+            git add .github/dependabot.yml unirtm.lock .unirtm.toml
+            git commit --no-gpg-sign --signoff -m "chore(deps): sync dependabot config and unirtm toolchain"
+            git push origin HEAD:"$GITHUB_REF"
+            echo "✅ Dependabot config and UniRTM toolchain updated and pushed."
+          fi

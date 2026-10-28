@@ -1,0 +1,137 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // === JavaScript & TypeScript (Node.js) ===
+    {
+      "name": "Node.js: Current File",
+      "type": "node",
+      "request": "launch",
+      "program": "${file}",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    // === Python ===
+    {
+      "name": "Python: Current File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    // === Go ===
+    {
+      "name": "Go: Launch File",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${file}"
+    },
+    // === Rust & C++ (requires CodeLLDB or ms-vscode.cpptools) ===
+    {
+      "name": "Rust/C++: Debug Executable",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/target/debug/${workspaceFolderBasename}",
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    // === Java (requires vscjava.vscode-java-debug) ===
+    {
+      "name": "Java: Launch Current File",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "${file}"
+    },
+    // === Ruby (requires wingrunr21.vscode-ruby or shopify.ruby-lsp) ===
+    {
+      "name": "Ruby: Debug Current File",
+      "type": "Ruby",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}"
+    },
+    // === PHP (requires xdebug.php-debug) ===
+    {
+      "name": "PHP: Listen for Xdebug",
+      "type": "php",
+      "request": "launch",
+      "port": 9003
+    },
+    {
+      "name": "PHP: Launch Current Script",
+      "type": "php",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}"
+    },
+    // === .NET / C# (requires ms-dotnettools.csharp) ===
+    {
+      "name": ".NET: Launch Console App",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/Debug/net8.0/${workspaceFolderBasename}.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopAtEntry": false
+    },
+    // === Dart / Flutter (requires dart-code.dart-code) ===
+    {
+      "name": "Flutter: Launch",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart"
+    },
+    // === Web Frontends (React / Vue) ===
+    {
+      "name": "Vue: Vite Dev Server",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "serverReadyAction": {
+        "pattern": "local: (http://localhost:[0-9]+)",
+        "uriFormat": "%s",
+        "action": "debugWithChrome"
+      }
+    },
+    {
+      "name": "React: Vite Dev Server",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "serverReadyAction": {
+        "pattern": "local: (http://localhost:[0-9]+)",
+        "uriFormat": "%s",
+        "action": "debugWithChrome"
+      }
+    },
+    {
+      "name": "Chrome: Debug App",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true
+    },
+    {
+      "name": "Edge: Debug App",
+      "type": "msedge",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true
+    }
+  ]
+}

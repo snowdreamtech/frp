@@ -1,0 +1,42 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+name: "🐛 Bug Report"
+description: "Report a bug to help us improve."
+labels: ["bug"]
+body:
+  - type: checkboxes
+    attributes:
+      label: "Is there an existing issue for this?"
+      description: "Please check if a similar issue already exists."
+      options:
+        - label: "I have searched the existing issues"
+          required: true
+  - type: textarea
+    attributes:
+      label: "Current Behavior"
+      description: "A concise description of what's happening."
+      placeholder: "e.g. 'unirtm install' fails on macOS 14."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Expected Behavior"
+      description: "A concise description of what you expected to happen."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Environment Information"
+      description: "OS version, AI IDE name/version, etc."
+      placeholder: "macOS 14.4, Windsurf 1.0.0"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Steps to trigger the issue."
+      placeholder: "1. Run unirtm install\n2. ..."
+    validations:
+      required: true

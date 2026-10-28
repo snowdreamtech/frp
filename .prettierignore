@@ -1,0 +1,152 @@
+# =============================================================================
+# .prettierignore for Snowdream Tech AI IDE Template
+# Standards: https://prettier.io/docs/en/ignore.html
+# =============================================================================
+
+# ── 1. AI IDE & Agent Ecosystems ─────────────────────────────────────────────
+# Prevents Prettier from interfering with AI-managed metadata and logs.
+.agents/
+.agent/
+.roo/
+.claude/
+.qwen/
+.amazonq/
+.augment/
+.cursor/
+.cursorrules
+.windsurf/
+.traerules
+.pearai/
+.trae/
+.zed/
+.openhands/
+.cody/
+.specify/
+.iflow/
+.devin/
+.devcontainer/
+.factory/
+.mcpjam/
+.melty/
+.neovate/
+.opencode/
+.pi/
+.pochi/
+.qoder/
+.shai/
+.vibe/
+.void/
+.zencoder
+
+# ── 2. Git & Tooling Meta-files ───────────────────────────────────────────────
+.git/
+.github/agents/
+.gitignore
+.gitattributes
+.gitconfig
+
+# ── 3. Dependencies & Runtimes ────────────────────────────────────────────────
+node_modules/
+.venv/
+venv/
+env/
+vendor/
+__pycache__/
+
+# ── 4. Lockfiles (Preserve machine formatting) ────────────────────────────────
+**/pnpm-lock.yaml
+pnpm-lock.yaml
+**/yarn.lock
+yarn.lock
+**/package-lock.json
+package-lock.json
+**/Cargo.lock
+Cargo.lock
+**/go.sum
+go.sum
+**/composer.lock
+composer.lock
+**/Gemfile.lock
+Gemfile.lock
+
+# ── 5. Build, Output & Temporary Artifacts ────────────────────────────────────
+dist/
+build/
+out/
+target/
+.next/
+.nuxt/
+.output/
+.turbo/
+.svelte-kit/
+docs/.vitepress/dist
+docs/.vitepress/cache
+.nyc_output/
+.coverage/
+coverage/
+junit.xml
+test-results/
+
+# ── 6. OS & IDE Metadata ──────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+.history/
+*.code-workspace
+.metadata/
+
+# ── 7. Linter & Formatting Exclusions (Standard Practise) ─────────────────────
+# We avoid formatting "ignore" and "rc" files that tools handle themselves.
+.prettierignore
+.prettierrc
+.eslintignore
+.stylelintignore
+.sqlfluffignore
+.gitleaksignore
+.yamllint.yml
+.markdownlint-cli2.jsonc
+.checkmake.ini
+
+# ── 8. Media, Binary & Asset Files ────────────────────────────────────────────
+# Prettier skips these by default, but explicit exclusion is a best practice.
+**/*.svg
+**/*.ico
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.webp
+**/*.avif
+**/*.pdf
+**/*.mp4
+**/*.webm
+**/*.mp3
+**/*.wav
+**/*.woff
+**/*.woff2
+**/*.ttf
+**/*.otf
+
+# ── 9. Minified & Machine-Generated Code ──────────────────────────────────────
+**/*.min.js
+**/*.min.css
+**/*.map
+**/*.bundle.js
+
+# ── 10. Miscellaneous ─────────────────────────────────────────────────────────
+.ansible-lint
+.ansible/
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+CHANGELOG.md
+LICENSE
+
+# ── 11. Markdown Files (Handled by markdownlint) ──────────────────────────────
+# Prettier converts *emphasis* to _emphasis_, conflicting with markdownlint.
+# Let markdownlint handle all markdown formatting instead.
+**/*.md

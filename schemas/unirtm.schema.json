@@ -1,0 +1,275 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://unirtm.snowdream.tech/schemas/v1/unirtm.schema.json",
+  "title": "UniRTM Configuration Schema",
+  "description": "JSON Schema specification for UniRTM configuration files (.unirtm.toml and unirtm.toml)",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "min_version": {
+      "type": "string",
+      "description": "Minimum required UniRTM CLI version to run this project (e.g. '0.27.0')"
+    },
+    "network_preset": {
+      "type": "string",
+      "enum": ["china", "global", "direct", "custom"],
+      "description": "Network acceleration and mirror preset (china, global, direct, custom)"
+    },
+    "tools": {
+      "type": "object",
+      "description": "Toolchain version definitions. Maps tool names (or backend prefixes) to version requirements.",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "string",
+            "description": "Semantic version or release tag (e.g. '1.24.0', 'latest', 'lts')"
+          },
+          {
+            "type": "object",
+            "required": ["version"],
+            "properties": {
+              "version": {
+                "type": "string",
+                "description": "Tool version requirement"
+              },
+              "backend": {
+                "type": "string",
+                "description": "Explicit backend to resolve this tool (e.g. 'aqua', 'asdf', 'github', 'npm')"
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "settings": {
+      "type": "object",
+      "description": "UniRTM runtime settings and operational preferences.",
+      "properties": {
+        "browser": {
+          "type": "string",
+          "description": "⚠️ Machine-specific preference. Prohibited in project-level .unirtm.toml. Configure globally via: unirtm config --global settings.browser <val>",
+          "deprecated": true
+        },
+        "editor": {
+          "type": "string",
+          "description": "Machine-specific preferred editor (e.g. 'code', 'vim'). Recommended in global configuration only."
+        },
+        "terminal": {
+          "type": "string",
+          "description": "Machine-specific preferred integrated shell or terminal binary path (e.g. '/bin/bash', '/usr/bin/zsh', 'pwsh'). Recommended in global configuration only."
+        },
+        "cache_ttl": {
+          "oneOf": [{ "type": "integer" }, { "type": "string" }],
+          "description": "Metadata and package cache time-to-live (e.g. '168h', 604800, '7d')"
+        },
+        "jobs": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of concurrent download or execution threads (default: CPU core count)"
+        },
+        "http_proxy": {
+          "type": "string",
+          "description": "HTTP proxy URL (e.g. 'http://127.0.0.1:7890')"
+        },
+        "https_proxy": {
+          "type": "string",
+          "description": "HTTPS proxy URL (e.g. 'http://127.0.0.1:7890')"
+        },
+        "github_proxy": {
+          "type": "string",
+          "description": "GitHub release download accelerator prefix"
+        },
+        "task_timeout": {
+          "oneOf": [{ "type": "integer" }, { "type": "string" }],
+          "description": "Default execution timeout for tasks (e.g. '10m', 600)"
+        },
+        "task_output": {
+          "type": "string",
+          "enum": ["interleaved", "prefix", "quiet"],
+          "default": "interleaved",
+          "description": "Log formatting output mode for concurrent tasks"
+        },
+        "auto_install": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically download and install missing tools when executing tasks"
+        },
+        "color": {
+          "type": "string",
+          "enum": ["auto", "always", "never"],
+          "default": "auto",
+          "description": "ANSI color output behavior"
+        },
+        "experimental": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable preview and experimental features"
+        },
+        "verify_metadata": {
+          "type": "boolean",
+          "default": true,
+          "description": "Verify cryptographic checksums and signatures for downloaded tools"
+        },
+        "ceiling_paths": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of filesystem directory boundaries where hierarchical config discovery stops"
+        },
+        "trusted_config_paths": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Globally trusted config paths exempted from SHA-256 trust validation"
+        },
+        "tools": {
+          "type": "object",
+          "description": "Tool-specific setting overrides.",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "env": {
+      "type": "object",
+      "description": "Environment variables injected into subshells and tasks. Supports Jinja2/Pongo2 templating.",
+      "additionalProperties": {
+        "oneOf": [{ "type": "string" }, { "type": "number" }, { "type": "boolean" }]
+      }
+    },
+    "tasks": {
+      "type": "object",
+      "description": "Task automation workflows.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["run"],
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Human-readable summary of the task"
+          },
+          "run": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "Shell command to execute"
+              },
+              {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "List of sequential shell commands to execute"
+              }
+            ]
+          },
+          "depends": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Precursor tasks that must complete before running this task"
+          },
+          "env": {
+            "type": "object",
+            "description": "Task-scoped environment variable overrides"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Task execution timeout in seconds"
+          },
+          "output": {
+            "type": "string",
+            "enum": ["interleaved", "prefix", "quiet"],
+            "description": "Output mode for this specific task"
+          },
+          "retry": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of retry attempts if the task fails"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "plugins": {
+      "type": "object",
+      "description": "Third-party plugin declarations and isolated configuration namespaces. Plugins MUST configure settings under [plugins.\"<id>\".config].",
+      "patternProperties": {
+        "^[a-zA-Z0-9_.-]+(/[a-zA-Z0-9_.-]+)*$": {
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "Plugin version constraint (e.g. '1.0.0', '>=2.0.0')"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "description": "Plugin version requirement"
+                },
+                "config": {
+                  "type": "object",
+                  "description": "Isolated configuration parameters owned exclusively by this plugin. Will not conflict with core tables or other plugins.",
+                  "additionalProperties": true
+                }
+              },
+              "additionalProperties": true
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "format": {
+      "type": "object",
+      "description": "Formatting rules for codebase standardization.",
+      "properties": {
+        "indent": {
+          "type": "string",
+          "enum": ["space", "tab"],
+          "default": "space"
+        },
+        "indent_size": {
+          "type": "integer",
+          "default": 2
+        }
+      },
+      "additionalProperties": true
+    },
+    "lint": {
+      "type": "object",
+      "description": "Linter configurations and rules.",
+      "additionalProperties": true
+    },
+    "hooks": {
+      "type": "object",
+      "description": "Lifecycle event hooks (e.g. pre-install, post-install, pre-task).",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "environments": {
+      "type": "object",
+      "description": "Environment-specific overrides (e.g. development, staging, production).",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "tools": { "type": "object" },
+          "env": { "type": "object" },
+          "tasks": { "type": "object" },
+          "settings": { "type": "object" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "aliases": {
+      "type": "object",
+      "description": "Version alias mappings for tools.",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

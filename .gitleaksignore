@@ -1,0 +1,4 @@
+# .gitleaksignore
+# This file is for ignoring specific Gitleaks findings by their fingerprint.
+# It does NOT support path-based exclusions.
+# Use .gitleaks.toml for path exclusions.

@@ -1,0 +1,61 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+# Mark Stale Issues and PRs
+# Purpose: Maintains repository health by identifying and closing inactive issues and pull requests.
+# Trigger: Daily cron schedule (01:30 UTC) and manual backup.
+# Permissions:
+#   - issues: write (Required to label and close stagnant issues).
+#   - pull-requests: write (Required to label and close stagnant PRs).
+# Concurrency:
+#   - group: ${{ github.workflow }}-${{ github.ref }} (Prevents overlapping maintenance runs).
+#   - cancel-in-progress: true (Maintenance can be safely restarted).
+# Design:
+#   - Safeguards sensitive items by exempting 'pinned', 'security', and 'bug' labels.
+#   - Non-disruptive: Provides a 7-day grace period after stale marking.
+
+name: "🕰️ Mark Stale Issues and PRs"
+
+"on":
+  schedule:
+    # Staggered to run during low-traffic hours
+    - cron: "30 1 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+env:
+  UNIRTM_LOCKED: 1
+
+jobs:
+  stale:
+    name: "⏳ Inactivity Management"
+    runs-on: ubuntu-latest
+    concurrency:
+      group: stale-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    permissions:
+      issues: write # Required to label and close stagnant issues
+      pull-requests: write # Required to label and close stagnant PRs
+    timeout-minutes: 40 # Maintenance tasks are usually fast API operations
+    steps:
+      - name: "🧹 Mark Inactive Issues & PRs (Stale)"
+        uses: actions/stale@4391f3da665fdf50b6810c1a66712fb9ba21aa93 # v11.0.0
+        with:
+          # Automatically identifies and labels stagnant items to maintain repository focus.
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          stale-issue-message: >
+            This issue is stale because it has been open for 60 days with no activity.
+            Remove the stale label or comment, otherwise this will be closed in 7 days.
+          stale-pr-message: >
+            This pull request is stale because it has been open for 60 days with no activity.
+            Remove the stale label or comment, otherwise this will be closed in 7 days.
+          stale-issue-label: "stale"
+          stale-pr-label: "stale"
+          days-before-issue-stale: 60
+          days-before-pr-stale: 60
+          days-before-issue-close: 7
+          days-before-pr-close: 7
+          exempt-issue-labels: "pinned,security,bug"
+          exempt-pr-labels: "pinned,security,bug"

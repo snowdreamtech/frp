@@ -1,0 +1,5 @@
+# This repository is a language-agnostic template and does not contain any .NET projects.
+# GitHub's dependency graph and ADS should skip NuGet scanning until a real .NET project is added.
+
+[nuget]
+enabled = false

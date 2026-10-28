@@ -1,0 +1,324 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+# CI (Continuous Integration)
+# Purpose: Unified development pipeline covering Code Quality, Testing, and Security Auditing.
+# Trigger: Every push and PR on non-main branches.
+# Design:
+#   - Sequential execution: Lint -> Test -> Audit.
+#   - Fail-fast: Stop early if early stages fail to save resources.
+#   - Secure: Runs in the context of the triggered ref, avoiding workflow_run risks.
+
+name: "🔄 Continuous Integration"
+
+"on":
+  pull_request:
+    branches:
+      - "main"
+      - "dev"
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  UNIRTM_LOCKED: 1
+  # Opt into Node.js 24 now ahead of GitHub's June 16, 2026 forced migration.
+  # See: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "1"
+
+jobs:
+  # 0. Security Guard Stage (PR Only)
+  dependency-review:
+    name: "🛡️ Dependency Review"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: "📂 Checkout Repository Code"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: "🔍 Dependency Review"
+        if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+
+  # 1. Code Quality Stage (Lint)
+  lint:
+    name: "🛡️ Quality Assurance Gate (${{ matrix.os }})"
+    needs: [dependency-review]
+    runs-on: ${{ matrix.os }}
+    environment: development
+    concurrency:
+      group: lint-${{ github.workflow }}-${{ matrix.os }}-${{ github.ref }}
+      cancel-in-progress: true
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    permissions:
+      contents: read
+      security-events: write
+    timeout-minutes: 60
+    env:
+      GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+      VENV: ".venv"
+      PYTHONUTF8: 1
+    steps:
+      - name: "📂 Checkout Repository Code"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: "⚡ Cache UniRTM Installs and Downloads"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.local/share/unirtm
+            ~/.cache/unirtm
+          key: ${{ runner.os }}-unirtm-${{ hashFiles('.unirtm.toml', 'unirtm.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-unirtm-
+
+      - name: "⚡ Setup UniRTM"
+        uses: snowdreamtech/setup-unirtm@663cc55933eafea30cd63f43e837cecd4a587f45 # v0.7.0
+        with:
+          unirtm-version: "0.39.0"
+          install: true
+          trust: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          UNIRTM_VERIFY_PROVENANCE: "0"
+
+      - name: "🔍 Inspect Code Quality (Lint)"
+        shell: sh
+        run: |
+          unirtm run lint-all
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          UNIRTM_YES: 1
+
+  # 2. Automated Testing Stage (Test)
+  test:
+    name: "🧪 Automated Testing Suite (${{ matrix.os }})"
+    needs: [lint]
+    runs-on: ${{ matrix.os }}
+    environment: development
+    concurrency:
+      group: test-${{ github.workflow }}-${{ matrix.os }}-${{ github.ref }}
+      cancel-in-progress: true
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    permissions:
+      contents: read
+      pull-requests: read
+    timeout-minutes: 60
+    env:
+      GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+      VENV: ".venv"
+      PYTHONUTF8: 1
+    steps:
+      - name: "📂 Checkout Repository Code"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: "⚡ Cache UniRTM Installs and Downloads"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.local/share/unirtm
+            ~/.cache/unirtm
+          key: ${{ runner.os }}-unirtm-${{ hashFiles('.unirtm.toml', 'unirtm.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-unirtm-
+
+      - name: "⚡ Setup UniRTM"
+        uses: snowdreamtech/setup-unirtm@663cc55933eafea30cd63f43e837cecd4a587f45 # v0.7.0
+        with:
+          unirtm-version: "0.39.0"
+          install: true
+          trust: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          UNIRTM_VERIFY_PROVENANCE: "0"
+
+      - name: "📦 Cache Language Dependencies (Advanced)"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+            ~/.npm
+            ~/.cache/pip
+            ~/.cargo/bin
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            ~/.bundle/cache
+            ~/.composer/cache
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.m2/repository
+            ~/.pub-cache
+            ~/.bun/install/cache
+            .build
+            _build
+            deps
+            vendor
+            node_modules
+            target
+          key: ${{ runner.os }}-lang-${{ hashFiles('**/go.mod', '**/package-lock.json', '**/requirements.txt', '**/Cargo.lock', '**/Gemfile.lock', '**/composer.lock', '**/build.gradle*', '**/pom.xml', '**/Package.resolved', '**/pubspec.lock', '**/mix.lock', '**/bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-lang-
+
+      - name: "🧪 Execute Unit Tests"
+        shell: sh
+        run: |
+          unirtm run test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UNIRTM_YES: 1
+
+  #       - name: "🧪 Execute Shell Tests (Bats)"
+  #         if: matrix.os != 'windows-latest'
+  #         shell: sh
+  #         run: |
+  #           unirtm run test:shell
+  #         env:
+  #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #           UNIRTM_YES: 1
+  #
+  #       - name: "🧪 Execute PowerShell Tests (Pester)"
+  #         if: matrix.os == 'windows-latest'
+  #         shell: pwsh
+  #         run: |
+  #           unirtm run test:powershell
+  #         env:
+  #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #           UNIRTM_YES: 1
+
+  # 3. Security & Standards Audit Stage (Audit)
+  audit:
+    name: "🕵️ Security & Standards Audit (ubuntu-latest)"
+    needs: [lint]
+    runs-on: ubuntu-latest
+    environment: development
+    concurrency:
+      group: audit-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      pull-requests: read
+      statuses: write
+      security-events: write
+    timeout-minutes: 60
+    env:
+      VENV: ".venv"
+      PYTHONUTF8: 1
+    steps:
+      - name: "📂 Checkout Repository Code"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: "⚡ Cache UniRTM Installs and Downloads"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.local/share/unirtm
+            ~/.cache/unirtm
+          key: ${{ runner.os }}-unirtm-${{ hashFiles('.unirtm.toml', 'unirtm.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-unirtm-
+
+      - name: "⚡ Setup UniRTM"
+        uses: snowdreamtech/setup-unirtm@663cc55933eafea30cd63f43e837cecd4a587f45 # v0.7.0
+        with:
+          unirtm-version: "0.39.0"
+          install: true
+          trust: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          UNIRTM_VERIFY_PROVENANCE: "0"
+
+      - name: "📝 Validate Commit Convention (Commitlint)"
+        shell: sh
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            unirtm exec -- commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose
+          else
+            unirtm exec -- commitlint --last --verbose
+          fi
+
+      - name: "🛡️ Perform Security Audit"
+        shell: sh
+        run: |
+          unirtm run audit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TRIVY_CACHE_DIR: .trivycache
+          TRIVY_DB_REPOSITORY: "ghcr.io/aquasecurity/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2"
+          TRIVY_JAVA_DB_REPOSITORY: "ghcr.io/aquasecurity/trivy-java-db:1,public.ecr.aws/aquasecurity/trivy-java-db:1"
+          TRIVY_CHECKS_BUNDLE_REPOSITORY: "ghcr.io/aquasecurity/trivy-checks:2,public.ecr.aws/aquasecurity/trivy-checks:2"
+          UNIRTM_YES: 1
+
+      - name: "⚡ Cache Documentation Links (Lychee)"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .lycheecache
+          key: ${{ runner.os }}-lychee-${{ hashFiles('**/*.md') }}
+          restore-keys: |
+            ${{ runner.os }}-lychee-
+
+      - name: "🔗 Verify Documentation Links (Lychee)"
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        if: ${{ always() }}
+        continue-on-error: true # Don't block CI on link check failures (network issues, rate limits, etc.)
+        with:
+          args: --config lychee.toml '**/*.md'
+          fail: true
+        env:
+          # Pass GitHub token to avoid rate limiting and access private repos
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+
+      - name: "🕵️ Detect Vulnerabilities (Trivy FS)"
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        if: ${{ always() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TRIVY_CACHE_DIR: .trivycache
+          TRIVY_DB_REPOSITORY: "ghcr.io/aquasecurity/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2"
+          TRIVY_JAVA_DB_REPOSITORY: "ghcr.io/aquasecurity/trivy-java-db:1,public.ecr.aws/aquasecurity/trivy-java-db:1"
+          TRIVY_CHECKS_BUNDLE_REPOSITORY: "ghcr.io/aquasecurity/trivy-checks:2,public.ecr.aws/aquasecurity/trivy-checks:2"
+        with:
+          scan-type: "fs"
+          ignore-unfixed: true
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: "CRITICAL,HIGH,MEDIUM,LOW"
+          exit-code: "1"
+          skip-dirs: "unirtm_data,cmd/unirtm_data"
+
+      - name: "📤 Upload Security Audit (SARIF)"
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        if: always()
+        with:
+          sarif_file: "."

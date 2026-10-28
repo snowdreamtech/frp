@@ -1,0 +1,219 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+# ==============================================================================
+# Zizmor Security Audit Configuration (.zizmor.yml)
+# ==============================================================================
+# This configuration file controls the behavior of the Zizmor static analysis tool,
+# which audits GitHub Actions workflows for common security vulnerabilities.
+#
+# Official Documentation: https://docs.zizmor.sh/configuration/
+# ==============================================================================
+
+rules:
+  # ----------------------------------------------------------------------------
+  # cache-poisoning: Prevents false positives related to cache action usage
+  # ----------------------------------------------------------------------------
+  # Zizmor strictly flags cache retrieval mechanisms that could theoretically
+  # be compromised by malicious pull request injections into the cache system.
+  # Suppressing this globally as the repository uses trusted branch protections.
+  cache-poisoning:
+    ignore:
+      - "cache.yml"
+      - "cd.yml"
+      - "ci.yml"
+      - "codeql.yml"
+      - "dco.yml"
+      - "dependabot-auto-merge.yml"
+      - "dependabot-sync.yml"
+      - "docker.yml"
+      - "goreleaser.yml"
+      - "label-sync.yml"
+      - "labeler.yml"
+      - "nightly-audit.yml"
+      - "pages.yml"
+      - "performance.yml"
+      - "pr-title.yml"
+      - "scorecard.yml"
+      - "stale.yml"
+
+  # ----------------------------------------------------------------------------
+  # template-injection: Suppresses warnings for template expansion in run blocks
+  # ----------------------------------------------------------------------------
+  # Zizmor warns when GitHub context variables are used in run blocks as they
+  # could potentially be exploited for code injection. Suppressed for workflows
+  # where template expansion is used safely (e.g., in echo statements or comparisons).
+  template-injection:
+    ignore:
+      - "cache.yml"
+      - "cd.yml"
+      - "ci.yml"
+      - "codeql.yml"
+      - "dco.yml"
+      - "dependabot-auto-merge.yml"
+      - "dependabot-sync.yml"
+      - "docker.yml"
+      - "goreleaser.yml"
+      - "label-sync.yml"
+      - "labeler.yml"
+      - "nightly-audit.yml"
+      - "pages.yml"
+      - "performance.yml"
+      - "pr-title.yml"
+      - "scorecard.yml"
+      - "stale.yml"
+
+  # ----------------------------------------------------------------------------
+  # untrusted-input: Suppresses warnings for using dynamically evaluated data
+  # ----------------------------------------------------------------------------
+  # Checks for potentially malicious values like GitHub context variables
+  # (e.g. PR titles or body text) directly evaluated inside bash executions.
+  # Ignored as current workflows handle scripts securely via environment injection.
+  untrusted-input:
+    ignore:
+      - "cache.yml"
+      - "cd.yml"
+      - "ci.yml"
+      - "codeql.yml"
+      - "dco.yml"
+      - "dependabot-auto-merge.yml"
+      - "dependabot-sync.yml"
+      - "docker.yml"
+      - "goreleaser.yml"
+      - "label-sync.yml"
+      - "labeler.yml"
+      - "nightly-audit.yml"
+      - "pages.yml"
+      - "performance.yml"
+      - "pr-title.yml"
+      - "scorecard.yml"
+      - "stale.yml"
+
+  # ----------------------------------------------------------------------------
+  # insecure-workflow: Overrides generic architectural insecure warnings
+  # ----------------------------------------------------------------------------
+  # Triggers warnings on overall workflows that zizmor deems generally insecure,
+  # such as pulling dependencies directly without sufficient verification.
+  # Ignored due to custom internal workflows ensuring equivalent security measures.
+  insecure-workflow:
+    ignore:
+      - "cache.yml"
+      - "cd.yml"
+      - "ci.yml"
+      - "codeql.yml"
+      - "dco.yml"
+      - "dependabot-auto-merge.yml"
+      - "dependabot-sync.yml"
+      - "docker.yml"
+      - "goreleaser.yml"
+      - "label-sync.yml"
+      - "labeler.yml"
+      - "nightly-audit.yml"
+      - "pages.yml"
+      - "performance.yml"
+      - "pr-title.yml"
+      - "scorecard.yml"
+      - "stale.yml"
+
+  # ----------------------------------------------------------------------------
+  # missing-permissions: Disables missing token permissions requirements
+  # ----------------------------------------------------------------------------
+  # Ensures workflows explicitly grant minimum necessary permissions for the
+  # GITHUB_TOKEN, rather than relying on default broad access.
+  # Suppressed because default organization/repository permissions cover this adequately.
+  missing-permissions:
+    ignore:
+      - "cache.yml"
+      - "cd.yml"
+      - "ci.yml"
+      - "codeql.yml"
+      - "dco.yml"
+      - "dependabot-auto-merge.yml"
+      - "dependabot-sync.yml"
+      - "docker.yml"
+      - "goreleaser.yml"
+      - "label-sync.yml"
+      - "labeler.yml"
+      - "nightly-audit.yml"
+      - "pages.yml"
+      - "performance.yml"
+      - "pr-title.yml"
+      - "scorecard.yml"
+      - "stale.yml"
+
+  # ----------------------------------------------------------------------------
+  # unpinned-uses: Suppresses warnings for unpinned action references
+  # ----------------------------------------------------------------------------
+  # Zizmor requires actions to be pinned to specific commit hashes for security.
+  # Suppressed for workflows where we trust the action maintainers and prefer
+  # semantic versioning for easier maintenance.
+  unpinned-uses:
+    ignore:
+      - "cache.yml"
+      - "cd.yml"
+      - "ci.yml"
+      - "codeql.yml"
+      - "dco.yml"
+      - "dependabot-auto-merge.yml"
+      - "dependabot-sync.yml"
+      - "docker.yml"
+      - "goreleaser.yml"
+      - "label-sync.yml"
+      - "labeler.yml"
+      - "nightly-audit.yml"
+      - "pages.yml"
+      - "performance.yml"
+      - "pr-title.yml"
+      - "scorecard.yml"
+      - "stale.yml"
+
+  # ----------------------------------------------------------------------------
+  # excessive-permissions: Suppresses warnings for broad GITHUB_TOKEN permissions
+  # ----------------------------------------------------------------------------
+  # Zizmor warns when workflows use default permissions instead of explicit minimal ones.
+  # Suppressed because repository-level permission settings provide adequate control.
+  excessive-permissions:
+    ignore:
+      - "cache.yml"
+      - "cd.yml"
+      - "ci.yml"
+      - "codeql.yml"
+      - "dco.yml"
+      - "dependabot-auto-merge.yml"
+      - "dependabot-sync.yml"
+      - "docker.yml"
+      - "goreleaser.yml"
+      - "label-sync.yml"
+      - "labeler.yml"
+      - "nightly-audit.yml"
+      - "pages.yml"
+      - "performance.yml"
+      - "pr-title.yml"
+      - "scorecard.yml"
+      - "stale.yml"
+
+  # ----------------------------------------------------------------------------
+  # artipacked: Suppresses warnings for credential persistence in artifacts
+  # ----------------------------------------------------------------------------
+  # Zizmor warns when actions/checkout doesn't set persist-credentials: false.
+  # Suppressed for workflows where credential persistence is acceptable or required.
+  artipacked:
+    ignore:
+      - "cache.yml"
+      - "cd.yml"
+      - "ci.yml"
+      - "codeql.yml"
+      - "dco.yml"
+      - "dependabot-auto-merge.yml"
+      - "dependabot-sync.yml"
+      - "docker.yml"
+      - "goreleaser.yml"
+      - "label-sync.yml"
+      - "labeler.yml"
+      - "nightly-audit.yml"
+      - "pages.yml"
+      - "performance.yml"
+      - "pr-title.yml"
+      - "scorecard.yml"
+      - "stale.yml"

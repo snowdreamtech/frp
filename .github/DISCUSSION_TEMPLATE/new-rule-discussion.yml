@@ -1,0 +1,28 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+title: "[Discuss] "
+labels: ["discussion", "rule"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to share your idea!
+        Use this template to propose and discuss new rules, configurations, or workflow ideas before requesting a formal Feature Request.
+  - type: textarea
+    id: idea
+    attributes:
+      label: New Idea or Topic
+      description: What is the rule or workflow you would like to discuss?
+      placeholder: I am thinking about adding a rule for...
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context or Background
+      description: Provide any necessary context or background information.
+      placeholder: Currently, when using IDE X with Language Y...
+    validations:
+      required: false

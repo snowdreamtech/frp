@@ -1,0 +1,204 @@
+# -----------------------------------------------------------------------------
+# 1. Global Defaults
+# -----------------------------------------------------------------------------
+* text=auto eol=lf
+
+# -----------------------------------------------------------------------------
+# 2. Source Code (All LF)
+# -----------------------------------------------------------------------------
+*.bash text eol=lf
+*.c text eol=lf
+*.cjs text eol=lf
+*.cpp text eol=lf
+*.cs text eol=lf
+*.css text eol=lf
+*.dart text eol=lf
+*.go text eol=lf
+*.h text eol=lf
+*.html text eol=lf
+*.java text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.less text eol=lf
+*.m text eol=lf
+*.mjs text eol=lf
+*.php text eol=lf
+*.pl text eol=lf
+*.py text eol=lf
+*.rb text eol=lf
+*.rs text eol=lf
+*.scss text eol=lf
+*.sh text eol=lf
+*.sql text eol=lf
+*.svelte text eol=lf
+*.swift text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.vue text eol=lf
+*.zsh text eol=lf
+
+# -----------------------------------------------------------------------------
+# 3. Documentation & Configuration (All LF)
+# -----------------------------------------------------------------------------
+*.conf text eol=lf
+*.csv text eol=lf
+*.ini text eol=lf
+*.json text eol=lf
+*.json5 text eol=lf
+*.jsonc text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+*.txt text eol=lf
+*.xml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+.ansible-lint text eol=lf
+.editorconfig text eol=lf
+.gitattributes text eol=lf
+.gitignore text eol=lf
+.gitleaksignore text eol=lf
+.prettierignore text eol=lf
+.prettierrc text eol=lf
+.shellcheckrc text eol=lf
+.sqlfluffignore text eol=lf
+.stylelintignore text eol=lf
+.yamllint.yml text eol=lf
+.github/CODEOWNERS text eol=lf
+.goose/.goosehints text eol=lf
+.cursor/rules/rules.mdc text eol=lf
+docker-compose.yml text eol=lf
+Dockerfile text eol=lf
+.dockerignore text eol=lf
+LICENSE text eol=lf
+Makefile text eol=lf
+Taskfile.yml text eol=lf
+VERSION text eol=lf
+*.psd1 text eol=lf
+*.mts text eol=lf
+*.cts text eol=lf
+
+# -----------------------------------------------------------------------------
+# 4. Windows Scripts (Enforce CRLF)
+# -----------------------------------------------------------------------------
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# -----------------------------------------------------------------------------
+# 5. Static Assets & Binary Files
+# -----------------------------------------------------------------------------
+# Archives
+*.7z binary
+*.bz2 binary
+*.cab binary
+*.ear binary
+*.gz binary
+*.jar binary
+*.rar binary
+*.tar binary
+*.tgz binary
+*.war binary
+*.zip binary
+
+# Media (Images, Video, Audio)
+*.avi binary
+*.gif binary
+*.ico binary
+*.jpeg binary
+*.jpg binary
+*.mp3 binary
+*.mp4 binary
+*.ogg binary
+*.pdf binary
+*.png binary
+*.svg text eol=lf
+*.wav binary
+*.webm binary
+*.webp binary
+
+# Executables & Libraries
+*.class binary
+*.dll binary
+*.exe binary
+*.o binary
+*.so binary
+
+# Fonts
+*.eot binary
+*.otf binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+
+# -----------------------------------------------------------------------------
+# 6. Linguist / GitHub Overrides
+# -----------------------------------------------------------------------------
+# Standard build/dependency directories
+node_modules/ linguist-vendored=true
+dist/ linguist-vendored=true
+build/ linguist-vendored=true
+vendor/ linguist-vendored=true
+.venv/ linguist-vendored=true
+venv/ linguist-vendored=true
+env/ linguist-vendored=true
+__pycache__/ linguist-vendored=true
+coverage/ linguist-vendored=true
+out/ linguist-vendored=true
+target/ linguist-vendored=true
+.next/ linguist-vendored=true
+.nuxt/ linguist-vendored=true
+
+# AI Agent & IDE Configurations
+/.adal/** linguist-vendored=true
+/.agent/** linguist-vendored=true
+/.agents/** linguist-vendored=true
+/.aiassistant/** linguist-vendored=true
+/.aide/** linguist-vendored=true
+/.amazonq/** linguist-vendored=true
+/.augment/** linguist-vendored=true
+/.bito/** linguist-vendored=true
+/.blackbox/** linguist-vendored=true
+/.bob/** linguist-vendored=true
+/.claude/** linguist-vendored=true
+/.cline/** linguist-vendored=true
+/.codebuddy/** linguist-vendored=true
+/.codegeex/** linguist-vendored=true
+/.codeium/** linguist-vendored=true
+/.codex/** linguist-vendored=true
+/.cody/** linguist-vendored=true
+/.commandcode/** linguist-vendored=true
+/.continue/** linguist-vendored=true
+/.cortex/** linguist-vendored=true
+/.crush/** linguist-vendored=true
+/.cursor/** linguist-vendored=true
+/.devin/** linguist-vendored=true
+/.factory/** linguist-vendored=true
+/.gemini/** linguist-vendored=true
+/.goose/** linguist-vendored=true
+/.iflow/** linguist-vendored=true
+/.junie/** linguist-vendored=true
+/.kilocode/** linguist-vendored=true
+/.kiro/** linguist-vendored=true
+/.kode/** linguist-vendored=true
+/.mcpjam/** linguist-vendored=true
+/.melty/** linguist-vendored=true
+/.mux/** linguist-vendored=true
+/.neovate/** linguist-vendored=true
+/.opencode/** linguist-vendored=true
+/.openhands/** linguist-vendored=true
+/.pearai/** linguist-vendored=true
+/.pi/** linguist-vendored=true
+/.pochi/** linguist-vendored=true
+/.qoder/** linguist-vendored=true
+/.qwen/** linguist-vendored=true
+/.roo/** linguist-vendored=true
+/.shai/** linguist-vendored=true
+/.specify/** linguist-vendored=true
+/.supermaven/** linguist-vendored=true
+/.tabnine/** linguist-vendored=true
+/.trae/** linguist-vendored=true
+/.vibe/** linguist-vendored=true
+/.void/** linguist-vendored=true
+/.windsurf/** linguist-vendored=true
+/.zed/** linguist-vendored=true
+/.zencoder/** linguist-vendored=true

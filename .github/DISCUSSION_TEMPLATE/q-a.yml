@@ -1,0 +1,20 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+title: "[Q&A] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to ask a question!
+        Please read the project rules and check previous discussions or issues before asking.
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know or discuss?
+      placeholder: I am wondering how to...
+    validations:
+      required: true

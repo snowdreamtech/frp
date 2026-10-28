@@ -1,0 +1,65 @@
+# EditorConfig - Project-wide Coding Standards
+# This file defines the "Gold Standard" for indentation and file hygiene
+# to ensure consistent formatting across all 161+ supported tech stacks.
+#
+# Reference: https://EditorConfig.org
+
+# Top-most EditorConfig file
+root = true
+
+# ── Global Defaults ──────────────────────────────────────────────────────────
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# ── 4-Space Indentation ──────────────────────────────────────────────────────
+# Modern backend, system, and enterprise languages
+[*.{py,rs,java,kt,kts,scala,groovy,cs,fs,fsi,fsx,proto,c,cpp,h,hpp,objc,m,mm,f90,f95,pas,pp,d,zig,nim,odin,v,sv,vhdl,vhd,prolog,sol,lean,move,bal,ada,cob,cbl,jl,r,f,p,asm,s,fbs,thrift}]
+indent_style = space
+indent_size = 4
+
+# ── 2-Space Indentation ──────────────────────────────────────────────────────
+# Web stack, configuration files, and infrastructure-as-code
+[*.{js,ts,jsx,tsx,cjs,mjs,json,jsonc,yaml,yml,toml,html,htm,css,scss,sass,less,vue,astro,svelte,pug,styl,htmx,hbs,ejs,liquid,xml,svg,sql,tf,tfvars,dockerfile,Dockerfile,pkl,kcl,thrift,fbs,avsc,graphql,gql,dot,puml,gnu,bicep}]
+indent_style = space
+indent_size = 2
+
+# Scripting & Functional DSLs
+[*.{sh,bash,zsh,rb,pl,pm,lua,luau,tcl,awk,sed,arkts,ml,mli,clj,cljs,cljc,edn,lisp,lsp,cl,rkt,scm,gleam,cr,hx,mo,mbt,gr,typ,prql}]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+
+# Windows Scripts
+[*.{bat,cmd,ps1}]
+indent_style = space
+indent_size = 2
+end_of_line = crlf
+
+# Hidden config and RC files
+[.{babelrc,eslintrc,prettierrc,stylelintrc,yamllint.yml,ansible-lint,shellcheckrc,sqlfluff,gitleaksignore}]
+indent_style = space
+indent_size = 2
+
+# ── Special Syntactic Requirements ──────────────────────────────────────────
+# Makefile requires literal Tabs for command blocks
+[Makefile]
+indent_style = tab
+
+# Go relies heavily on gofmt which defaults to tabs
+[*.go]
+indent_style = tab
+indent_size = 4
+
+# Markdown requires trailing spaces for hard line breaks (<br>)
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = off
+
+# ── Binary & Static Assets ──────────────────────────────────────────────────
+# Prevent metadata corruption or noise in binary files
+[*.{png,jpg,jpeg,gif,webp,ico,pdf,zip,gz,tar,7z,exe,dll,so,o,pyc,jar,war,ear}]
+insert_final_newline = false
+trim_trailing_whitespace = false

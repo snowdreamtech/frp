@@ -1,0 +1,19 @@
+# This file dictates who must review PRs that touch specific files or directories
+# Documentation: https://help.github.com/articles/about-code-owners/
+
+# Global fallback:
+# Anyone with push access can review general application files
+*                           @snowdreamtech
+
+# 🤖 Agent Rules & AI SSoT (Single Source of Truth) Directory
+# Any changes to AI behaviors, instructions, or global prompts must be explicitly reviewed by the organization architects
+/.agent/rules/              @snowdreamtech
+/.github/instructions/      @snowdreamtech
+/prompts/                   @snowdreamtech
+/*rules                     @snowdreamtech
+
+# ⚙️ CI/CD & Automations
+# Protects the GitHub Action workflows, dependency management config, and pre-commit hooks
+/.github/workflows/         @snowdreamtech
+/.github/dependabot.yml     @snowdreamtech
+/.goreleaser.yaml           @snowdreamtech

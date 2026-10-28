@@ -1,0 +1,81 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🛠️ install: Install all tools & dependencies",
+      "type": "shell",
+      "command": "unirtm install",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "🔍 lint: Run all checks",
+      "type": "shell",
+      "command": "make lint",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "🔄 sync-rules: Update IDE rules",
+      "type": "shell",
+      "command": "make sync-rules",
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "🌐 web: dev server",
+      "type": "shell",
+      "command": "npm run dev",
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "🏗️ web: build",
+      "type": "shell",
+      "command": "npm run build",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "🦀 rust: cargo build",
+      "type": "shell",
+      "command": "cargo build",
+      "group": "build",
+      "problemMatcher": [
+        "$rustc"
+      ]
+    },
+    {
+      "label": "🐹 go: build",
+      "type": "shell",
+      "command": "go build ./...",
+      "group": "build",
+      "problemMatcher": [
+        "$go"
+      ]
+    },
+    {
+      "label": "☕ java: javac",
+      "type": "shell",
+      "command": "javac ${file}",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "🟣 dotnet: build",
+      "type": "shell",
+      "command": "dotnet build",
+      "group": "build",
+      "problemMatcher": [
+        "$msCompile"
+      ]
+    }
+  ]
+}

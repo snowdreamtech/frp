@@ -1,0 +1,120 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+# Deploy Docs to GitHub Pages
+# Purpose: Builds the VitePress documentation site and deploys it to GitHub Pages.
+# Trigger: Runs on pushes to 'main' affecting 'docs/' or dependency manifests.
+# Permissions:
+#   - contents: read (Required for repository checkout).
+#   - pages: write (Required for deploying to GitHub Pages).
+#   - id-token: write (Required for OIDC-based deployment).
+# Concurrency:
+#   - group: pages (Ensures atomic documentation deployments).
+#   - cancel-in-progress: false (Deploys must complete to ensure site consistency).
+# Design:
+#   - Decouples build and deployment jobs for enhanced traceability.
+#   - Uses specific semantic version tags for VitePress and setup actions.
+
+name: "📄 Deploy Docs to GitHub Pages"
+
+"on":
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+    inputs:
+      venv:
+        description: "Virtual environment path"
+        required: false
+        default: ".venv"
+
+permissions: {}
+
+env:
+  UNIRTM_LOCKED: 1
+  # Opt into Node.js 24 now ahead of GitHub's June 16, 2026 forced migration.
+  # See: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "1"
+
+jobs:
+  build:
+    name: "🏗️ Documentation Compilation"
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages-build-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: false # Never cancel in-progress deploys to avoid inconsistent states
+    permissions:
+      contents: read # Required for repository checkout
+    timeout-minutes: 50
+    env:
+      VENV: ${{ github.event.inputs.venv || '.venv' }}
+      PYTHONUTF8: 1
+
+    steps:
+      - name: "📂 Checkout Repository Code"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # Fetches source documentation and site assets for the build process.
+        with:
+          persist-credentials: false
+
+      - name: "⚡ Cache UniRTM Installs and Downloads"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.local/share/unirtm
+            ~/.cache/unirtm
+          key: ${{ runner.os }}-unirtm-${{ hashFiles('.unirtm.toml', 'unirtm.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-unirtm-
+
+      - name: "⚡ Setup UniRTM"
+        uses: snowdreamtech/setup-unirtm@663cc55933eafea30cd63f43e837cecd4a587f45 # v0.7.0
+        with:
+          unirtm-version: "0.39.0"
+          install: true
+          trust: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          UNIRTM_VERIFY_PROVENANCE: "0"
+
+      - name: "🚀 compile documentation artifacts"
+        shell: sh
+        run: |
+          cd docs
+          unirtm exec -- npm install --include=dev --legacy-peer-deps --registry=https://registry.npmjs.org
+          unirtm exec -- npm run docs:build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UNIRTM_YES: 1
+
+      - name: "📦 Stage Assets for Web Deployment"
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          # Bundles the compiled static site into a secure artifact for GitHub Pages.
+          path: docs/.vitepress/dist
+
+  deploy:
+    name: "🚀 Live Web Deployment"
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write # Required for deploying to GitHub Pages
+      id-token: write # Required for OIDC-based deployment
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
+    timeout-minutes: 40
+    steps:
+      - name: "🚀 Deploy to GitHub Pages"
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+        # Finalizes the deployment, making the new documentation live.

@@ -1,0 +1,137 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+# golangci-lint configuration for UniRTM
+# Reference: https://golangci-lint.run/usage/configuration/
+
+run:
+  timeout: 5m
+  tests: true
+  build-tags: []
+  skip-files: []
+  modules-download-mode: readonly
+  allow-parallel-runners: true
+
+output:
+  formats:
+    - format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+  sort-results: true
+
+linters:
+  disable-all: true
+  enable:
+    # Code quality
+    - govet # vet checks
+    - staticcheck # advanced static analysis
+    - gosimple # simplification suggestions
+    - unused # detect unused code
+    - ineffassign # detect ineffectual assignments
+    - typecheck # type checking
+
+    # Style and maintainability
+    - gofmt # formatting check
+    - goimports # import formatting
+
+    # Best practices
+    - depguard # block forbidden imports (e.g., CGO SQLite)
+    - bodyclose # ensure HTTP response bodies are closed
+    - noctx # ensure context is passed for HTTP requests
+    - errorlint # error wrapping
+
+    # Security
+    - gosec # security issues
+
+    # Performance
+    - prealloc # slice preallocation
+
+    # Code organization
+    - gci # import order
+    - gofumpt # stricter gofmt
+
+    # Bugs
+    - nilerr # returning nil error
+    - nilnil # returning nil, nil
+
+linters-settings:
+  govet:
+    enable-all: true
+    disable:
+      - shadow # too strict for practical use
+      - fieldalignment # breaks unkeyed struct literals in tests
+
+  # ── SQLite Driver Policy ────────────────────────────────────────────────────
+  depguard:
+    rules:
+      no-cgo-sqlite:
+        list-mode: lax
+        deny:
+          - pkg: "github.com/mattn/go-sqlite3"
+            desc: >-
+              Forbidden: CGO SQLite. Use 'modernc.org/sqlite' (pure-Go) instead.
+              Reason: CGO requires a C compiler, uses 5-10x RAM under -race, and
+              causes OOM kills in CI. See .golangci.yml for the policy.
+          - pkg: "github.com/gwenn/gosqlite"
+            desc: >-
+              Forbidden: CGO SQLite. Use 'modernc.org/sqlite' (pure-Go) instead.
+          - pkg: "github.com/mxk/go-sqlite"
+            desc: >-
+              Forbidden: CGO SQLite. Use 'modernc.org/sqlite' (pure-Go) instead.
+          - pkg: "github.com/jmoiron/sqlx"
+            desc: >-
+              Avoid sqlx with CGO SQLite drivers. Use database/sql + modernc.org/sqlite.
+
+  gosec:
+    excludes:
+      - G104 # audit errors not checked
+      - G304 # file path provided as taint input
+
+  gci:
+    sections:
+      - standard # standard library
+      - default # everything else
+      - prefix(github.com/snowdreamtech/unirtm) # project imports
+
+  gofumpt:
+    extra-rules: true
+
+issues:
+  exclude-dirs:
+    - vendor
+    - node_modules
+    - \.venv
+    - dist
+    - build
+  uniq-by-line: true
+  exclude-rules:
+    # Exclude some linters from running on tests files
+    - path: _test\.go
+      linters:
+        - gosec
+
+    # Exclude some linters from running on generated files
+    - path: ".*\\.pb\\.go$"
+      linters:
+        - gofmt
+        - goimports
+        - gci
+
+    # Exclude known issues
+    - text: "G404: Use of weak random number generator"
+      linters:
+        - gosec
+
+    # Allow blank identifier in type assertions for error checking
+    - text: "type assertion on error will fail on wrapped errors"
+      linters:
+        - errorlint
+
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  new: false
+  fix: false
+
+severity:
+  default-severity: error

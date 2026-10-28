@@ -1,0 +1,46 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+# Pull Request Labeler
+# Purpose: Automatically categorizes PRs based on changed file paths to improve backlog visibility.
+# Trigger: PR events (opened, synchronize, reopened).
+# Permissions:
+#   - pull-requests: write (Required to apply labels to the pull request).
+#   - contents: read (Required to analyze changed files via the GitHub API).
+# Concurrency:
+#   - group: labeler-${{ github.event.pull_request.number }} (Scoped to PR to avoid global collisions).
+#   - cancel-in-progress: true (Subsequent PR updates supersede previous labeling runs).
+# Design:
+#   - Configuration-driven via '.github/labeler.yml' for easy maintenance.
+#   - Lightweight, event-driven categorization with near-zero resource footprint.
+
+name: "🏷️ Pull Request Labeler"
+
+"on":
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions: {}
+
+env:
+  UNIRTM_LOCKED: 1
+
+jobs:
+  label:
+    name: "🏷️ Pull Request Categorization"
+    runs-on: ubuntu-latest
+    concurrency:
+      group: labeler-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    permissions:
+      pull-requests: write # Required to apply labels to the pull request
+      contents: read # Required to analyze changed files via the GitHub API
+    timeout-minutes: 30 # Path-based labeling is extremely fast
+    steps:
+      - name: "🔍 Triage Pull Request (Labeler)"
+        uses: actions/labeler@bf12e9b00b37c5c0ca2b87b79b2daf7891dbda13 # v7.0.0
+        with:
+          # Automatically applies labels based on file path changes to improve maintenance visibility.
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          sync-labels: true

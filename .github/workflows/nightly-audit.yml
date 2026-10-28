@@ -1,0 +1,98 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+name: "🌙 Nightly Security Audit"
+
+"on":
+  schedule:
+    # Run at 00:00 UTC every day
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  UNIRTM_LOCKED: 1
+  # Opt into Node.js 24 now ahead of GitHub's June 16, 2026 forced migration.
+  # See: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "1"
+
+jobs:
+  audit:
+    name: "🔍 Full Security Audit"
+    runs-on: ubuntu-latest
+    environment: development
+    timeout-minutes: 120
+    steps:
+      - name: "📂 Checkout Repository Code"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: "⚡ Cache UniRTM Installs and Downloads"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.local/share/unirtm
+            ~/.cache/unirtm
+          key: ${{ runner.os }}-unirtm-${{ hashFiles('.unirtm.toml', 'unirtm.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-unirtm-
+
+      - name: "⚡ Setup UniRTM"
+        uses: snowdreamtech/setup-unirtm@663cc55933eafea30cd63f43e837cecd4a587f45 # v0.7.0
+        with:
+          unirtm-version: "0.39.0"
+          install: true
+          trust: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+          UNIRTM_VERIFY_PROVENANCE: "0"
+
+      - name: "⚡ Cache Trivy Database"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .trivycache
+          key: ${{ runner.os }}-trivy-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-trivy-
+
+      - name: "🛡️ Run Security Audit"
+        shell: sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TRIVY_CACHE_DIR: .trivycache
+          TRIVY_DB_REPOSITORY: "ghcr.io/aquasecurity/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2"
+          TRIVY_JAVA_DB_REPOSITORY: "ghcr.io/aquasecurity/trivy-java-db:1,public.ecr.aws/aquasecurity/trivy-java-db:1"
+          TRIVY_CHECKS_BUNDLE_REPOSITORY: "ghcr.io/aquasecurity/trivy-checks:2,public.ecr.aws/aquasecurity/trivy-checks:2"
+          UNIRTM_YES: 1
+        run: |
+          # We run unirtm run audit which includes gitleaks, osv-scanner, etc.
+          unirtm run audit
+
+      - name: "🚨 Report Vulnerabilities"
+        if: failure()
+        shell: sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
+        run: |
+          _TITLE="🚨 Nightly Security Audit Failed: Vulnerabilities Detected"
+          _BODY="The scheduled nightly security audit detected vulnerabilities or secrets in the codebase.
+
+          **Run History:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          Please run \`unirtm run audit\` locally to investigate and fix these issues."
+
+          # Check if an open issue with the same title already exists to avoid duplication
+          _EXISTS=$(gh issue list --search "$_TITLE" --state open --json number --jq ".[0].number")
+
+          if [ -z "$_EXISTS" ]; then
+            gh issue create --title "$_TITLE" --body "$_BODY" --label "bug"
+          else
+            echo "Issue already exists: #$_EXISTS. Skipping creation."
+          fi

@@ -1,0 +1,64 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+# GitHub Cache Management
+# Purpose: Automatically clears stale GitHub Actions caches to optimize storage and prevents build pollution.
+# Trigger: Manual execution (workflow_dispatch) with optional branch/tag filtering.
+# Permissions:
+#   - actions: write (Required to delete caches via the GitHub API).
+#   - contents: read (Required for repository metadata access).
+# Concurrency:
+#   - group: ${{ github.workflow }}-${{ github.ref }} (Prevents overlapping cleanup runs).
+#   - cancel-in-progress: false (Cleanup should always complete to ensure consistent state).
+# Design:
+#   - Uses POSIX-compliant shell for maximum compatibility with runner environments.
+#   - Implements safe-fail logic (set +e) for non-critical cleanup tasks.
+
+name: "🧹 Cache Cleanup"
+
+"on":
+  schedule:
+    # Staggered to avoid peak load times on GitHub's infrastructure
+    - cron: "0 16 * * 0"
+  workflow_dispatch:
+
+permissions: {}
+
+env:
+  UNIRTM_LOCKED: 1
+
+jobs:
+  cleanup:
+    name: "🧹 Cache Sanitation Maintenance"
+    runs-on: ubuntu-latest
+    concurrency:
+      group: cache-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    permissions:
+      actions: write # Required to delete caches via the GitHub API
+      contents: read # Required for repository metadata access
+    timeout-minutes: 40 # 10m is more than enough for cache list/delete operations
+    steps:
+      - name: "🧹 Prune Inactive GitHub Caches"
+        shell: sh # POSIX compliant shell for better portability
+        run: |
+          gh extension install actions/gh-actions-cache
+
+          echo "Fetching list of cache keys..."
+          cacheKeys=$(gh actions-cache list \
+            -R "$REPO" -B "$BRANCH" -L 100 \
+            --sort created-at --order desc | cut -f 1)
+
+          # set +e: don't fail the whole job if one deletion fails (e.g., race condition)
+          set +e
+          echo "Deleting caches..."
+          for cacheKey in $cacheKeys
+          do
+              gh actions-cache delete "$cacheKey" -R "$REPO" -B "$BRANCH" --confirm
+          done
+          echo "Cleanup completed successfully."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref }}

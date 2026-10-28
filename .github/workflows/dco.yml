@@ -1,0 +1,42 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+# DCO Check
+# Purpose: Enforces the Developer Certificate of Origin (DCO) by verifying commits include 'Signed-off-by'.
+# Standards: Rule 07 (Git), Industry Best Practices for OSS Governance.
+
+name: "✍️ DCO"
+
+"on":
+  pull_request:
+    branches: [main, dev]
+
+permissions: {}
+
+env:
+  UNIRTM_LOCKED: 1
+
+jobs:
+  dco:
+    name: "🛡️ Verify Signed-off-by"
+    runs-on: ubuntu-latest
+    # Skip DCO check for bot-created PRs and repository maintainer
+    # When release-please uses GITHUB_TOKEN, it creates PRs as user 'snowdream' (not the org 'snowdreamtech')
+    # Security: github.event.pull_request.user.login cannot be forged by external contributors
+    # Note: github.repository_owner = 'snowdreamtech' (org), but PR user = 'snowdream' (user)
+    if: |
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      github.event.pull_request.user.login != 'github-actions[bot]' &&
+      github.event.pull_request.user.login != 'release-please[bot]' &&
+      github.event.pull_request.user.login != 'snowdream'
+    concurrency:
+      group: dco-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+    timeout-minutes: 30
+    steps:
+      - name: "🛡️ Check DCO Signature"
+        uses: tisonkun/actions-dco@f1024cd563550b5632e754df11b7d30b73be54a5 # v1.1
+        # This action fails if any commit in the PR lacks a 'Signed-off-by' line.

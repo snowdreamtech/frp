@@ -1,0 +1,90 @@
+# Copyright (c) 2026 SnowdreamTech. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+---
+# CodeQL Security Analysis
+# Purpose: Performs deep static analysis to detect security vulnerabilities and coding errors.
+# Trigger: Push to main, weekly schedule, and manual dispatch.
+# Permissions:
+#   - security-events: write (Required to upload SARIF results to the GitHub Security tab).
+#   - actions: read (Required to determine workflow run status).
+#   - contents: read (Required for code analysis).
+# Concurrency:
+#   - group: ${{ github.workflow }}-${{ github.ref }} (Ensures only the latest scan results are processed).
+#   - cancel-in-progress: true (In-progress scans are superseded by newer commits to save resources).
+# Design:
+#   - Utilizes advanced matrix strategy for multi-language support (Go, Python).
+#   - Leverages internal CodeQL autobuild for zero-config compilation where possible.
+
+name: "🔬 CodeQL Analysis"
+
+"on":
+  push:
+    branches:
+      - "main"
+      - "dev"
+  pull_request:
+    branches:
+      - "main"
+      - "dev"
+      - "feat/**"
+      - "branch/**"
+      - "feature/**"
+      - "fix/**"
+      - "pr/**"
+
+permissions: {}
+
+env:
+  UNIRTM_LOCKED: 1
+
+jobs:
+  analyze:
+    name: "🛡️ Deep Semantic Analysis (${{ matrix.language }})"
+    runs-on: ubuntu-latest
+    concurrency:
+      group: codeql-${{ github.workflow }}-${{ matrix.language }}-${{ github.ref }}
+      cancel-in-progress: true
+    permissions:
+      security-events: write # Required to upload SARIF results to the GitHub Security tab
+      actions: read # Required to determine workflow run status
+      contents: read # Required for code analysis
+    timeout-minutes: 360 # Deep scans on large repos can take significant time
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language:
+          - actions
+          # Uncomment the following lines when source files exist in the repo:
+          # - go # Go (*.go) — golangci-lint, gofmt
+          # - python                # Python (*.py) — ruff, ansible-lint
+          # - javascript-typescript # JS/TS (*.js, *.ts, *.jsx, *.tsx) — eslint
+          # - c-cpp                 # C/C++/Obj-C (*.c, *.cpp, *.h) — clang-format
+          # - csharp                # C# (*.cs) — dotnet format
+          # - java-kotlin           # Java/Kotlin (*.java, *.kt) — ktlint
+          # - ruby                  # Ruby (*.rb) — rubocop
+          # - swift                 # Swift (*.swift) — swiftformat, swiftlint
+
+    steps:
+      - name: "📂 Checkout Repository Code"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: "🛡️ Initialize CodeQL Engine"
+        uses: github/codeql-action/init@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          # Sets up the CodeQL database for the specified technical stack (e.g., Python, Go).
+          languages: ${{ matrix.language }}
+          config-file: .github/codeql/codeql-config.yml
+
+      - name: "🚀 Bootstrap Target Build"
+        uses: github/codeql-action/autobuild@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        # Attempts to automatically compile the project to enable full-trace analysis.
+
+      - name: "🔍 Perform Deep Security Analysis"
+        uses: github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          # Executes the semantic queries and generates the final vulnerability report.
+          category: "/language:${{ matrix.language }}"
