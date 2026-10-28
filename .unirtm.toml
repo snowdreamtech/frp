@@ -2,44 +2,18 @@
 # Licensed under the MIT License. See LICENSE file in the project root for full license information.
 #:schema ./schemas/unirtm.schema.json
 
-
 [env]
-GOTOOLCHAIN = "auto"
-COREPACK_INTEGRITY_KEYS = "0"
-PYTHONUTF8 = "1"
-PYTHONUNBUFFERED = "1"
-UNIRTM_NODE_COMPILE = "{% if env.ALPINE_VERSION is defined %}false{% endif %}"
-UNIRTM_NODE_FLAVOR = "{% if env.ALPINE_VERSION is defined %}musl{% endif %}"
 UNIRTM_HOOK_ALLOW_MISSING = "1"
 
 [tools]
 "github:anchore/syft" = "1.55.0"
 "github:aquasecurity/trivy" = "0.76.1"
-"github:astral-sh/ruff" = "0.16.6"
 "github:cli/cli" = "2.102.0"
 "github:gitleaks/gitleaks" = "8.30.1"
 "github:google/osv-scanner" = "2.7.0"
 "github:koalaman/shellcheck" = "0.11.0"
-"go:mvdan.cc/sh/v3/cmd/shfmt" = "v3.14.0"
 "github:rhysd/actionlint" = "1.7.12"
 "github:zizmorcore/zizmor" = "1.31.1"
-"github:goreleaser/goreleaser" = "2.18.2"
-go = "1.27.3"
-node = "26.8.1"
-"npm:@commitlint/cli" = "21.2.4"
-"npm:@commitlint/config-conventional" = "21.2.4"
-"npm:@taplo/cli" = "0.7.0"
-"npm:eslint" = "10.13.0"
-"npm:prettier" = "3.9.10"
-"npm:sort-package-json" = "4.1.0"
-"npm:stylelint" = "17.16.0"
-"pipx:pip-audit" = "2.10.1"
-python = "3.14.7"
-"go:golang.org/x/vuln/cmd/govulncheck" = "v1.9.0"
-
-"go:golang.org/x/tools/cmd/goimports" = "v0.49.0"
-"go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint" = "v2.13.2"
-"go:github.com/securego/gosec/v2/cmd/gosec" = "v2.29.0"
 
 [guard]
 enabled = true
@@ -51,16 +25,13 @@ depends = [
   "audit:gitleaks",
   "audit:zizmor",
   "audit:osv",
-  "audit:npm",
-  "audit:pip",
-  "audit:govulncheck",
   "audit:trivy",
 ]
 output = "interleaved"
 
 [tasks."audit:fix"]
 description = "Auto-fix security flaws and dependency vulnerabilities where supported"
-depends = ["audit:zizmor", "audit:npm", "audit:pip"]
+depends = ["audit:zizmor"]
 output = "interleaved"
 env = { UNIRTM_FIX = "1" }
 
@@ -111,52 +82,6 @@ for i in 1 2 3; do
     sleep 2
 done
 exit 1
-'''
-output = "interleaved"
-
-[tasks."audit:npm"]
-description = "Node.js dependency audit"
-run = '''
-if [ -f "package.json" ]; then
-    if [ "$UNIRTM_FIX" = "1" ]; then
-        unirtm exec -- npm audit fix --registry=https://registry.npmjs.org
-    else
-        unirtm exec -- npm audit --registry=https://registry.npmjs.org
-    fi
-else
-    echo "↷  Skipped (no package.json)"
-fi
-'''
-output = "interleaved"
-
-[tasks."audit:pip"]
-description = "Python dependency audit"
-run = '''
-if [ -f "requirements.txt" ] || [ -f "pyproject.toml" ]; then
-    if [ "$UNIRTM_FIX" = "1" ]; then
-        unirtm exec -- pip-audit --fix
-    else
-        unirtm exec -- pip-audit
-    fi
-else
-    echo "↷  Skipped (no python requirements)"
-fi
-'''
-output = "interleaved"
-
-[tasks."audit:govulncheck"]
-description = "Go dependency audit"
-run = '''
-if [ -f "go.mod" ]; then
-    # In local development, skip external Go vulnerability network scan unless explicitly requested.
-    if [ "${CI:-}" != "true" ] && [ "${GITHUB_ACTIONS:-}" != "true" ] && [ "${RUN_GOVULNCHECK_LOCAL:-}" != "1" ]; then
-        echo "↷  Skipped govulncheck online vulnerability scan locally (deferred to CI runner)."
-        exit 0
-    fi
-    unirtm exec -- govulncheck ./...
-else
-    echo "↷  Skipped (no go.mod)"
-fi
 '''
 output = "interleaved"
 
@@ -211,7 +136,6 @@ output = "interleaved"
 description = "Run template sanity check"
 run = "unirtm version"
 output = "interleaved"
-env = { GOTOOLCHAIN = "auto", CGO_ENABLED = "0" }
 
 [tasks.verify]
 description = "Run verification sequentially: incremental on local, full-coverage on CI"
