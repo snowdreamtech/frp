@@ -32,30 +32,6 @@ updates:
       - "devcontainers"
       - "infrastructure"
 
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    target-branch: "dev"
-    open-pull-requests-limit: 5
-    rebase-strategy: "auto"
-    groups:
-      all-dependencies:
-        patterns: ["*"]
-        update-types:
-          - "patch"
-          - "minor"
-          - "major"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    cooldown:
-      default-days: 7
-    commit-message:
-      prefix: "ci(deps):"
-    labels:
-      - "dependencies"
-      - "github-actions"
-      - "devops"
-
   - package-ecosystem: "docker"
     directory: "/docker/alpine"
     target-branch: "dev"
@@ -142,3 +118,27 @@ updates:
         update-types:
           - "version-update:semver-minor"
           - "version-update:semver-major"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "dev"
+    open-pull-requests-limit: 5
+    rebase-strategy: "auto"
+    groups:
+      all-dependencies:
+        patterns: ["*"]
+        update-types:
+          - "patch"
+          - "minor"
+          - "major"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "ci(deps):"
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "devops"
