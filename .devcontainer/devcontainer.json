@@ -8,9 +8,7 @@
   "containerEnv": {
     "XDG_CACHE_HOME": "/var/cache/xdg"
   },
-  "mounts": [
-    "source=xdg-cache,target=/var/cache/xdg,type=volume"
-  ],
+  "mounts": ["source=xdg-cache,target=/var/cache/xdg,type=volume"],
   "customizations": {
     "vscode": {
       "extensions": [
