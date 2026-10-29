@@ -259,7 +259,7 @@ A: 不需要。`.unirtm.toml` 中的配置对所有环境生效：
 - [UniRTM Attestation Error 故障排除](../troubleshooting/unirtm-attestation-error.md)
 - [工具安装参考](./tool-installation.md)
 - [Alpine 兼容性](../alpine-compatibility.md)
-- [安全最佳实践](../rules/04-security.md)
+- [UniRTM 供应链安全分析](../security/unirtm-supply-chain.md)
 
 ## 更新历史
 
