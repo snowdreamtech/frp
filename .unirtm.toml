@@ -21,12 +21,7 @@ enabled = true
 [tasks]
 [tasks.audit]
 description = "Run comprehensive security audit sequentially"
-depends = [
-  "audit:gitleaks",
-  "audit:zizmor",
-  "audit:osv",
-  "audit:trivy",
-]
+depends = ["audit:gitleaks", "audit:zizmor", "audit:osv", "audit:trivy"]
 output = "interleaved"
 
 [tasks."audit:fix"]
