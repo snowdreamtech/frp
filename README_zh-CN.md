@@ -6,215 +6,160 @@
 [![CodeQL 审计](https://img.shields.io/github/actions/workflow/status/snowdreamtech/template/codeql.yml?branch=main&label=CodeQL&logo=github)](https://github.com/snowdreamtech/template/actions/workflows/codeql.yml)
 [![跨平台验证](https://img.shields.io/badge/Verified-Linux%20%7C%20macOS%20%7C%20Windows-blue)](https://github.com/snowdreamtech/template/actions/workflows/ci.yml)
 [![安全审计](https://img.shields.io/badge/Security-Zizmor%20%7C%20Trivy%20%7C%20Gitleaks-brightgreen)](https://github.com/snowdreamtech/template/actions/workflows/ci.yml)
+[![UniRTM 质量守卫](https://img.shields.io/badge/Quality%20Guard-UniRTM%20Native-blue)](https://github.com/snowdreamtech/UniRTM)
 [![SBOM 背书](https://img.shields.io/badge/SBOM-Available-success)](https://github.com/snowdreamtech/template/releases/latest)
 [![许可证: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/MIT)
 [![最新发布](https://img.shields.io/github/v/release/snowdreamtech/template?logo=github&sort=semver)](https://github.com/snowdreamtech/template/releases/latest)
 [![Dependabot 已启用](https://img.shields.io/badge/Dependabot-Enabled-brightgreen?logo=dependabot)](https://github.com/snowdreamtech/template/blob/main/.github/dependabot.yml)
-[![pre-commit 已启用](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![GitHub Stars](https://img.shields.io/github/stars/snowdreamtech/template?style=social)](https://github.com/snowdreamtech/template)
 [![GitHub Issues](https://img.shields.io/github/issues/snowdreamtech/template)](https://github.com/snowdreamtech/template/issues)
 [![代码规模](https://img.shields.io/github/languages/code-size/snowdreamtech/template)](https://github.com/snowdreamtech/template)
 
 [English](README.md) | [简体中文](README_zh-CN.md)
 
-一个企业级、为多 AI IDE 协作而设计的基石模板。本项目作为 AI Agent 规则、工作流和项目配置的**单一事实来源 (Single Source of Truth)**，支持超过 50 种不同的 AI 辅助 IDE，并提供海量的多语言支持。
+基于 [UniRTM](https://github.com/snowdreamtech/UniRTM) 构建的企业级多 AI IDE 协作脚手架。本项目采用针对 AI 智能体的**零侵入架构 (Zero-Footprint Architecture)**，提供标准 Model Context Protocol (MCP) 服务、确定性锁版本工具链以及覆盖 Linux、macOS 和 Windows 的全链路工程质量守卫。
 
-## 🌟 特性
+---
 
-- **多 IDE 兼容性**：开箱即用支持 Cursor、Windsurf、GitHub Copilot、Cline、Roo Code、Trae、Gemini、Claude Code 等 50 多种 AI 编辑器。
-- **统一规则系统**：在 `.agent/rules/` 中维护中心化规则定义。在此修改规则通过安全的软链接/重定向模式自动传播到所有支持的 IDE。
-- **80+ 语言与框架规则**：预配置的高质量规则，涵盖从 Rust、Go、TypeScript、Python 到 Ansible、Kubernetes 和 API 设计等各个领域。
-- **智能工作流 (SpecKit)**：标准化的 `.agent/workflows/`（命令），如 `speckit.plan`、`speckit.analyze` 和 `snowdreamtech.init`，在所有支持的环境中保持一致。
-- **三重保证质量**：通过 Pre-commit 和 GitHub Actions 集成门禁检查，确保 100% 的代码纯净。
-- **跨平台就绪**：在 macOS (Homebrew/MacPorts)、Linux 和 Windows 上无缝运行。
+## 🌟 核心特性
 
-## 🏗️ 第 1 节 — 设计与架构
+- **零侵入 AI 集成 (Zero-Footprint)**：通过标准 Model Context Protocol (`unirtm mcp`) 对接任意 AI IDE 或智能体（Cursor、Windsurf、Claude Code、GitHub Copilot、Roo Code、Trae、Zed 等），无需在仓库根目录提交 50+ 个私有配置目录（如 `.cursor/`、`.cline/` 等）。
+- **UniRTM 确定性工具链**：通过 [unirtm.lock](unirtm.lock) 锁定各编译器运行时（Node.js、Go、Python）及所有开发工具的精准版本与 SHA-256 跨平台完整性哈希。
+- **原生质量守卫 (Quality Guard)**：内置开箱即用的约定式提交验证（`builtin:commit-msg`）、代码格式化与代码检查，本地毫秒级校验，彻底摆脱重型外部运行时包装。
+- **企业级安全防线**：基于 Gitleaks 的提交级硬编码机密扫描、基于 Zizmor 的 GitHub Actions 工作流安全审计，以及基于 OSV-Scanner 与 Trivy 的多层依赖漏洞检测。
+- **可复现 DevContainer**：标准化的 `.devcontainer` 环境，实现本地开发机与云端开发容器的 100% 环境一致性。
+- **双语文档站点**：现代化的 VitePress 文档架构，自动化构建并持续部署至 GitHub Pages。
 
-### 概览 (Overview)
+---
 
-Snowdream Tech 模板是一个基础脚手架，专为解决“多重 AI IDE 协作产生的配置碎片化”问题而设计。它在各种平台和语言中标准化了开发环境、AI Agent 规则以及自动化流水线。
-
-**核心能力 (Key Capabilities):**
-
-- 提供**统一的规则引擎**，跨 50+ 种 IDE 一致地约束 AI 行为。
-- 通过动态适配的 POSIX Shell 自动化脚本，强制保证**跨平台便携性**。
-- 实施**三重保证质量门禁**（IDE、CLI、CI），严防代码劣化。
-- 支持**大规模多语言技术栈**，并配备模块化的加载逻辑。
-
-### 架构 (Architecture)
+## 🏗️ 架构设计
 
 ```mermaid
 graph TD
-    A["开发者与智能体 (Agents)"] -->|操作| IDE["Cursor / Windsurf / Copilot / 50+ 其它"]
-    IDE -->|通过重定向读取规则| R1[".vscode/"]
-    IDE -->|通过重定向读取规则| R2[".github/"]
-    IDE -->|通过重定向读取规则| R3[".cline/ .trae/ 等等"]
+    subgraph "AI IDEs 与智能体"
+        IDE["Cursor / Windsurf / Claude Code / Copilot / Trae / Zed"]
+    end
 
-    R1 -.->|SSoT 指针| CoreRules[".agent/rules/"]
-    R2 -.->|SSoT 指针| CoreRules
-    R3 -.->|SSoT 指针| CoreRules
+    subgraph "UniRTM 统一运行时基座"
+        MCP["UniRTM MCP 服务<br/>(unirtm mcp)"]
+        CLI["UniRTM 任务执行器<br/>(unirtm run ...)"]
+        Guard["质量守卫 Quality Guard<br/>(builtin:commit-msg, 格式化, 代码检查)"]
+        Lock["确定性工具链<br/>(.unirtm.toml / unirtm.lock)"]
+    end
 
-    CoreRules -->|管理与约束| Src["项目应用源码"]
-    CoreRules -->|管理与约束| Scripts["CI/CD 与统一自动化脚本"]
+    subgraph "CI / CD 流水线"
+        GH["GitHub Actions<br/>(Ubuntu / macOS / Windows)"]
+        Sec["安全审计<br/>(Zizmor, Gitleaks, Trivy, OSV)"]
+        Pages["文档自动部署<br/>(GitHub Pages)"]
+    end
+
+    IDE <-->|通过 stdio 进行 MCP 协议通信| MCP
+    MCP -->|动态注入规则与工作流| Lock
+    CLI --> Guard
+    CLI --> Lock
+    GH --> Guard
+    GH --> Sec
+    GH --> Pages
 ```
 
-### 设计原则
+### 核心架构原则
 
-- **唯一事实来源 (SSoT)**: 所有 AI 行为准则、开发脚手架命令和 Git 生态钩子均集中在一处维护，彻底消灭各 IDE 之间的配置孤岛与冗余。
-- **跨平台多态性 (Cross-Platform)**: 核心自动化流水线基于原生 POSIX Shell 编写，且强制为 Windows (PowerShell / Batch) 提供对等兼容的轻量级包装层。
-- **三重质量护城河 (Triple Guarantee)**: 由 IDE 实时自动修复、Pre-commit 本地强制阻断、以及 CI/CD (GitHub Actions) 远端全量审计，三层联防共同构建 100% 代码纯净度防线。
-
-### 职责分工
-
-- **.agent/rules/**: 拥有跨所有支持语言的 AI Agent 权威行为逻辑。
-- **scripts/**: 拥有跨平台自动化和生命周期逻辑。
-- **.agent/workflows/**: 拥有交互式 AI 命令 (SpecKit)。
+1. **零仓库污染 (Zero Pollution)**：AI 智能体的提示词规则与工作流通过 stdio MCP 动态提供（`unirtm://config`、`unirtm://conventions`），严禁在项目根目录产生工具碎片。
+2. **单一事实来源 (SSoT)**：所有开发工具链、任务流水线与代码质量契约集中在 [.unirtm.toml](.unirtm.toml) 中声明，并在 [unirtm.lock](unirtm.lock) 中固化版本与哈希。
+3. **三重质量护城河**：由 IDE 本地格式化、Git Pre-commit 守卫阻断与多平台 GitHub Actions CI 构筑坚实的代码纯净度防线。
 
 ---
 
-## 📖 第 2 节 — 使用指南
+## 📖 快速开始
 
-### 前置条件
+### 前置要求
 
-- **运行时**: Node.js (>= 20.x), Python (>= 3.10.x)。
-- **Git**: 需要全局安装 git。
+- **[UniRTM](https://github.com/snowdreamtech/UniRTM) (>= 0.39.0)**：全局统一运行时与任务管理工具。
+- **Git**：建议配置好提交用户邮箱与 GPG 签名密钥。
 
-### 快速开始
-
-1. **前提条件**：必须安装 [UniRTM](https://github.com/snowdreamtech/UniRTM) 以实现全局工具和任务管理。
-2. **初始化**：`unirtm run setup`（引导安装核心工具）。
-3. **安装**：`unirtm run install`（同步项目依赖）。
-4. **验证**：`unirtm run verify`（确保环境健康）。
-
-### 配置参考
-
-| 参数           | 用途                                       | 位置                    |
-| :------------- | :----------------------------------------- | :---------------------- |
-| `PROJECT_NAME` | 项目身份                                   | `init-project.sh`       |
-| `GITHUB_PROXY` | 网络优化 (见 [代理使用场](#-代理使用场景)) | `scripts/lib/common.sh` |
-| `VERSION`      | 语义化版本                                 | `package.json`          |
-
-### 目录结构
-
-```text
-project-root/
-├── .agent/              # 🤖 权威 AI 配置 (大脑)
-│   ├── rules/           # 📏 统一 AI 行为规则 (80+ 套件, SSoT)
-│   └── workflows/       # 🛠️ 统一命令与 AI 工作流 (SpecKit)
-├── .agents/             # 🧩 共享命令源 (自动管理的软链接)
-├── .github/             # 🐙 GitHub 集成与 Copilot 设置
-├── .vscode/             # 💻 优化的 VS Code 配置
-└── src/                 # 📦 您的实际应用源代码
-```
-
----
-
-## 🛠️ 第 3 节 — 运维指南
-
-### 部署前检查清单
-
-1. 运行 `unirtm run verify` 确保所有质量门禁均为绿色。
-2. 运行 `unirtm run audit` 验证安全合规性。
-3. 确保 `CHANGELOG.md` 已更新。
-
-### 性能考虑
-
-- **Lint 速度**: Pre-commit 钩子通过仅扫描暂存文件，目标耗时 < 5s。
-- **CI 吞吐量**: GitHub Actions 使用矩阵构建在不同操作系统上并行测试。
-
-### 故障排除
-
-- **问题**: `unirtm run install` 在 Windows 上失败。
-  - **诊断**: 检查 `ExecutionPolicy` 是否允许脚本执行。
-  - **解决方案**: 运行 `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`。
-- **问题**: Gitleaks 检测到误报。
-  - **诊断**: 检查 `.gitleaks.toml` 白名单。
-  - **解决方案**: 将特征码添加到 `.gitleaksignore`。
-- **问题**: `unirtm run install` 后，macOS 上的 Pre-commit 钩子出现 Python 报错。
-  - **诊断**: 检查 venv 是否存在：`ls .venv/bin/python`。
-  - **解决方案**: 重建 venv：`rm -rf .venv && unirtm run install`。
-
----
-
-## 🔒 第 4 节 — 安全注意事项
-
-### 安全模型
-
-- **机密管理**: 所有机密必须通过环境变量注入或由 HashiCorp Vault 处理。严禁提交 `.env` 文件。
-- **审计日志**: 所有关键操作（提交、发布、状态变更）均通过 Git 和 CI 日志记录。
-- **供应链**: 所有 CI Action 均锁定到精确的版本/SHA。
-
-### 最佳实践
-
-| 维度   | 要求             | 实现                          |
-| :----- | :--------------- | :---------------------------- |
-| 机密   | 仓库中无明文机密 | 提交时强制执行 `gitleaks`     |
-| 完整性 | 验证下载内容     | `common.sh` 中的 SHA-256 校验 |
-| 权限   | 非 root 执行     | Dockerfile 最佳实践           |
-
----
-
-## 🧑‍💻 第 5 节 — 开发者指南
-
-### 代码组织 (Code Organization)
-
-```text
-project-root/
-├── .agent/               # AI 配置（单一事实来源）
-│   ├── rules/            # 88 个 AI Agent 行为规则文件
-│   └── workflows/        # SpecKit 斜杠命令定义
-├── .github/              # GitHub 生态（Actions、模板、Dependabot）
-│   └── workflows/        # CI/CD 流水线（lint、verify、release、security）
-├── .devcontainer/        # DevContainer 配置，保障可复现的开发环境
-├── docs/                 # 项目文档
-│   ├── adr/              # 架构决策记录
-│   ├── runbooks/         # 运维与恢复手册
-│   └── glossary.md       # 中英文对照术语表
-├── scripts/              # POSIX Shell 自动化脚本（setup、install、verify）
-│   └── lib/              # 共享 Shell 库函数
-└── .unirtm.toml          # 任务编排（setup、install、lint、verify、audit）
-```
-
-**命名规范**：核心规则文件使用 `NN-短横线命名.md`，语言栈规则使用 `technology.md`，
-工作流文件使用 `namespace.verb.md`，Shell 脚本使用 `kebab-case.sh`。
-
-### 扩展点
-
-1. **添加规则**: 在 `.agent/rules/` 中创建新的 `.md` 文件，并在 `00-index.md` 中关联。
-2. **添加命令**: 将 `.md` 文件添加到 `.agent/workflows/`。
-3. **添加 IDE 支持**: 按照 Rule 03 中的软链接模式创建重定向文件夹（例如 `.myide/`）。
-
-### 本地开发设置
+### 引导流程
 
 ```bash
-git clone <repo>
-cd <repo>
-git config core.ignorecase false  # Mac/Windows 用户必须执行此设置
-git config core.filemode false    # Windows 用户推荐设置（避免文件权限误报变更）
+# 1. 克隆仓库
+git clone https://github.com/snowdreamtech/template.git
+cd template
+
+# 2. 信任仓库配置
+unirtm trust
+
+# 3. 安装工具链并配置本地 Git 钩子
 unirtm run setup
-unirtm run install
+
+# 4. 验证环境并执行全工作区质量验证
+unirtm run verify
 ```
 
-### 参考资料
+---
 
-- [完整文档](docs/index.md)
-- [项目术语表](docs/glossary.md)
-- [约定式提交](https://www.conventionalcommits.org/)
+## 🛠️ 任务清单参考
 
-### 🚀 代理使用场景
+所有常规工作流均通过 [.unirtm.toml](.unirtm.toml) 中的 UniRTM 任务标准化定义：
 
-`GITHUB_PROXY` (默认: `https://gh-proxy.sn0wdr1am.com/`) 针对特定的网络加速场景进行了优化。在不支持的协议（如 Git）上误用它会导致错误。
+| 命令 | 用途 | 说明 |
+| :--- | :--- | :--- |
+| `unirtm run setup` | 工具链引导 | 安装锁定版本的编译器、工具并配置钩子 |
+| `unirtm run verify` | 全量质量检查 | 执行所有代码格式化、Linter 及安全规则校验 |
+| `unirtm run audit` | 安全漏洞审计 | 运行 Gitleaks、Zizmor、Trivy 及 OSV-Scanner |
+| `unirtm run fix` | 自动修复 | 自动修正支持的代码格式与可修复语法规则 |
+| `unirtm run docs:dev` | 本地文档服务 | 启动 VitePress 实时热更新文档开发服务器 |
+| `unirtm run docs:build` | 编译文档 | 编译用于生产部署的静态文档站点 |
+| `unirtm mcp` | AI 智能体服务 | 启动标准 Model Context Protocol 服务端 |
 
-| 场景                   | 是否支持      | 示例 / 说明                                    |
-| :--------------------- | :------------ | :--------------------------------------------- |
-| **Release 文件**       | ✅ 支持       | `.../releases/download/v1.0/tool.zip`          |
-| **源码归档 (Archive)** | ✅ 支持       | `.../archive/master.zip` 或 `.tar.gz`          |
-| **文件直接链接**       | ✅ 支持       | `.../blob/master/filename`                     |
-| **Git Clone**          | ❌ **不支持** | **请勿**用于 `git clone` 或 `insteadOf` 配置。 |
-| **项目文件夹**         | ❌ **不支持** | 不支持通过代理进行项目文件夹的浏览或克隆。     |
+---
 
-> [!IMPORTANT]
-> 为了防止破坏工具链（如 `unirtm` 或 `asdf`），本模板显式禁用了通过此代理进行的 Git 重定向。请仅在脚本中进行直接 HTTP 下载时使用它。
+## 📂 项目结构
+
+```text
+project-root/
+├── .devcontainer/        # 🐳 标准化可复现 DevContainer 开发容器配置
+├── .github/              # 🐙 GitHub 集成与自动化流水线
+│   └── workflows/        # 🚀 经多系统验证的 Actions 工作流 (CI, CD, Pages, CodeQL)
+├── .vscode/              # 💻 推荐的编辑器设置与任务定义
+├── docs/                 # 📖 VitePress 完整中英双语文档站点
+│   ├── guide/            # 架构理念、CI/CD 与预提交钩子说明
+│   ├── reference/        # 配置手册、工具链参考与规范
+│   ├── security/         # 供应链安全分析与防护指南
+│   └── workflows/        # 规范化工作流文档
+├── schemas/              # 📐 UniRTM 工具链与清单的 JSON Schema 定义
+├── .editorconfig         # 📝 跨编辑器基础格式化规范
+├── .unirtm.toml          # 🔧 仓库工具链、质量守卫规则与任务定义
+├── unirtm.lock           # 🔒 精确固化的工具版本与跨平台 SHA-256 完整性哈希
+├── CHANGELOG.md          # 📜 版本变更历史（基于 Release-Please 自动生成）
+├── CONTRIBUTING.md       # 🤝 贡献者指南与社区规范
+├── LICENSE               # ⚖️ MIT 开源许可证
+└── VERSION               # 🏷️ 语义化版本声明文件
+```
+
+---
+
+## 🔒 安全保障机制
+
+- **机密防护**：在暂存区与历史提交上严格执行 Gitleaks 密钥检测，防止凭据泄露。
+- **流水线加固**：通过 Zizmor 与 Actionlint 审计 Actions 最小权限与语法安全。
+- **依赖审计**：通过 Google OSV-Scanner 与 Aqua Trivy 双重扫描第三方依赖安全隐患。
+- **可复现构建**：所有外部二进制与工具均与 `unirtm.lock` 中的 SHA-256 哈希进行密码学强校验。
+
+---
+
+## ❓ 常见问题排查
+
+- **配置未信任警告**：
+  - *现象*：`Tasks in .unirtm.toml are ignored because the configuration file is not trusted`。
+  - *解决*：在项目根目录下执行 `unirtm trust` 即可。
+- **Windows PowerShell 脚本执行策略受限**：
+  - *现象*：Windows 终端下运行任务时报错提示脚本执行策略限制。
+  - *解决*：在终端运行 `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`。
+- **Gitleaks 误报测试用例数据**：
+  - *现象*：测试文件中的 Mock 数据或特定格式字符串被识别为泄露。
+  - *解决*：将指纹或规则添加到 [.gitleaksignore](.gitleaksignore) 或在 [.gitleaks.toml](.gitleaks.toml) 中配置白名单。
+- **生成锁文件时报告平台不完整**：
+  - *现象*：某些特定架构上游未发布官方二进制，执行 `unirtm lock` 出现缺失提示。
+  - *解决*：使用 `unirtm lock --allow-incomplete` 命令完成对已有支持平台的精准锁定。
 
 ---
 
@@ -224,6 +169,6 @@ unirtm run install
 版权所有 (c) 2026-现在 [SnowdreamTech Inc.](https://github.com/snowdreamtech)
 详见 [LICENSE](./LICENSE) 文件。
 
-## Star History
+## 🌟 Star History
 
 [![Star History Chart](https://api.star-history.com/image?repos=snowdreamtech/template&type=date&legend=top-left)](https://www.star-history.com/?repos=snowdreamtech%2Ftemplate&type=date&legend=top-left)
