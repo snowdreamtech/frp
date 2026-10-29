@@ -1,9 +1,16 @@
 # Base
 
+[![CI 流水线](https://img.shields.io/github/actions/workflow/status/snowdreamtech/base/ci.yml?branch=main&label=CI%20Pipeline)](https://github.com/snowdreamtech/base/actions/workflows/ci.yml)
+[![CD 自动化发布](https://img.shields.io/github/actions/workflow/status/snowdreamtech/base/cd.yml?branch=main&label=CD%20Pipeline)](https://github.com/snowdreamtech/base/actions/workflows/cd.yml)
+[![CodeQL 审计](https://img.shields.io/github/actions/workflow/status/snowdreamtech/base/codeql.yml?branch=main&label=CodeQL&logo=github)](https://github.com/snowdreamtech/base/actions/workflows/codeql.yml)
+[![安全审计](https://img.shields.io/badge/Security-Zizmor%20%7C%20Trivy%20%7C%20Gitleaks-brightgreen)](https://github.com/snowdreamtech/base/actions/workflows/ci.yml)
+[![许可证: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/MIT)
 ![Docker Image Version](https://img.shields.io/docker/v/snowdreamtech/base)
 ![Docker Image Size](https://img.shields.io/docker/image-size/snowdreamtech/base/latest)
 ![Docker Pulls](https://img.shields.io/docker/pulls/snowdreamtech/base)
 ![Docker Stars](https://img.shields.io/docker/stars/snowdreamtech/base)
+
+[English](README.md) | [简体中文](README_zh-CN.md)
 
 Docker 基础模板，提供标准化的容器基础，具有灵活的入口点系统、多架构支持以及跨 Alpine、Debian 和 Rocky Linux 发行版的一致配置模式。
 
@@ -25,8 +32,8 @@ Docker 基础模板作为构建容器化应用程序的基础起点。它提供�
 docker pull snowdreamtech/base:debian
 docker run -d --name=base -e TZ=Asia/Shanghai snowdreamtech/base:debian
 
-# 或使用 docker-compose
-docker-compose up -d
+# 或使用 docker compose
+docker compose up -d
 ```
 
 ## 发行版变体
@@ -128,23 +135,24 @@ docker buildx build \
 
 所有变体都支持以下环境变量进行运行时配置：
 
-| 变量 | 默认值 | 描述 |
-|----------|---------|-------------|
-| `KEEPALIVE` | `0` | 保持容器运行（1=启用，0=禁用）|
-| `CAP_NET_BIND_SERVICE` | `0` | 启用绑定到特权端口（<1024）|
-| `LANG` | `C.UTF-8` | UTF-8 字符支持的区域设置 |
-| `UMASK` | `022` | 默认文件创建掩码 |
-| `DEBUG` | `false` | 在入口点脚本中启用调试输出 |
-| `PGID` | `0` | 自定义用户创建的主组 ID |
-| `PUID` | `0` | 自定义用户创建的用户 ID |
-| `USER` | `root` | 自定义用户创建的用户名 |
-| `WORKDIR` | `/root` | 工作目录路径 |
-| `TZ` | - | 时区（例如 `Asia/Shanghai`、`America/New_York`）|
+| 变量                   | 默认值    | 描述                                             |
+| ---------------------- | --------- | ------------------------------------------------ |
+| `KEEPALIVE`            | `0`       | 保持容器运行（1=启用，0=禁用）                   |
+| `CAP_NET_BIND_SERVICE` | `0`       | 启用绑定到特权端口（<1024）                      |
+| `LANG`                 | `C.UTF-8` | UTF-8 字符支持的区域设置                         |
+| `UMASK`                | `022`     | 默认文件创建掩码                                 |
+| `DEBUG`                | `false`   | 在入口点脚本中启用调试输出                       |
+| `PASSWORDLESS_SUDO`    | `false`   | 是否为非 root 用户启用无密码 sudo（true/false）  |
+| `PGID`                 | `0`       | 自定义用户创建的主组 ID                          |
+| `PUID`                 | `0`       | 自定义用户创建的用户 ID                          |
+| `USER`                 | `root`    | 自定义用户创建的用户名                           |
+| `WORKDIR`              | `/root`   | 工作目录路径                                     |
+| `TZ`                   | -         | 时区（例如 `Asia/Shanghai`、`America/New_York`） |
 
 **Debian 特定**：
 
-| 变量 | 默认值 | 描述 |
-|----------|---------|-------------|
+| 变量              | 默认值           | 描述                  |
+| ----------------- | ---------------- | --------------------- |
 | `DEBIAN_FRONTEND` | `noninteractive` | Debian 软件包安装模式 |
 
 ### 自定义用户创建
@@ -223,11 +231,11 @@ services:
 
 每个发行版变体都支持多个 CPU 架构，可在多样化的硬件平台上部署：
 
-| 变体 | 架构 |
-|---------|---------------|
-| **Debian** | amd64、arm32v7、arm64、ppc64le、riscv64、s390x |
+| 变体       | 架构                                                          |
+| ---------- | ------------------------------------------------------------- |
+| **Debian** | amd64、arm32v7、arm64、ppc64le、riscv64、s390x                |
 | **Alpine** | i386、amd64、arm32v6、arm32v7、arm64、ppc64le、riscv64、s390x |
-| **Rocky** | amd64、arm64、ppc64le、s390x |
+| **Rocky**  | amd64、arm64、ppc64le、s390x                                  |
 
 Docker 在拉取镜像时会自动为您的平台选择适当的架构。
 
@@ -278,15 +286,28 @@ docker run -e DEBUG=true snowdreamtech/base:debian
 
 ### 前置要求
 
-- Docker（>= 20.10）
-- Docker Buildx 插件
+- Docker（>= 20.10）及 Docker Buildx 插件
+- [UniRTM](https://github.com/snowdreamtech/UniRTM)：统一运行时管理与工作区质量守卫
+
+### 质量与安全验证
+
+```bash
+# 安装并验证项目工具链
+unirtm run setup
+
+# 运行全工作区代码与格式质量检查（包含格式化、Linter 及安全规则）
+unirtm run verify
+
+# 运行全量安全审计（Zizmor, Gitleaks, OSV-Scanner, Trivy）
+unirtm run audit
+
+# 自动修复支持的问题和代码格式
+unirtm run fix
+```
 
 ### 本地构建
 
 ```bash
-# 构建所有变体
-make build
-
 # 构建特定变体
 docker build -t base:debian ./docker/debian/
 docker build -t base:alpine ./docker/alpine/
@@ -319,10 +340,10 @@ docker run --rm -e DEBUG=true base:debian
 
 ## 联系方式（备注：base）
 
-* Email: <sn0wdr1am@qq.com>
-* QQ: 3217680847
-* QQ群: 949022145
-* WeChat/微信群: sn0wdr1am
+- Email: <sn0wdr1am@qq.com>
+- QQ: 3217680847
+- QQ群: 949022145
+- WeChat/微信群: sn0wdr1am
 
 ## 许可证
 

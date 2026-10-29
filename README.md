@@ -1,9 +1,16 @@
 # Base
 
+[![CI Pipeline](https://img.shields.io/github/actions/workflow/status/snowdreamtech/base/ci.yml?branch=main&label=CI%20Pipeline)](https://github.com/snowdreamtech/base/actions/workflows/ci.yml)
+[![CD Pipeline](https://img.shields.io/github/actions/workflow/status/snowdreamtech/base/cd.yml?branch=main&label=CD%20Pipeline)](https://github.com/snowdreamtech/base/actions/workflows/cd.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/snowdreamtech/base/codeql.yml?branch=main&label=CodeQL&logo=github)](https://github.com/snowdreamtech/base/actions/workflows/codeql.yml)
+[![Security Audit](https://img.shields.io/badge/Security-Zizmor%20%7C%20Trivy%20%7C%20Gitleaks-brightgreen)](https://github.com/snowdreamtech/base/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/MIT)
 ![Docker Image Version](https://img.shields.io/docker/v/snowdreamtech/base)
 ![Docker Image Size](https://img.shields.io/docker/image-size/snowdreamtech/base/latest)
 ![Docker Pulls](https://img.shields.io/docker/pulls/snowdreamtech/base)
 ![Docker Stars](https://img.shields.io/docker/stars/snowdreamtech/base)
+
+[English](README.md) | [简体中文](README_zh-CN.md)
 
 Docker base template providing standardized container foundations with flexible entrypoint systems, multi-architecture support, and consistent configuration patterns across Alpine, Debian, and Rocky Linux distributions.
 
@@ -25,8 +32,8 @@ The Docker base template serves as a foundational starting point for building co
 docker pull snowdreamtech/base:debian
 docker run -d --name=base -e TZ=Asia/Shanghai snowdreamtech/base:debian
 
-# Or use docker-compose
-docker-compose up -d
+# Or use docker compose
+docker compose up -d
 ```
 
 ## Distribution Variants
@@ -128,23 +135,24 @@ docker buildx build \
 
 All variants support the following environment variables for runtime configuration:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `KEEPALIVE` | `0` | Keep container running (1=enabled, 0=disabled) |
-| `CAP_NET_BIND_SERVICE` | `0` | Enable binding to privileged ports (<1024) |
-| `LANG` | `C.UTF-8` | Locale setting for UTF-8 character support |
-| `UMASK` | `022` | Default file creation mask |
-| `DEBUG` | `false` | Enable debug output in entrypoint scripts |
-| `PGID` | `0` | Primary group ID for custom user creation |
-| `PUID` | `0` | User ID for custom user creation |
-| `USER` | `root` | Username for custom user creation |
-| `WORKDIR` | `/root` | Working directory path |
-| `TZ` | - | Timezone (e.g., `Asia/Shanghai`, `America/New_York`) |
+| Variable               | Default   | Description                                              |
+| ---------------------- | --------- | -------------------------------------------------------- |
+| `KEEPALIVE`            | `0`       | Keep container running (1=enabled, 0=disabled)           |
+| `CAP_NET_BIND_SERVICE` | `0`       | Enable binding to privileged ports (<1024)               |
+| `LANG`                 | `C.UTF-8` | Locale setting for UTF-8 character support               |
+| `UMASK`                | `022`     | Default file creation mask                               |
+| `DEBUG`                | `false`   | Enable debug output in entrypoint scripts                |
+| `PASSWORDLESS_SUDO`    | `false`   | Enable passwordless sudo for non-root users (true/false) |
+| `PGID`                 | `0`       | Primary group ID for custom user creation                |
+| `PUID`                 | `0`       | User ID for custom user creation                         |
+| `USER`                 | `root`    | Username for custom user creation                        |
+| `WORKDIR`              | `/root`   | Working directory path                                   |
+| `TZ`                   | -         | Timezone (e.g., `Asia/Shanghai`, `America/New_York`)     |
 
 **Debian-specific**:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
+| Variable          | Default          | Description                      |
+| ----------------- | ---------------- | -------------------------------- |
 | `DEBIAN_FRONTEND` | `noninteractive` | Debian package installation mode |
 
 ### Custom User Creation
@@ -223,11 +231,11 @@ This format allows:
 
 Each distribution variant supports multiple CPU architectures for deployment across diverse hardware platforms:
 
-| Variant | Architectures |
-|---------|---------------|
-| **Debian** | amd64, arm32v7, arm64, ppc64le, riscv64, s390x |
+| Variant    | Architectures                                                 |
+| ---------- | ------------------------------------------------------------- |
+| **Debian** | amd64, arm32v7, arm64, ppc64le, riscv64, s390x                |
 | **Alpine** | i386, amd64, arm32v6, arm32v7, arm64, ppc64le, riscv64, s390x |
-| **Rocky** | amd64, arm64, ppc64le, s390x |
+| **Rocky**  | amd64, arm64, ppc64le, s390x                                  |
 
 Docker automatically selects the appropriate architecture for your platform when pulling images.
 
@@ -278,15 +286,28 @@ Output example:
 
 ### Prerequisites
 
-- Docker (>= 20.10)
-- Docker Buildx plugin
+- Docker (>= 20.10) with Docker Buildx plugin
+- [UniRTM](https://github.com/snowdreamtech/UniRTM) for workspace quality guard and toolchain management
+
+### Quality & Verification
+
+```bash
+# Setup toolchain and verify environment
+unirtm run setup
+
+# Run comprehensive workspace quality check (formatters, linters, security)
+unirtm run verify
+
+# Run security audits (Zizmor, Gitleaks, OSV-Scanner, Trivy)
+unirtm run audit
+
+# Automatically fix linting and formatting issues where supported
+unirtm run fix
+```
 
 ### Building Locally
 
 ```bash
-# Build all variants
-make build
-
 # Build specific variant
 docker build -t base:debian ./docker/debian/
 docker build -t base:alpine ./docker/alpine/
@@ -319,10 +340,10 @@ docker run --rm -e DEBUG=true base:debian
 
 ## Contact (备注：base)
 
-* Email: <sn0wdr1am@qq.com>
-* QQ: 3217680847
-* QQ群: 949022145
-* WeChat/微信群: sn0wdr1am
+- Email: <sn0wdr1am@qq.com>
+- QQ: 3217680847
+- QQ群: 949022145
+- WeChat/微信群: sn0wdr1am
 
 ## License
 
