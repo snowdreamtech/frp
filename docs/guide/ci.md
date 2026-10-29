@@ -25,7 +25,7 @@ The `lint.yml` workflow runs the full pre-commit hook suite against all changed 
 - `security` — Gitleaks secret scanning + Trivy vulnerability scanning
 - `backend` — Language-specific linting (Ruff, golangci-lint, etc.)
 - `infra` — Infrastructure linting (ShellCheck, Hadolint, Actionlint)
-- `commitlint` — Conventional Commits format enforcement
+- `commit-msg` — Conventional Commits format enforcement (UniRTM Quality Guard)
 
 ## Release Workflow
 

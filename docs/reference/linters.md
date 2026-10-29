@@ -57,7 +57,7 @@ pre-commit install --hook-type commit-msg
 | ------------------- | -------------------------------------------- |
 | `sort-package-json` | `package.json` key ordering                  |
 | `dotenv-linter`     | `.env` file formatting                       |
-| `commitlint`        | Commit message format (Conventional Commits) |
+| `builtin:commit-msg`| Commit message format (Conventional Commits) |
 | `actionlint`        | GitHub Actions workflow syntax               |
 
 ## Running Manually
@@ -71,8 +71,8 @@ pre-commit run prettier --all-files
 pre-commit run markdownlint-cli2 --all-files
 pre-commit run shellcheck --all-files
 
-# Run commitlint
-echo "feat: my feature" | commitlint
+# Run commit message validation
+echo "feat: my feature" | unirtm guard check --hook commit-msg
 ```
 
 ## CI Integration

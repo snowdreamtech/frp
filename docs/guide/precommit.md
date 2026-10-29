@@ -38,7 +38,7 @@ pre-commit install --hook-type commit-msg
 
 ### Git Hygiene
 
-`commitlint`, `trailing-whitespace`, `end-of-file-fixer`, `check-merge-conflict`, `check-added-large-files`
+`builtin:commit-msg`, `trailing-whitespace`, `end-of-file-fixer`, `check-merge-conflict`, `check-added-large-files`
 
 ## Running Manually
 

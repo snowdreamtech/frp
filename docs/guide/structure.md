@@ -29,7 +29,6 @@ project-root/
 ├── unirtm.lock               # 🔒 Pinned tool versions and integrity hashes
 ├── .editorconfig             # Editor-agnostic formatting rules
 ├── .pre-commit-config.yaml   # Pre-commit hook definitions
-├── commitlint.config.js      # Conventional Commits enforcement
 ├── eslint.config.mjs         # JavaScript/TypeScript linting
 ├── .stylelintrc.json         # CSS/SCSS linting
 ├── .yamllint.yml             # YAML linting

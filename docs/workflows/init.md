@@ -18,7 +18,6 @@ Invoke with `/snowdreamtech.init` in any AI IDE.
 
 - `corepack enable` — enables zero-config `pnpm`
 - `pnpm install` — installs all project-local linters/formatters:
-  - `commitlint`
   - `markdownlint-cli2`
   - `prettier`
   - `sort-package-json`
@@ -67,7 +66,7 @@ After initialization, verify everything works:
 pre-commit run --all-files
 
 # Test commit message validation
-echo "feat: test" | pnpm exec commitlint
+echo "feat: test" | unirtm guard check --hook commit-msg
 
 # Test formatting
 pnpm exec prettier --check .

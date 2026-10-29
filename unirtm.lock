@@ -511,46 +511,6 @@ gpg_key = "C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8"
 url = "https://nodejs.org/dist/v26.8.1/node-v26.8.1-win-arm64.zip"
 gpg_key = "C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8"
 
-[[tools."npm:@commitlint/cli"]]
-version = "21.2.4"
-backend = "npm"
-
-[tools."npm:@commitlint/cli"."platforms.linux-amd64"]
-
-[tools."npm:@commitlint/cli"."platforms.linux-amd64-musl"]
-
-[tools."npm:@commitlint/cli"."platforms.linux-arm64"]
-
-[tools."npm:@commitlint/cli"."platforms.linux-arm64-musl"]
-
-[tools."npm:@commitlint/cli"."platforms.macos-amd64"]
-
-[tools."npm:@commitlint/cli"."platforms.macos-arm64"]
-
-[tools."npm:@commitlint/cli"."platforms.windows-amd64"]
-
-[tools."npm:@commitlint/cli"."platforms.windows-arm64"]
-
-[[tools."npm:@commitlint/config-conventional"]]
-version = "21.2.4"
-backend = "npm"
-
-[tools."npm:@commitlint/config-conventional"."platforms.linux-amd64"]
-
-[tools."npm:@commitlint/config-conventional"."platforms.linux-amd64-musl"]
-
-[tools."npm:@commitlint/config-conventional"."platforms.linux-arm64"]
-
-[tools."npm:@commitlint/config-conventional"."platforms.linux-arm64-musl"]
-
-[tools."npm:@commitlint/config-conventional"."platforms.macos-amd64"]
-
-[tools."npm:@commitlint/config-conventional"."platforms.macos-arm64"]
-
-[tools."npm:@commitlint/config-conventional"."platforms.windows-amd64"]
-
-[tools."npm:@commitlint/config-conventional"."platforms.windows-arm64"]
-
 [[tools."npm:@taplo/cli"]]
 version = "0.7.0"
 backend = "npm"
