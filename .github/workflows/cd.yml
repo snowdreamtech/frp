@@ -78,10 +78,12 @@ jobs:
           GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
           UNIRTM_VERIFY_PROVENANCE: "0"
 
-      - name: "📝 Validate Commit Convention (Commitlint)"
+      - name: "📝 Validate Commit Convention (UniRTM Native)"
         shell: sh
         run: |
-          unirtm exec -- commitlint --last --verbose
+          printf "%s\n" "$(git log -1 --pretty=%B)" > .git/COMMIT_EDITMSG
+          unirtm check .git/COMMIT_EDITMSG
+          rm -f .git/COMMIT_EDITMSG
 
       - name: "⚡ Cache Trivy Database"
         if: matrix.os == 'ubuntu-latest'

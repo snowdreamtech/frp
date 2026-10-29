@@ -254,19 +254,23 @@ jobs:
           GH_TOKEN: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
           UNIRTM_VERIFY_PROVENANCE: "0"
 
-      - name: "📝 Validate Commit Convention (Commitlint)"
+      - name: "📝 Validate Commit Convention (UniRTM Native)"
         shell: sh
         env:
           EVENT_NAME: ${{ github.event_name }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-
-          if [ "$EVENT_NAME" = "pull_request" ]; then
-            unirtm exec -- commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose
+          if [ "$EVENT_NAME" = "pull_request" ] && [ -n "$BASE_SHA" ]; then
+            git log --format="%H" "$BASE_SHA..$HEAD_SHA" | while read -r sha; do
+              printf "%s\n" "$(git log -1 --pretty=%B "$sha")" > .git/COMMIT_EDITMSG
+              unirtm check .git/COMMIT_EDITMSG
+            done
           else
-            unirtm exec -- commitlint --last --verbose
+            printf "%s\n" "$(git log -1 --pretty=%B)" > .git/COMMIT_EDITMSG
+            unirtm check .git/COMMIT_EDITMSG
           fi
+          rm -f .git/COMMIT_EDITMSG
 
       - name: "🛡️ Perform Security Audit"
         shell: sh
