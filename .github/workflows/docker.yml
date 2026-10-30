@@ -203,16 +203,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-trivy-
 
-      - name: "🏗️ Configure QEMU Emulation"
-        if: steps.variant-filter.outputs.skip != 'true'
-        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
-
-      - name: "🛠️ Configure Docker Buildx"
-        if: steps.variant-filter.outputs.skip != 'true'
-        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
-        with:
-          buildkitd-config: .github/buildkitd.toml
-
       - name: "🔑 Initialize DockerHub Registry Session"
         if: steps.variant-filter.outputs.skip != 'true'
         id: login-dockerhub
@@ -221,16 +211,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
-
-      - name: "🔑 Initialize Quay.io Registry Session"
-        if: steps.variant-filter.outputs.skip != 'true'
-        id: login-quay
-        continue-on-error: true
-        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
-        with:
-          registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_ROBOT_TOKEN }}
 
       - name: "🔑 Initialize GitHub Container Registry Session"
         if: steps.variant-filter.outputs.skip != 'true'
@@ -247,15 +227,23 @@ jobs:
         run: |
           echo "→ Registry login status:"
           echo "  DockerHub: ${{ steps.login-dockerhub.outcome }}"
-          echo "  Quay.io: ${{ steps.login-quay.outcome }}"
           echo "  GHCR: ${{ steps.login-ghcr.outcome }}"
 
           if [ "${{ steps.login-dockerhub.outcome }}" != "success" ] && \
-            [ "${{ steps.login-quay.outcome }}" != "success" ] && \
             [ "${{ steps.login-ghcr.outcome }}" != "success" ]; then
             echo "::error::All registry logins failed. Cannot proceed."
             exit 1
           fi
+
+      - name: "🏗️ Configure QEMU Emulation"
+        if: steps.variant-filter.outputs.skip != 'true'
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+
+      - name: "🛠️ Configure Docker Buildx"
+        if: steps.variant-filter.outputs.skip != 'true'
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+        with:
+          buildkitd-config: .github/buildkitd.toml
 
       - name: "🎯 Check if tag is stable release"
         id: tag-check
@@ -275,7 +263,6 @@ jobs:
           images: |
             name=ghcr.io/snowdreamtech/${{ matrix.flavor }},enable=true
             name=snowdreamtech/${{ matrix.flavor }},enable=true
-            name=quay.io/snowdreamtech/${{ matrix.flavor }},enable=true
           flavor: |
             latest=false
             prefix=
@@ -490,7 +477,7 @@ jobs:
 
           # DockerHub (no prefix)
           if [ "${{ steps.login-dockerhub.outcome }}" = "success" ]; then
-            dockerhub_tag=$(echo "${TAGS}" | grep -v '^ghcr.io/' | grep -v '^quay.io/' | head -n 1)
+            dockerhub_tag=$(echo "${TAGS}" | grep -v '^ghcr.io/' | head -n 1)
             if [ -n "${dockerhub_tag}" ]; then
               echo "  Testing DockerHub: ${dockerhub_tag}"
               if retry_pull "${dockerhub_tag}"; then
@@ -500,22 +487,6 @@ jobs:
                 fi
               else
                 echo "  ✗ DockerHub image pull failed after retries"
-              fi
-            fi
-          fi
-
-          # Quay.io
-          if [ "${{ steps.login-quay.outcome }}" = "success" ]; then
-            quay_tag=$(echo "${TAGS}" | grep '^quay.io/' | head -n 1)
-            if [ -n "${quay_tag}" ]; then
-              echo "  Testing Quay.io: ${quay_tag}"
-              if retry_pull "${quay_tag}"; then
-                if run_smoke_test "${quay_tag}" "Quay.io"; then
-                  size=$(docker image inspect "${quay_tag}" --format='{{.Size}}' | awk '{printf "%.2f MB", $1/1024/1024}')
-                  echo "  ✓ Quay.io image verified (Size: ${size})"
-                fi
-              else
-                echo "  ✗ Quay.io image pull failed after retries"
               fi
             fi
           fi
@@ -749,7 +720,7 @@ jobs:
                   ;;
               esac
               echo "- **Package Manager:** ${{ matrix.package_manager }}"
-              echo "- **Registries:** DockerHub (${{ steps.login-dockerhub.outcome }}), GHCR (${{ steps.login-ghcr.outcome }}), Quay.io (${{ steps.login-quay.outcome }})"
+              echo "- **Registries:** DockerHub (${{ steps.login-dockerhub.outcome }}), GHCR (${{ steps.login-ghcr.outcome }})"
               echo "- **Cache Sources:** Current branch + main + dev"
               echo ""
               echo "### 🔐 Security & Compliance"
@@ -809,7 +780,6 @@ jobs:
           fi
 
           if [ "${{ steps.login-dockerhub.outcome }}" != "success" ] && \
-            [ "${{ steps.login-quay.outcome }}" != "success" ] && \
             [ "${{ steps.login-ghcr.outcome }}" != "success" ]; then
             echo "::error title=Registry Login Failed::All registry authentications failed"
           fi

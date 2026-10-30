@@ -6,8 +6,8 @@ This document describes the Docker image tagging strategy for `frpc` and `frps`.
 
 All images use the format:
 
-- `snowdreamtech/frpc:TAG` / `ghcr.io/snowdreamtech/frpc:TAG` / `quay.io/snowdreamtech/frpc:TAG`
-- `snowdreamtech/frps:TAG` / `ghcr.io/snowdreamtech/frps:TAG` / `quay.io/snowdreamtech/frps:TAG`
+- `snowdreamtech/frpc:TAG` / `ghcr.io/snowdreamtech/frpc:TAG`
+- `snowdreamtech/frps:TAG` / `ghcr.io/snowdreamtech/frps:TAG`
 
 Where `TAG` follows these patterns:
 
@@ -16,11 +16,10 @@ Where `TAG` follows these patterns:
 
 ## Supported Registries
 
-All tags are pushed to three registries:
+All tags are pushed to two registries:
 
 - **DockerHub**: `snowdreamtech/frpc:TAG`, `snowdreamtech/frps:TAG`
 - **GitHub Container Registry**: `ghcr.io/snowdreamtech/frpc:TAG`, `ghcr.io/snowdreamtech/frps:TAG`
-- **Quay.io**: `quay.io/snowdreamtech/frpc:TAG`, `quay.io/snowdreamtech/frps:TAG`
 
 ## Tag Scenarios
 
