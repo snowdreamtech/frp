@@ -14,12 +14,6 @@
 * release main ([a2cafdc](https://github.com/snowdreamtech/frp/commit/a2cafdc012ed85559e0239e6333af767a878eff8))
 * **release:** deduplicate CHANGELOG headers ([ec1c2ef](https://github.com/snowdreamtech/frp/commit/ec1c2ef80d3e6af152487494cd1727eaf502214b))
 
-## [0.71.1](https://github.com/snowdreamtech/frp/compare/debian-v0.71.0...debian-v0.71.1) (2026-10-27)
-
-### 🛠 Refactoring
-
-- update release-please configuration and version management in Dockerfiles and workflows ([8b3d143](https://github.com/snowdreamtech/frp/commit/8b3d143043efa50dcdd46c5f062031380cf1676c))
-
 ## [0.71.0](https://github.com/snowdreamtech/frp/compare/debian-v0.70.1...debian-v0.71.0) (2026-08-14)
 
 ### 🚀 Features
