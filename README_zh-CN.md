@@ -1,18 +1,20 @@
-# Base
+# Frp
 
-[![CI 流水线](https://img.shields.io/github/actions/workflow/status/snowdreamtech/base/ci.yml?branch=main&label=CI%20Pipeline)](https://github.com/snowdreamtech/base/actions/workflows/ci.yml)
-[![CD 自动化发布](https://img.shields.io/github/actions/workflow/status/snowdreamtech/base/cd.yml?branch=main&label=CD%20Pipeline)](https://github.com/snowdreamtech/base/actions/workflows/cd.yml)
-[![CodeQL 审计](https://img.shields.io/github/actions/workflow/status/snowdreamtech/base/codeql.yml?branch=main&label=CodeQL&logo=github)](https://github.com/snowdreamtech/base/actions/workflows/codeql.yml)
-[![安全审计](https://img.shields.io/badge/Security-Zizmor%20%7C%20Trivy%20%7C%20Gitleaks-brightgreen)](https://github.com/snowdreamtech/base/actions/workflows/ci.yml)
-[![许可证: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/MIT)
-![Docker Image Version](https://img.shields.io/docker/v/snowdreamtech/base)
-![Docker Image Size](https://img.shields.io/docker/image-size/snowdreamtech/base/latest)
-![Docker Pulls](https://img.shields.io/docker/pulls/snowdreamtech/base)
-![Docker Stars](https://img.shields.io/docker/stars/snowdreamtech/base)
+![Docker Image Version](https://img.shields.io/docker/v/snowdreamtech/frps)
+![Docker Image Size](https://img.shields.io/docker/image-size/snowdreamtech/frps/latest)
+![Docker Pulls](https://img.shields.io/docker/pulls/snowdreamtech/frps)
+![Docker Stars](https://img.shields.io/docker/stars/snowdreamtech/frps)
 
-[English](README.md) | [简体中文](README_zh-CN.md)
+![Docker Image Version](https://img.shields.io/docker/v/snowdreamtech/frpc)
+![Docker Image Size](https://img.shields.io/docker/image-size/snowdreamtech/frpc/latest)
+![Docker Pulls](https://img.shields.io/docker/pulls/snowdreamtech/frpc)
+![Docker Stars](https://img.shields.io/docker/stars/snowdreamtech/frpc)
 
 Docker 基础模板，提供标准化的容器基础，具有灵活的入口点系统、多架构支持以及跨 Alpine、Debian 和 Rocky Linux 发行版的一致配置模式。
+
+## [Documentation](https://gofrp.org/en/)
+
+## [中文文档](https://gofrp.org/zh-cn/docs/)
 
 ## 概述
 
@@ -29,11 +31,11 @@ Docker 基础模板作为构建容器化应用程序的基础起点。它提供�
 
 ```bash
 # 拉取并运行默认的 Debian 变体
-docker pull snowdreamtech/base:debian
-docker run -d --name=base -e TZ=Asia/Shanghai snowdreamtech/base:debian
+docker pull snowdreamtech/frpc:debian
+docker run -d --name=frpc -e TZ=Asia/Shanghai snowdreamtech/frpc:debian
 
-# 或使用 docker compose
-docker compose up -d
+# 或使用 docker-compose
+docker-compose up -d
 ```
 
 ## 发行版变体
@@ -44,10 +46,10 @@ docker compose up -d
 
 ```bash
 docker run -d \
-  --name=base \
+  --name=frpc \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  snowdreamtech/base:debian
+  snowdreamtech/frpc:debian
 ```
 
 **支持的架构**：amd64、arm32v7、arm64、ppc64le、riscv64、s390x
@@ -60,10 +62,10 @@ docker run -d \
 
 ```bash
 docker run -d \
-  --name=base \
+  --name=frpc \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  snowdreamtech/base:alpine
+  snowdreamtech/frpc:alpine
 ```
 
 **支持的架构**：i386、amd64、arm32v6、arm32v7、arm64、ppc64le、riscv64、s390x
@@ -76,10 +78,10 @@ docker run -d \
 
 ```bash
 docker run -d \
-  --name=base \
+  --name=frpc \
   -e TZ=Asia/Shanghai \
   --restart unless-stopped \
-  snowdreamtech/base:rocky
+  snowdreamtech/frpc:rocky
 ```
 
 **支持的架构**：amd64、arm64、ppc64le、s390x
@@ -92,13 +94,13 @@ docker run -d \
 
 ```bash
 # 构建 Debian 变体
-docker build -t snowdreamtech/base:debian ./docker/debian/
+docker build -t snowdreamtech/frpc:debian ./docker/debian/
 
 # 构建 Alpine 变体
-docker build -t snowdreamtech/base:alpine ./docker/alpine/
+docker build -t snowdreamtech/frpc:alpine ./docker/alpine/
 
 # 构建 Rocky 变体
-docker build -t snowdreamtech/base:rocky ./docker/rocky/
+docker build -t snowdreamtech/frpc:rocky ./docker/rocky/
 ```
 
 ### 多架构构建
@@ -112,21 +114,21 @@ docker buildx create --use --name build --node build --driver-opt network=host
 # 为多个架构构建 Debian
 docker buildx build \
   --platform=linux/386,linux/amd64,linux/arm/v5,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x \
-  -t snowdreamtech/base:debian \
+  -t snowdreamtech/frpc:debian \
   ./docker/debian/ \
   --push
 
 # 为多个架构构建 Alpine
 docker buildx build \
   --platform=linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x \
-  -t snowdreamtech/base:alpine \
+  -t snowdreamtech/frpc:alpine \
   ./docker/alpine/ \
   --push
 
 # 为多个架构构建 Rocky
 docker buildx build \
   --platform=linux/amd64,linux/arm64,linux/ppc64le,linux/s390x \
-  -t snowdreamtech/base:rocky \
+  -t snowdreamtech/frpc:rocky \
   ./docker/rocky/ \
   --push
 ```
@@ -142,7 +144,6 @@ docker buildx build \
 | `LANG`                 | `C.UTF-8` | UTF-8 字符支持的区域设置                         |
 | `UMASK`                | `022`     | 默认文件创建掩码                                 |
 | `DEBUG`                | `false`   | 在入口点脚本中启用调试输出                       |
-| `PASSWORDLESS_SUDO`    | `false`   | 是否为非 root 用户启用无密码 sudo（true/false）  |
 | `PGID`                 | `0`       | 自定义用户创建的主组 ID                          |
 | `PUID`                 | `0`       | 自定义用户创建的用户 ID                          |
 | `USER`                 | `root`    | 自定义用户创建的用户名                           |
@@ -164,7 +165,7 @@ docker build \
   --build-arg PUID=1000 \
   --build-arg PGID=1000 \
   --build-arg USER=appuser \
-  -t snowdreamtech/base:debian-custom \
+  -t snowdreamtech/frpc:debian-custom \
   ./docker/debian/
 ```
 
@@ -172,11 +173,11 @@ docker build \
 
 ```bash
 docker run -d \
-  --name=base \
+  --name=frpc \
   -e PUID=1000 \
   -e PGID=1000 \
   -e USER=appuser \
-  snowdreamtech/base:debian
+  snowdreamtech/frpc:debian
 ```
 
 **注意**：仅当 `PUID≠0`、`PGID≠0` 且 `USER≠root` 时才会创建用户。
@@ -187,9 +188,9 @@ docker run -d \
 
 ```yaml
 services:
-  base:
-    image: snowdreamtech/base:debian
-    container_name: base
+  frp:
+    image: snowdreamtech/frpc:debian
+    container_name: frpc
     environment:
       - TZ=Asia/Shanghai
     restart: unless-stopped
@@ -199,9 +200,9 @@ services:
 
 ```yaml
 services:
-  base:
-    image: snowdreamtech/base:debian
-    container_name: base
+  frp:
+    image: snowdreamtech/frpc:debian
+    container_name: frpc
     environment:
       - TZ=Asia/Shanghai
       - DEBUG=true
@@ -217,13 +218,13 @@ services:
 
 示例：
 
-- `snowdreamtech/base:<version>-debian`
-- `snowdreamtech/base:<version>-alpine`
-- `snowdreamtech/base:<version>-rocky`
+- `snowdreamtech/frpc:0.71.1-debian` <!-- x-release-please-version -->
+- `snowdreamtech/frpc:0.71.1-alpine` <!-- x-release-please-version -->
+- `snowdreamtech/frpc:0.71.1-rocky` <!-- x-release-please-version -->
 
 此格式允许：
 
-- **完整版本固定**：`<version>-debian`（精确版本）
+- **完整版本固定**：`0.71.1-debian`（精确版本） <!-- x-release-please-version -->
 - **变体最新标签**：`latest-debian`（跟踪 Debian 最新版本）
 - **全局最新标签**：`latest`（跟踪最新版本，默认指向 Debian）
 
@@ -255,7 +256,7 @@ Docker 在拉取镜像时会自动为您的平台选择适当的架构。
 在派生的 Dockerfile 中创建自定义初始化脚本：
 
 ```dockerfile
-FROM snowdreamtech/base:debian
+FROM snowdreamtech/frpc:debian
 
 # 添加您的自定义初始化脚本
 COPY my-init.sh /usr/local/bin/entrypoint.d/20-my-init.sh
@@ -271,14 +272,14 @@ CMD ["/app/start.sh"]
 启用调试输出以排查入口点执行问题：
 
 ```bash
-docker run -e DEBUG=true snowdreamtech/base:debian
+docker run -e DEBUG=true snowdreamtech/frpc:debian
 ```
 
 输出示例：
 
 ```
 → [ENTRYPOINT] Executing all scripts in /usr/local/bin/entrypoint.d
-→ Running /usr/local/bin/entrypoint.d/10-base-init.sh
+→ Running /usr/local/bin/entrypoint.d/10-frp-init.sh
 → [ENTRYPOINT] Done.
 ```
 
@@ -286,47 +287,52 @@ docker run -e DEBUG=true snowdreamtech/base:debian
 
 ### 前置要求
 
-- Docker（>= 20.10）及 Docker Buildx 插件
-- [UniRTM](https://github.com/snowdreamtech/UniRTM)：统一运行时管理与工作区质量守卫
+- Docker（>= 20.10）与 Docker Buildx 插件
+- [UniRTM](https://github.com/snowdreamtech/UniRTM) 用于工作区质量防护与工具链管理
 
-### 质量与安全验证
+### 质量与验证
 
 ```bash
-# 安装并验证项目工具链
+# 初始化工具链并验证环境
 unirtm run setup
 
-# 运行全工作区代码与格式质量检查（包含格式化、Linter 及安全规则）
+# 执行全量工作区质量检查（格式化、静态分析、安全审计）
 unirtm run verify
 
-# 运行全量安全审计（Zizmor, Gitleaks, OSV-Scanner, Trivy）
+# 执行安全审计（Zizmor、Gitleaks、OSV-Scanner、Trivy）
 unirtm run audit
 
-# 自动修复支持的问题和代码格式
+# 自动修复支持的代码规范与格式问题
 unirtm run fix
 ```
 
 ### 本地构建
 
 ```bash
-# 构建特定变体
-docker build -t base:debian ./docker/debian/
-docker build -t base:alpine ./docker/alpine/
-docker build -t base:rocky ./docker/rocky/
+# 构建客户端 (frpc)
+docker build -f ./docker/debian/Dockerfile.frpc -t frpc:debian ./docker/debian/
+docker build -f ./docker/alpine/Dockerfile.frpc -t frpc:alpine ./docker/alpine/
+docker build -f ./docker/rocky/Dockerfile.frpc -t frpc:rocky ./docker/rocky/
+
+# 构建服务端 (frps)
+docker build -f ./docker/debian/Dockerfile.frps -t frps:debian ./docker/debian/
+docker build -f ./docker/alpine/Dockerfile.frps -t frps:alpine ./docker/alpine/
+docker build -f ./docker/rocky/Dockerfile.frps -t frps:rocky ./docker/rocky/
 ```
 
 ### 测试
 
 ```bash
 # 测试默认配置
-docker run --rm base:debian id
+docker run --rm frpc:debian id
 
 # 测试自定义用户创建
-docker build --build-arg PUID=1000 --build-arg PGID=1000 --build-arg USER=testuser -t base:debian-test ./docker/debian/
-docker run --rm base:debian-test id
+docker build --build-arg PUID=1000 --build-arg PGID=1000 --build-arg USER=testuser -t frpc:debian-test ./docker/debian/
+docker run --rm frpc:debian-test id
 # 预期输出：uid=1000(testuser) gid=1000(testuser)
 
 # 测试 DEBUG 模式
-docker run --rm -e DEBUG=true base:debian
+docker run --rm -e DEBUG=true frpc:debian
 ```
 
 ## 参考资料
@@ -338,7 +344,7 @@ docker run --rm -e DEBUG=true base:debian
 5. [Faster Multi-Platform Builds: Dockerfile Cross-Compilation Guide](https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/)
 6. [docker/buildx](https://github.com/docker/buildx)
 
-## 联系方式（备注：base）
+## 联系方式（备注：frp）
 
 - Email: <sn0wdr1am@qq.com>
 - QQ: 3217680847

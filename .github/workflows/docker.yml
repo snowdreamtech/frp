@@ -65,17 +65,23 @@ name: "🐳 Docker Multi-Platform Build"
 permissions:
   contents: read
 
+env:
+  UNIRTM_LOCKED: 1
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "1"
+
 jobs:
   buildx:
-    name: "🚀 Build & Deliver (${{ matrix.variant }})"
+    name: "🚀 Build & Deliver (${{ matrix.flavor }}-${{ matrix.variant }})"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
+        flavor: [frpc, frps]
+        variant: [alpine, debian, rocky]
         include:
           - variant: alpine
             # x-release-please-start-version
-            version: "3.24.1"
+            version: "0.71.1"
             # x-release-please-end
             context: docker/alpine
             platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x
@@ -84,7 +90,7 @@ jobs:
 
           - variant: debian
             # x-release-please-start-version
-            version: "13.6.0"
+            version: "0.71.1"
             # x-release-please-end
             context: docker/debian
             platforms: linux/amd64,linux/arm/v7,linux/arm64,linux/riscv64,linux/ppc64le,linux/s390x
@@ -93,14 +99,14 @@ jobs:
 
           - variant: rocky
             # x-release-please-start-version
-            version: "10.2.0"
+            version: "0.71.1"
             # x-release-please-end
             context: docker/rocky
             platforms: linux/amd64,linux/arm64,linux/ppc64le,linux/s390x
             is_latest: false
             package_manager: dnf
     concurrency:
-      group: docker-${{ github.workflow }}-${{ github.event_name == 'schedule' && 'nightly' || github.ref }}-${{ matrix.variant }}
+      group: docker-${{ github.workflow }}-${{ github.event_name == 'schedule' && 'nightly' || github.ref }}-${{ matrix.flavor }}-${{ matrix.variant }}
       cancel-in-progress: ${{ github.event_name != 'schedule' }}
     permissions:
       contents: read
@@ -124,7 +130,7 @@ jobs:
             fi
           fi
 
-          # For tag pushes, check if tag matches this variant or is a unified tag
+          # For tag pushes, check if tag matches this variant
           if [ "${{ github.event_name }}" = "push" ]; then
             case "${{ github.ref }}" in
               refs/tags/*)
@@ -132,16 +138,7 @@ jobs:
                 tag_name="${tag_name#refs/tags/}"
                 case "${tag_name}" in
                   ${{ matrix.variant }}-*)
-                    # Variant-specific tag (e.g. alpine-v1.0.0), matches this variant
-                    ;;
-                  alpine-*|debian-*|rocky-*)
-                    # Variant-specific tag for a different variant, skip this variant
-                    echo "skip=true" >> "$GITHUB_OUTPUT"
-                    echo "→ Skipping ${{ matrix.variant }} (tag ${tag_name} is for another variant)"
-                    exit 0
-                    ;;
-                  v*|[0-9]*)
-                    # Unified project tag (e.g. v0.1.1, v1.1.0, 0.1.1), build for all variants
+                    # Tag matches variant, continue
                     ;;
                   *)
                     echo "skip=true" >> "$GITHUB_OUTPUT"
@@ -206,6 +203,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-trivy-
 
+      - name: "🏗️ Configure QEMU Emulation"
+        if: steps.variant-filter.outputs.skip != 'true'
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+
+      - name: "🛠️ Configure Docker Buildx"
+        if: steps.variant-filter.outputs.skip != 'true'
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+        with:
+          buildkitd-config: .github/buildkitd.toml
+
       - name: "🔑 Initialize DockerHub Registry Session"
         if: steps.variant-filter.outputs.skip != 'true'
         id: login-dockerhub
@@ -214,6 +221,16 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: "🔑 Initialize Quay.io Registry Session"
+        if: steps.variant-filter.outputs.skip != 'true'
+        id: login-quay
+        continue-on-error: true
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_ROBOT_TOKEN }}
 
       - name: "🔑 Initialize GitHub Container Registry Session"
         if: steps.variant-filter.outputs.skip != 'true'
@@ -230,29 +247,21 @@ jobs:
         run: |
           echo "→ Registry login status:"
           echo "  DockerHub: ${{ steps.login-dockerhub.outcome }}"
+          echo "  Quay.io: ${{ steps.login-quay.outcome }}"
           echo "  GHCR: ${{ steps.login-ghcr.outcome }}"
 
           if [ "${{ steps.login-dockerhub.outcome }}" != "success" ] && \
+            [ "${{ steps.login-quay.outcome }}" != "success" ] && \
             [ "${{ steps.login-ghcr.outcome }}" != "success" ]; then
             echo "::error::All registry logins failed. Cannot proceed."
             exit 1
           fi
 
-      - name: "🏗️ Configure QEMU Emulation"
-        if: steps.variant-filter.outputs.skip != 'true'
-        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
-
-      - name: "🛠️ Configure Docker Buildx"
-        if: steps.variant-filter.outputs.skip != 'true'
-        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
-        with:
-          buildkitd-config: .github/buildkitd.toml
-
       - name: "🎯 Check if tag is stable release"
         id: tag-check
         if: steps.variant-filter.outputs.skip != 'true'
         run: |
-          if echo "${{ github.ref }}" | grep -Eq "^refs/tags/(${{ matrix.variant }}-)?v?[0-9]+\.[0-9]+\.[0-9]+$"; then
+          if echo "${{ github.ref }}" | grep -Eq "^refs/tags/${{ matrix.variant }}-v?[0-9]+\.[0-9]+\.[0-9]+$"; then
             echo "is_stable=true" >> "$GITHUB_OUTPUT"
           else
             echo "is_stable=false" >> "$GITHUB_OUTPUT"
@@ -264,8 +273,9 @@ jobs:
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: |
-            name=ghcr.io/snowdreamtech/base,enable=true
-            name=snowdreamtech/base,enable=true
+            name=ghcr.io/snowdreamtech/${{ matrix.flavor }},enable=true
+            name=snowdreamtech/${{ matrix.flavor }},enable=true
+            name=quay.io/snowdreamtech/${{ matrix.flavor }},enable=true
           flavor: |
             latest=false
             prefix=
@@ -285,11 +295,7 @@ jobs:
             type=schedule,enable=true,priority=1000,prefix=,suffix=-${{ matrix.variant }},pattern=nightly
             # Nightly builds - global nightly tag (only for is_latest variant, no suffix)
             type=schedule,enable=${{ matrix.is_latest }},priority=1000,prefix=,suffix=,pattern=nightly
-            # Semantic version tags (vX.Y.Z) - variant-suffixed
-            type=semver,pattern={{version}},suffix=-${{ matrix.variant }}
-            # Semantic version tags (vX.Y.Z) - global tag (only for is_latest variant, no suffix)
-            type=semver,pattern={{version}},enable=${{ matrix.is_latest }}
-            # Variant-prefixed tags from Release Please (variant-x.y.z) - variant-suffixed
+            # Semantic version tags from Release Please (variant-x.y.z) - variant-suffixed
             type=match,enable=${{ startsWith(github.ref, format('refs/tags/{0}-', matrix.variant)) }},priority=800,prefix=,suffix=-${{ matrix.variant }},pattern=${{ matrix.variant }}-v?(.*),group=1
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
@@ -300,6 +306,7 @@ jobs:
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: ${{ matrix.context }}
+          file: ${{ matrix.context }}/Dockerfile.${{ matrix.flavor }}
           build-args: |
             BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
             VERSION=${{ matrix.version }}
@@ -312,10 +319,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
           cache-from: |
-            type=gha,scope=${{ github.ref_name }}-${{ matrix.variant }}
-            type=gha,scope=main-${{ matrix.variant }}
-            type=gha,scope=dev-${{ matrix.variant }}
-          cache-to: type=gha,mode=max,scope=${{ github.ref_name }}-${{ matrix.variant }}
+            type=gha,scope=${{ github.ref_name }}-${{ matrix.flavor }}-${{ matrix.variant }}
+            type=gha,scope=main-${{ matrix.flavor }}-${{ matrix.variant }}
+            type=gha,scope=dev-${{ matrix.flavor }}-${{ matrix.variant }}
+          cache-to: type=gha,mode=max,scope=${{ github.ref_name }}-${{ matrix.flavor }}-${{ matrix.variant }}
 
       - name: "📈 Analyze Build Cache Performance"
         id: cache-stats
@@ -444,15 +451,19 @@ jobs:
               -e TZ=Asia/Shanghai \
               -e PUID=1000 \
               -e PGID=1000 \
+              -e KEEPALIVE=0 \
               "${tag}" \
-              sh -c '
-                echo "  ✓ Entrypoint execution: OK" && \
-                printf "  ✓ Timezone: " && date "+%Z %z" && \
-                echo "  ✓ User context: $(id -un 2>/dev/null || id -u)" && \
-                printf "  ✓ Package manager: " && \
-                '"${pkg_check}"' && echo "functional" && \
-                echo "  ✓ All checks passed"
-              '; then
+              sh -c "
+                echo '  ✓ Entrypoint execution: OK' && \
+                printf '  ✓ Timezone: ' && date '+%Z %z' && \
+                printf '  ✓ User context: ' && id -un && \
+                printf '  ✓ Package manager: ' && \
+                ${pkg_check} && echo 'functional' && \
+                printf '  ✓ Web Dashboard: ' && \
+                if grep -qa 'index.html' /usr/bin/${{ matrix.flavor }}; then echo 'integrated'; else echo 'missing (NOWEB_TAG issue)'; exit 1; fi && \
+                ${{ matrix.flavor }} version && \
+                echo '  ✓ All checks passed'
+              "; then
               return 0
             else
               echo "  ✗ Smoke test failed for ${registry_name}"
@@ -479,7 +490,7 @@ jobs:
 
           # DockerHub (no prefix)
           if [ "${{ steps.login-dockerhub.outcome }}" = "success" ]; then
-            dockerhub_tag=$(echo "${TAGS}" | grep -v '^ghcr.io/' | head -n 1)
+            dockerhub_tag=$(echo "${TAGS}" | grep -v '^ghcr.io/' | grep -v '^quay.io/' | head -n 1)
             if [ -n "${dockerhub_tag}" ]; then
               echo "  Testing DockerHub: ${dockerhub_tag}"
               if retry_pull "${dockerhub_tag}"; then
@@ -489,6 +500,22 @@ jobs:
                 fi
               else
                 echo "  ✗ DockerHub image pull failed after retries"
+              fi
+            fi
+          fi
+
+          # Quay.io
+          if [ "${{ steps.login-quay.outcome }}" = "success" ]; then
+            quay_tag=$(echo "${TAGS}" | grep '^quay.io/' | head -n 1)
+            if [ -n "${quay_tag}" ]; then
+              echo "  Testing Quay.io: ${quay_tag}"
+              if retry_pull "${quay_tag}"; then
+                if run_smoke_test "${quay_tag}" "Quay.io"; then
+                  size=$(docker image inspect "${quay_tag}" --format='{{.Size}}' | awk '{printf "%.2f MB", $1/1024/1024}')
+                  echo "  ✓ Quay.io image verified (Size: ${size})"
+                fi
+              else
+                echo "  ✗ Quay.io image pull failed after retries"
               fi
             fi
           fi
@@ -514,13 +541,14 @@ jobs:
         continue-on-error: true
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         env:
-          TRIVY_DB_REPOSITORY: "public.ecr.aws/aquasecurity/trivy-db"
-          TRIVY_CHECKS_BUNDLE_REPOSITORY: "public.ecr.aws/aquasecurity/trivy-checks"
+          TRIVY_DB_REPOSITORY: "ghcr.io/aquasecurity/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2"
+          TRIVY_JAVA_DB_REPOSITORY: "ghcr.io/aquasecurity/trivy-java-db:1,public.ecr.aws/aquasecurity/trivy-java-db:1"
+          TRIVY_CHECKS_BUNDLE_REPOSITORY: "ghcr.io/aquasecurity/trivy-checks:2,public.ecr.aws/aquasecurity/trivy-checks:2"
         with:
           scan-type: "image"
           image-ref: ${{ steps.trivy-image.outputs.tag }}
           format: "sarif"
-          output: "trivy-image-${{ matrix.variant }}.sarif"
+          output: "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif"
           severity: "CRITICAL,HIGH,MEDIUM,LOW"
           ignore-unfixed: true
           exit-code: "0"
@@ -532,10 +560,10 @@ jobs:
         if: steps.variant-filter.outputs.skip != 'true' && steps.build.conclusion == 'success' && steps.trivy.outcome == 'success'
         continue-on-error: true
         run: |
-          if [ -f "trivy-image-${{ matrix.variant }}.sarif" ]; then
-            critical=$(jq '[.runs[].results[] | select(.level=="error")] | length' trivy-image-${{ matrix.variant }}.sarif)
-            high=$(jq '[.runs[].results[] | select(.level=="warning")] | length' trivy-image-${{ matrix.variant }}.sarif)
-            medium=$(jq '[.runs[].results[] | select(.level=="note")] | length' trivy-image-${{ matrix.variant }}.sarif)
+          if [ -f "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif" ]; then
+            critical=$(jq '[.runs[].results[] | select(.level=="error")] | length' trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif)
+            high=$(jq '[.runs[].results[] | select(.level=="warning")] | length' trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif)
+            medium=$(jq '[.runs[].results[] | select(.level=="note")] | length' trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif)
             {
               echo "critical=${critical}"
               echo "high=${high}"
@@ -556,8 +584,8 @@ jobs:
         continue-on-error: true
         uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
         with:
-          sarif_file: "trivy-image-${{ matrix.variant }}.sarif"
-          category: "trivy-image-base-${{ matrix.variant }}"
+          sarif_file: "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif"
+          category: "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}"
 
       - name: "🗑️ Clean Up Build Artifacts"
         if: steps.variant-filter.outputs.skip != 'true' && always()
@@ -721,7 +749,7 @@ jobs:
                   ;;
               esac
               echo "- **Package Manager:** ${{ matrix.package_manager }}"
-              echo "- **Registries:** DockerHub (${{ steps.login-dockerhub.outcome }}), GHCR (${{ steps.login-ghcr.outcome }})"
+              echo "- **Registries:** DockerHub (${{ steps.login-dockerhub.outcome }}), GHCR (${{ steps.login-ghcr.outcome }}), Quay.io (${{ steps.login-quay.outcome }})"
               echo "- **Cache Sources:** Current branch + main + dev"
               echo ""
               echo "### 🔐 Security & Compliance"
@@ -781,6 +809,7 @@ jobs:
           fi
 
           if [ "${{ steps.login-dockerhub.outcome }}" != "success" ] && \
+            [ "${{ steps.login-quay.outcome }}" != "success" ] && \
             [ "${{ steps.login-ghcr.outcome }}" != "success" ]; then
             echo "::error title=Registry Login Failed::All registry authentications failed"
           fi
