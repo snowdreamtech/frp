@@ -159,7 +159,7 @@ jobs:
           ignore-unfixed: true
           format: "sarif"
           output: "trivy-results.sarif"
-          severity: "CRITICAL,HIGH"
+          severity: "CRITICAL,HIGH,MEDIUM,LOW"
           exit-code: "1"
           skip-dirs: "unirtm_data,cmd/unirtm_data"
 
