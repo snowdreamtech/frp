@@ -28,7 +28,7 @@
     "source-map-js": "1.2.2"
   },
   "dependencies": {
-    "dompurify": "^3.4.17",
+    "dompurify": "3.4.17",
     "postcss": "8.5.31"
   }
 }
