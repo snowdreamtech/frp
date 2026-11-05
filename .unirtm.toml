@@ -8,7 +8,7 @@ UNIRTM_HOOK_ALLOW_MISSING = "1"
 [tools]
 "github:anchore/syft" = "1.55.0"
 "github:aquasecurity/trivy" = "0.76.1"
-"github:cli/cli" = "2.102.0"
+"github:cli/cli" = "2.103.3"
 "github:gitleaks/gitleaks" = "8.30.1"
 "github:google/osv-scanner" = "2.7.0"
 "github:koalaman/shellcheck" = "0.11.0"
