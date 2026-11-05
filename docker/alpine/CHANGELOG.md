@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.72.0](https://github.com/snowdreamtech/frp/compare/alpine-v0.71.1...alpine-v0.72.0) (2026-11-05)
+
+
+### 🚀 Features
+
+* upgrade frp version to 0.72.0 ([9536d19](https://github.com/snowdreamtech/frp/commit/9536d19a43dce1b986c0c5cfc24dc5956d272360))
+
 ## [0.71.1](https://github.com/snowdreamtech/frp/compare/alpine-v0.71.1...alpine-v0.71.1) (2026-10-30)
 
 
