@@ -81,7 +81,7 @@ jobs:
         include:
           - variant: alpine
             # x-release-please-start-version
-            version: "0.71.1"
+            version: "0.72.0"
             # x-release-please-end
             context: docker/alpine
             platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x
@@ -90,7 +90,7 @@ jobs:
 
           - variant: debian
             # x-release-please-start-version
-            version: "0.71.1"
+            version: "0.72.0"
             # x-release-please-end
             context: docker/debian
             platforms: linux/amd64,linux/arm/v7,linux/arm64,linux/riscv64,linux/ppc64le,linux/s390x
@@ -99,7 +99,7 @@ jobs:
 
           - variant: rocky
             # x-release-please-start-version
-            version: "0.71.1"
+            version: "0.72.0"
             # x-release-please-end
             context: docker/rocky
             platforms: linux/amd64,linux/arm64,linux/ppc64le,linux/s390x
